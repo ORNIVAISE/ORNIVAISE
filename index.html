@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#050608" />
+  <title>ØRNIVAISE — SIGNAL FROM NØWHERE</title>
+  <meta name="description" content="ØRNIVAISE — cosmic drift phonk / dark electronic. SIGNAL 001." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="boot" class="boot" aria-hidden="true">
+    <div class="boot-line"></div>
+    <div class="boot-text">SIGNAL DETECTED</div>
+    <div class="boot-sub">TRANSMISSION 001</div>
+  </div>
+
+  <header class="topbar">
+    <a class="brand glitch" href="#home" data-text="ØRNIVAISE">ØRNIVAISE</a>
+    <nav>
+      <a href="#home">Главная</a>
+      <a href="#music">Музыка</a>
+      <a href="#story">История</a>
+      <a href="#contact">Контакты</a>
+    </nav>
+    <button id="muteToggle" class="icon-btn" type="button" aria-label="Включить или выключить звук">◼</button>
+  </header>
+
+  <main>
+    <section id="home" class="hero">
+      <div class="space-layer stars-a"></div>
+      <div class="space-layer stars-b"></div>
+      <div class="hero-planet" aria-hidden="true"></div>
+      <div class="scanline"></div>
+      <div class="hero-copy">
+        <div class="eyebrow">СИГНАЛ ОБНАРУЖЕН · ПЕРЕДАЧА 001</div>
+        <h1 class="glitch hero-title" data-text="ØRNIVAISE">ØRNIVAISE</h1>
+        <p class="tagline">SIGNAL FROM NØWHERE</p>
+        <div class="signal-meta">
+          <span>ИСТОЧНИК: НЕИЗВЕСТЕН</span>
+          <span>ЧАСТОТА: 144.00 HZ</span>
+          <span>СТАТУС: ПРИНИМАЕМ</span>
+        </div>
+        <div class="hero-actions">
+          <button class="cta" id="heroPlay" type="button">▶ СЛУШАТЬ SIGNAL 001</button>
+          <a class="cta ghost" href="#story">О ПРОЕКТЕ</a>
+        </div>
+      </div>
+      <div class="signal-strip"><span></span></div>
+    </section>
+
+    <section id="music" class="section release-section">
+      <div class="cover-wrap reveal">
+        <img src="assets/signal001-cover.png" alt="Обложка ØRNIVAISE — SIGNAL 001" class="cover-img" />
+      </div>
+      <div class="release-copy reveal">
+        <div class="eyebrow">ПЕРВЫЙ РЕЛИЗ</div>
+        <h2>SIGNAL 001</h2>
+        <p>Первый обнаруженный сигнал ØRNIVAISE: мрачный cosmic drift phonk с глубоким басом, холодными синтезаторами и ощущением движения через неизвестность.</p>
+
+        <div class="player" id="player">
+          <button id="playBtn" class="play-btn" type="button" aria-label="Воспроизвести">▶</button>
+          <div class="player-main">
+            <div class="player-top"><strong>SIGNAL 001</strong><span id="timeLabel">00:00 / 00:00</span></div>
+            <input id="seek" class="seek" type="range" min="0" max="100" value="0" step="0.01" aria-label="Позиция трека" />
+          </div>
+          <audio id="audio" preload="metadata" src="assets/signal001.mp3"></audio>
+        </div>
+
+        <div class="buttons">
+          <a class="cta disabled" href="#" data-platform="yandex">Яндекс Музыка · скоро</a>
+          <a class="cta ghost disabled" href="#" data-platform="vk">VK Музыка · скоро</a>
+        </div>
+
+        <div class="tracklist">
+          <div class="active"><span>01</span><b>SIGNAL 001</b><em>02:43</em></div>
+          <div><span>02</span><b>APØGEE</b><em>скоро</em></div>
+          <div><span>03</span><b>EVENT HØRIZON</b><em>скоро</em></div>
+          <div><span>04</span><b>LØST TRANSMISSION</b><em>скоро</em></div>
+          <div><span>05</span><b>SIGNAL 002</b><em>скоро</em></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="story" class="section story-section">
+      <div class="story-visual reveal">
+        <div class="avatar-orbit">
+          <img src="assets/avatar.png" alt="ØRNIVAISE" class="avatar-img" />
+        </div>
+      </div>
+      <div class="story-copy reveal">
+        <div class="eyebrow">ИСТОРИЯ ПРОЕКТА</div>
+        <h2>СИГНАЛ ИЗ НИОТКУДА</h2>
+        <p>ØRNIVAISE — тёмный электронный проект на границе drift phonk, atmospheric wave и cinematic electronic.</p>
+        <p>Каждый релиз — отдельная передача. Сигнал появляется, исчезает и возвращается уже другим. Мир проекта развивается вместе с музыкой.</p>
+        <blockquote>«Мы не знаем, откуда он приходит. Мы лишь принимаем.»</blockquote>
+      </div>
+    </section>
+
+    <section id="contact" class="section contact-section reveal">
+      <div>
+        <div class="eyebrow">ПРИСОЕДИНЯЙСЯ К ПЕРЕДАЧЕ</div>
+        <h2>Следи за новыми сигналами</h2>
+        <p>Когда появятся страницы проекта, сюда можно вставить реальные ссылки.</p>
+      </div>
+      <div class="socials">
+        <a href="#">VK</a><a href="#">Telegram</a><a href="#">YouTube</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>© ØRNIVAISE 2026</span>
+    <span class="footer-mark">ØN</span>
+    <span>SIGNAL FROM NØWHERE</span>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>
