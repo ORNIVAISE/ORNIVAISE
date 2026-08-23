@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#05070b" />
+  <title>ØRNIVAISE — SIGNAL FROM NØWHERE</title>
+  <meta name="description" content="ØRNIVAISE — официальный сайт проекта. SIGNAL 001." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="page-shell">
+    <section class="hero" id="home">
+      <img class="hero-img" src="hero-reference.png" alt="ØRNIVAISE" />
+      <div class="hero-hit hero-hit-logo" aria-hidden="true"></div>
+      <a class="hero-hit hero-hit-nav home" href="#home" aria-label="Главная"></a>
+      <a class="hero-hit hero-hit-nav music" href="#music" aria-label="Музыка"></a>
+      <a class="hero-hit hero-hit-nav story" href="#story" aria-label="История"></a>
+      <a class="hero-hit hero-hit-nav merch" href="#merch" aria-label="Мерч"></a>
+      <a class="hero-hit hero-hit-nav contact" href="#contact" aria-label="Контакты"></a>
+      <a class="hero-hit hero-hit-social vk" href="#" aria-label="VK"></a>
+      <a class="hero-hit hero-hit-social ig" href="#" aria-label="Instagram"></a>
+      <a class="hero-hit hero-hit-social tg" href="#" aria-label="Telegram"></a>
+      <a class="hero-hit hero-hit-social yt" href="#" aria-label="YouTube"></a>
+      <button class="hero-hit hero-hit-listen" id="heroListen" aria-label="Слушать сигнал"></button>
+    </section>
+
+    <section class="panel release" id="music">
+      <div class="release-cover-wrap">
+        <div class="vinyl"></div>
+        <img class="release-cover" src="cover.png" alt="ØRNIVAISE — SIGNAL 001" />
+      </div>
+      <div class="release-main">
+        <div class="release-copy">
+          <p class="eyebrow">ПОСЛЕДНИЙ РЕЛИЗ</p>
+          <h2>SIGNAL 001</h2>
+          <div class="meta">СИНГЛ • 2024</div>
+          <p class="release-text">Первый обнаруженный сигнал из неизвестного источника.<br>Начало передачи.</p>
+        </div>
+
+        <div class="player-box">
+          <button class="play-btn" id="playBtn" aria-label="Воспроизвести"><span id="playIcon">▶</span></button>
+          <span class="time" id="currentTime">00:00</span>
+          <div class="wave-track" id="waveTrack">
+            <div class="wave-graphic"></div>
+            <input id="seek" type="range" min="0" max="100" value="0" />
+          </div>
+          <span class="time" id="duration">02:43</span>
+          <button class="mute-btn" id="muteBtn" aria-label="Без звука">🔊</button>
+          <audio id="audio" preload="metadata">
+            <source src="signal001.mp3" type="audio/mpeg" />
+          </audio>
+        </div>
+
+        <div class="platforms">
+          <a href="#"><span class="dot spotify"></span><small>Слушать в</small><b>Spotify</b></a>
+          <a href="#"><span class="dot apple"></span><small>Слушать в</small><b>Apple Music</b></a>
+          <a href="#"><span class="dot yandex"></span><small>Слушать в</small><b>Яндекс Музыке</b></a>
+          <a href="#"><span class="dot vk"></span><small>Слушать в</small><b>VK Музыке</b></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel story-grid" id="story">
+      <div class="story-copy">
+        <p class="eyebrow">ИСТОРИЯ</p>
+        <h3>СИГНАЛ ИЗ НИОТКУДА</h3>
+        <p>Мы не знаем, откуда он приходит.</p>
+        <p>Мы лишь принимаем.</p>
+        <p>Каждый трек — это фрагмент передачи.<br>Собери их все. Узнай правду.</p>
+        <a href="#" class="ghost-btn">ЧИТАТЬ ДАЛЬШЕ <span>→</span></a>
+      </div>
+      <div class="story-image-wrap">
+        <img src="story-space.png" alt="История ØRNIVAISE" class="story-image" />
+      </div>
+      <div class="future-list">
+        <p class="eyebrow">БУДУЩИЕ ПЕРЕДАЧИ</p>
+        <div><span>002</span><b>APØGEE</b><em>--:--</em></div>
+        <div><span>003</span><b>EVENT HØRIZON</b><em>--:--</em></div>
+        <div><span>004</span><b>LØST TRANSMISSION</b><em>--:--</em></div>
+        <div><span>005</span><b>SIGNAL 002</b><em>--:--</em></div>
+        <a href="#music" class="ghost-btn transmissions">ВСЕ ПЕРЕДАЧИ <span>→</span></a>
+      </div>
+    </section>
+
+    <section class="panel subscribe" id="contact">
+      <div class="subscribe-copy">
+        <h4>ПОДПИШИСЬ НА ПЕРЕДАЧУ</h4>
+        <p>Новые сигналы скоро. Не пропусти.</p>
+      </div>
+      <form class="subscribe-form" onsubmit="return false;">
+        <input type="email" placeholder="Твой e-mail" />
+        <button type="submit">ПОДПИСАТЬСЯ <span>→</span></button>
+      </form>
+    </section>
+
+    <section class="card-row" id="merch">
+      <a class="mini-card" href="#" style="background-image:url('card-vk.png')"><b>VK</b><span>Паблик</span></a>
+      <a class="mini-card" href="#" style="background-image:url('card-tg.png')"><b>Telegram</b><span>Канал</span></a>
+      <a class="mini-card" href="#" style="background-image:url('card-yt.png')"><b>YouTube</b><span>Канал</span></a>
+      <a class="mini-card" href="#" style="background-image:url('card-merch.png')"><b>МЕРЧ</b><span>Скоро</span></a>
+    </section>
+
+    <footer class="footer">
+      <div class="footer-left">
+        <div class="brand-foot">ØRNIVAISE</div>
+        <div class="sub-foot">SIGNAL FROM NØWHERE</div>
+        <div class="foot-wave"></div>
+        <div class="copyright">© ØRNIVAISE 2024</div>
+      </div>
+      <div class="footer-center">ØN</div>
+      <div class="footer-right">
+        <a href="#contact">КОНТАКТЫ</a>
+        <a href="#">ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ</a>
+        <a href="#">УСЛОВИЯ ИСПОЛЬЗОВАНИЯ</a>
+      </div>
+    </footer>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
