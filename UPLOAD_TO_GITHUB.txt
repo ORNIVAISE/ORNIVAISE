@@ -1,0 +1,13 @@
+ВАЖНО: загрузите ВСЕ файлы из этой папки В КОРЕНЬ репозитория (рядом с index.html):
+index.html
+styles.css
+script.js
+cover.png
+avatar.png
+signal001.mp3
+
+Не загружайте ZIP как один файл.
+Не создавайте папку assets — в v3 все медиа лежат рядом с index.html, чтобы GitHub Pages точно находил их.
+
+После загрузки GitHub: Add file -> Upload files -> перетащить все 6 файлов -> Commit changes.
+Через 1–3 минуты обновите сайт Ctrl+F5.
