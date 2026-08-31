@@ -1,121 +1,1201 @@
 <!doctype html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#05070b" />
-  <title>ØRNIVAISE — SIGNAL FROM NØWHERE</title>
-  <meta name="description" content="ØRNIVAISE — официальный сайт проекта. SIGNAL 001." />
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#050608">
+  <meta name="referrer" content="no-referrer">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; style-src 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; script-src 'unsafe-inline'; connect-src 'none'; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'none'">
+  <title>ØRNIVAISE</title>
+  <meta name="description" content="ØRNIVAISE — музыка без привязки к одному жанру. SIGNAL 001, ECHO FROM NØWHERE, FRACTURED и AFTERIMAGE.">
+  <meta property="og:title" content="ØRNIVAISE">
+  <meta property="og:description" content="Музыка, которая меняется вместе с проектом.">
+  <meta property="og:image" content="https://ornivaise.ru/og-image.png">
+  <link rel="icon" href="favicon.png">
+  <style>
+:root{--bg:#050608;--panel:#0a0c10;--line:#252a31;--text:#f1f3f5;--muted:#929aa5;--soft:#c9cfd6;--accent:#dfe5ea}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif;letter-spacing:.02em;padding-bottom:104px}a{color:inherit;text-decoration:none}button,input{font:inherit}.site-header{position:fixed;z-index:40;left:0;right:0;top:0;height:68px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:0 28px;border-bottom:1px solid rgba(255,255,255,.08);background:rgba(5,6,8,.72);backdrop-filter:blur(14px)}.wordmark{font-size:18px;letter-spacing:.28em}.main-nav{display:flex;gap:30px;font-size:11px;letter-spacing:.14em}.main-nav a{color:#c9ced4}.main-nav em,.social-nav em{font-style:normal;color:#666f79;font-size:8px}.social-nav{justify-self:end;display:flex;gap:18px;font-size:10px;color:#b5bbc2}.social-nav span{opacity:.7}.menu-toggle{display:none;background:none;border:0;width:40px;height:40px}.menu-toggle span{display:block;height:1px;background:#fff;margin:7px 0}.hero{position:relative;min-height:720px;padding-top:68px;overflow:hidden;border-bottom:1px solid var(--line)}.hero-bg{position:absolute;inset:68px 0 0;background:url('og-image.png') center/cover no-repeat;transform:scale(1.04);animation:breath 16s ease-in-out infinite alternate}.hero-bg:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(4,5,7,.12),rgba(4,5,7,.58) 70%,#050608),radial-gradient(circle at 50% 42%,transparent 0 36%,rgba(4,5,7,.55) 85%)}.hero-noise{position:absolute;inset:68px 0 0;opacity:.08;pointer-events:none;background-image:repeating-radial-gradient(circle at 20% 30%,#fff 0 1px,transparent 1px 4px);mix-blend-mode:soft-light}.hero-copy{position:relative;z-index:2;text-align:center;padding-top:165px}.kicker,.section-label{font-size:10px;letter-spacing:.28em;color:#aeb5bd}.hero-copy h1{font-size:78px;letter-spacing:.08em;margin:12px 0}.hero-sub{font-size:12px;letter-spacing:.25em;color:#d4d8dd}.popular-card{position:absolute;z-index:3;left:50%;bottom:34px;transform:translateX(-50%);width:min(920px,calc(100% - 38px));min-height:112px;border:1px solid rgba(255,255,255,.15);background:rgba(7,9,12,.72);backdrop-filter:blur(18px);display:grid;grid-template-columns:82px 1fr auto 1.2fr auto auto;gap:18px;align-items:center;padding:14px 18px;border-radius:14px}.popular-cover img{width:72px;height:72px;object-fit:cover;border-radius:8px}.popular-info{display:flex;flex-direction:column;gap:4px}.popular-info strong{font-size:20px}.popular-info small{color:var(--muted)}.signal-btn{border:0;background:none;color:#fff;display:flex;align-items:center;gap:8px;cursor:pointer;font-size:10px;letter-spacing:.1em}.signal-btn svg{width:50px;height:50px;fill:none;stroke:#e7ebef;stroke-width:1.5}.signal-btn .play-shape,.signal-btn .pause-shape{fill:#e7ebef;stroke:none}.signal-btn .pause-shape{display:none}.signal-btn .slash{opacity:.35}.signal-btn.playing .play-shape{display:none}.signal-btn.playing .pause-shape{display:block}.popular-progress{height:28px;display:flex;align-items:center}.signal-line{width:100%;height:20px;background:repeating-linear-gradient(90deg,transparent 0 8px,rgba(255,255,255,.55) 8px 9px,transparent 9px 12px);clip-path:polygon(0 48%,5% 40%,9% 60%,13% 28%,16% 58%,20% 34%,24% 67%,28% 42%,32% 55%,36% 31%,40% 65%,44% 38%,48% 57%,52% 27%,56% 68%,60% 42%,64% 59%,68% 33%,72% 62%,76% 44%,80% 56%,84% 35%,88% 64%,92% 43%,96% 58%,100% 49%,100% 51%,96% 42%,92% 57%,88% 36%,84% 65%,80% 44%,76% 56%,72% 38%,68% 67%,64% 41%,60% 58%,56% 32%,52% 73%,48% 43%,44% 62%,40% 35%,36% 69%,32% 45%,28% 58%,24% 33%,20% 66%,16% 42%,13% 72%,9% 40%,5% 60%,0 52%)}.popular-time{font-size:10px;color:#b8bec6}.jump-link{font-size:10px;letter-spacing:.12em;color:#cdd2d8;white-space:nowrap}.section{max-width:1180px;margin:0 auto;padding:88px 28px;border-bottom:1px solid var(--line)}.section-head{max-width:680px;margin-bottom:38px}.section h2{font-size:46px;letter-spacing:.08em;margin:10px 0 12px}.section-head p,.news-section p{color:var(--muted);line-height:1.6}.release-card{display:grid;grid-template-columns:360px 1fr;min-height:360px;border:1px solid var(--line);margin-bottom:24px;background:linear-gradient(135deg,#0a0c10,#07090c);overflow:hidden;border-radius:14px}.release-card.reverse{grid-template-columns:1fr 360px}.release-card.reverse .release-art{order:2}.release-art{width:100%;height:100%;object-fit:cover}.release-body{padding:44px;display:flex;flex-direction:column;justify-content:center}.release-index{font-size:10px;letter-spacing:.18em;color:#8f98a2}.release-body h3{font-size:48px;letter-spacing:.08em;margin:16px 0 24px;line-height:1.05}.release-body p{max-width:580px;color:#b7bec6;line-height:1.6}.release-controls{margin-top:0;display:flex;gap:12px;align-items:center;flex-wrap:wrap}.signal-btn.compact{border:1px solid #343b43;border-radius:999px;padding:5px 13px 5px 6px}.signal-btn.compact svg{width:36px;height:36px}.service-status{border:1px solid #272d34;padding:10px 13px;border-radius:8px;color:#76808b;font-size:9px;letter-spacing:.1em}.story-section{display:grid;grid-template-columns:230px 1fr;gap:60px}.story-number{font-size:110px;letter-spacing:-.08em;color:#161b21;align-self:start}.story-copy{max-width:780px}.story-copy h2{line-height:1.08}.story-copy p{color:#b8bfc7;line-height:1.75;font-size:15px}.story-copy blockquote{margin:34px 0 0;padding:24px 0;border-top:1px solid #2b3138;border-bottom:1px solid #2b3138;font-size:24px;line-height:1.4;color:#f2f4f6}.news-section{text-align:center}.soon-pill{display:inline-flex;border:1px solid #313840;border-radius:999px;padding:10px 16px;font-size:10px;letter-spacing:.14em;color:#858e98;margin:10px}.vk-button{display:inline-flex;border:1px solid #d7dce2;padding:12px 18px;margin:10px;font-size:10px;letter-spacing:.12em}.global-player{position:fixed;z-index:50;left:14px;right:14px;bottom:12px;min-height:80px;border:1px solid #2a3037;background:rgba(7,9,12,.92);backdrop-filter:blur(18px);display:grid;grid-template-columns:58px 1fr auto auto auto 2fr auto;align-items:center;gap:12px;padding:10px 14px;border-radius:14px;box-shadow:0 16px 50px rgba(0,0,0,.45)}.global-player>img{width:56px;height:56px;object-fit:cover;border-radius:8px}.gp-meta{display:flex;flex-direction:column;gap:4px}.gp-meta small{font-size:8px;letter-spacing:.16em;color:#87919b}.gp-meta strong{font-size:13px}.icon-btn,.main-play,.volume-btn{background:none;border:0;color:#fff;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px}.icon-btn svg{width:30px;height:30px;fill:#dfe4e9;stroke:#dfe4e9;stroke-width:1.4}.icon-btn span,.main-play span,.volume-btn span{font-size:7px;letter-spacing:.1em;color:#919aa4}.main-play svg{width:44px;height:44px;fill:none;stroke:#e7ebef;stroke-width:1.5}.main-play .play-shape,.main-play .pause-shape{fill:#e7ebef;stroke:none}.main-play .pause-shape{display:none}.main-play.playing .play-shape{display:none}.main-play.playing .pause-shape{display:block}.gp-progress{display:grid;grid-template-columns:42px 1fr 42px;gap:8px;align-items:center;font-size:8px;color:#a9b0b8}.gp-progress input{width:100%;appearance:none;height:2px;background:#4c555e}.gp-progress input::-webkit-slider-thumb{appearance:none;width:10px;height:10px;border-radius:50%;background:#fff}.volume-btn svg{width:34px;height:34px;fill:none;stroke:#dfe4e9;stroke-width:1.7}.volume-btn .mute-slash{display:none}.volume-btn.muted .waves{display:none}.volume-btn.muted .mute-slash{display:block}footer{min-height:130px;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:28px;max-width:1180px;margin:0 auto;color:#a5adb5}footer>div:first-child{display:flex;flex-direction:column;gap:8px}footer strong{letter-spacing:.22em;color:#e7eaed}.footer-links{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:18px;font-size:9px;letter-spacing:.1em}@keyframes breath{from{transform:scale(1.04)}to{transform:scale(1.095)}}
+@media(max-width:900px){body{padding-bottom:128px}.site-header{grid-template-columns:1fr auto;height:60px;padding:0 16px}.main-nav{position:absolute;top:60px;left:0;right:0;display:none;flex-direction:column;background:#07090c;padding:20px;border-bottom:1px solid #252b31}.main-nav.open{display:flex}.social-nav{display:none}.menu-toggle{display:block}.hero{min-height:660px;padding-top:60px}.hero-bg,.hero-noise{inset:60px 0 0}.hero-copy{padding-top:150px}.hero-copy h1{font-size:48px}.hero-sub{font-size:9px}.popular-card{grid-template-columns:64px 1fr auto;bottom:18px}.popular-progress,.popular-time,.jump-link{display:none}.popular-cover img{width:58px;height:58px}.section{padding:64px 18px}.release-card,.release-card.reverse{grid-template-columns:1fr}.release-card.reverse .release-art{order:0}.release-art{aspect-ratio:1/1;height:auto}.release-body{padding:28px}.release-body h3{font-size:30px}.story-section{grid-template-columns:1fr}.story-number{display:none}.global-player{grid-template-columns:48px 1fr auto auto auto;bottom:8px}.global-player>img{width:46px;height:46px}.gp-progress{grid-column:1/-1;order:2}.volume-btn{display:none}.icon-btn span,.main-play span{display:none}.footer-links{flex-direction:column}footer{align-items:flex-start;flex-direction:column}}
+@media(max-width:520px){.hero{min-height:590px}.hero-copy{padding:120px 14px 0}.hero-copy h1{font-size:36px}.popular-card{width:calc(100% - 18px);padding:10px;gap:9px}.signal-btn span{display:none}.section h2{font-size:32px}.story-copy blockquote{font-size:20px}.footer-links{font-size:8px}}
+
+
+/* v10.1 — cinematic hero motion */
+.hero-bg{
+  --mx:0px;
+  --my:0px;
+  --zoom:1.045;
+  transform:translate3d(var(--mx),var(--my),0) scale(var(--zoom));
+  will-change:transform,filter;
+  animation:heroCinematicZoom 22s ease-in-out infinite alternate;
+}
+.hero-glow{position:absolute;inset:68px 0 0;pointer-events:none;z-index:1;
+  background:radial-gradient(circle at 50% 43%,rgba(235,241,246,.16) 0%,rgba(205,216,226,.07) 11%,rgba(255,255,255,0) 35%);
+  mix-blend-mode:screen;opacity:.38;filter:blur(10px);animation:heroGlowBreath 7.5s ease-in-out infinite alternate;will-change:opacity,transform}
+.hero-particles{position:absolute;inset:68px 0 0;z-index:1;overflow:hidden;pointer-events:none}
+.hero-particles i{position:absolute;width:1px;height:1px;border-radius:50%;background:#fff;opacity:.16;box-shadow:0 0 6px rgba(255,255,255,.28);animation:particleDrift var(--dur,18s) linear infinite;animation-delay:var(--delay,0s)}
+.hero-copy,.popular-card{z-index:4}
+.hero-noise{z-index:2}
+.hero-wave{transition:opacity .3s ease,filter .3s ease}
+.hero-wave.is-playing{animation:wavePulse .72s ease-in-out infinite alternate;filter:drop-shadow(0 0 4px rgba(255,255,255,.18))}
+
+@keyframes heroCinematicZoom{
+  0%{transform:translate3d(var(--mx),var(--my),0) scale(1.045);filter:saturate(.94) contrast(1.02) brightness(.98)}
+  100%{transform:translate3d(var(--mx),var(--my),0) scale(1.095);filter:saturate(.98) contrast(1.05) brightness(1.02)}
+}
+@keyframes heroGlowBreath{
+  0%{opacity:.23;transform:scale(.98)}
+  100%{opacity:.48;transform:scale(1.04)}
+}
+@keyframes particleDrift{
+  0%{transform:translate3d(0,16px,0);opacity:0}
+  12%{opacity:.18}
+  75%{opacity:.10}
+  100%{transform:translate3d(var(--dx,24px),-90px,0);opacity:0}
+}
+@keyframes wavePulse{
+  from{opacity:.46;transform:scaleY(.74)}
+  to{opacity:.95;transform:scaleY(1.12)}
+}
+
+@media (prefers-reduced-motion: reduce){
+  .hero-bg,.hero-glow,.hero-particles i,.hero-wave.is-playing{animation:none!important}
+  .hero-bg{transform:scale(1.045)!important}
+}
+@media(max-width:900px){
+  .hero-glow,.hero-particles{inset:60px 0 0}
+  .hero-bg{animation-duration:30s}
+  .hero-glow{opacity:.22;animation-duration:10s}
+  .hero-particles i:nth-child(n+10){display:none}
+}
+@media(max-width:520px){
+  .hero-bg{animation:heroMobileZoom 32s ease-in-out infinite alternate}
+  .hero-glow{opacity:.16;filter:blur(14px)}
+  .hero-particles i:nth-child(n+7){display:none}
+}
+@keyframes heroMobileZoom{
+  from{transform:scale(1.035);filter:brightness(.98)}
+  to{transform:scale(1.065);filter:brightness(1.01)}
+}
+
+/* v11.1 — clean hero + hidden ØN easter egg */
+.hero-copy-accessible{
+  position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;
+  overflow:hidden!important;clip:rect(0 0 0 0)!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important;
+}
+.hero-bg{background-position:center center}
+.easter-hotspot{
+  position:absolute;z-index:6;left:50%;top:29.5%;transform:translate(-50%,-50%);
+  width:116px;height:38px;border:0;background:transparent;cursor:default;padding:0;
+}
+.easter-hotspot.arm{cursor:pointer}
+.easter-hotspot.pulse:after{content:"";position:absolute;inset:7px 20px;border:1px solid rgba(255,255,255,.28);border-radius:999px;animation:easterHint .5s ease}
+.easter-overlay{position:fixed;z-index:100;inset:0;display:grid;place-items:center;background:rgba(2,3,5,.94);backdrop-filter:blur(18px);opacity:0;visibility:hidden;transition:opacity .35s ease,visibility .35s ease}
+.easter-overlay.open{opacity:1;visibility:visible}
+.easter-grid{position:absolute;inset:0;opacity:.12;background-image:linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px);background-size:42px 42px;mask-image:radial-gradient(circle at center,#000 0 35%,transparent 72%)}
+.easter-panel{position:relative;width:min(620px,calc(100% - 32px));padding:52px 36px;text-align:center;border:1px solid rgba(255,255,255,.16);background:radial-gradient(circle at 50% 30%,rgba(255,255,255,.045),transparent 45%),#050608;box-shadow:0 30px 100px rgba(0,0,0,.65)}
+.easter-code{font-size:10px;letter-spacing:.34em;color:#8e98a2}.easter-panel h2{margin:18px 0 28px;font-size:32px;letter-spacing:.16em;font-weight:500}.easter-panel p{font-size:9px;letter-spacing:.28em;color:#7f8993;margin:22px 0 30px}.easter-wave{height:46px;background:repeating-linear-gradient(90deg,transparent 0 7px,rgba(255,255,255,.7) 7px 8px,transparent 8px 11px);clip-path:polygon(0 49%,4% 40%,8% 56%,12% 20%,16% 62%,20% 30%,24% 72%,28% 39%,32% 58%,36% 25%,40% 70%,44% 36%,48% 61%,52% 18%,56% 76%,60% 40%,64% 63%,68% 29%,72% 71%,76% 42%,80% 59%,84% 31%,88% 66%,92% 39%,96% 57%,100% 49%,100% 51%,96% 43%,92% 61%,88% 34%,84% 69%,80% 41%,76% 58%,72% 29%,68% 71%,64% 37%,60% 60%,56% 24%,52% 82%,48% 39%,44% 64%,40% 30%,36% 75%,32% 42%,28% 61%,24% 28%,20% 70%,16% 38%,12% 80%,8% 44%,4% 60%,0 51%);animation:easterWave 1s ease-in-out infinite alternate}
+.easter-close{border:1px solid #313840;background:transparent;color:#dce1e6;padding:11px 18px;font-size:9px;letter-spacing:.18em;cursor:pointer}
+body.easter-open{overflow:hidden}
+@keyframes easterWave{from{opacity:.32;transform:scaleY(.68)}to{opacity:.9;transform:scaleY(1.08)}}
+@keyframes easterHint{from{opacity:0;transform:scale(.8)}to{opacity:1;transform:scale(1.05)}}
+@media(max-width:900px){.easter-hotspot{top:30%;width:100px;height:34px}.easter-panel{padding:42px 24px}.easter-panel h2{font-size:23px}}
+@media(max-width:520px){.easter-hotspot{top:28.5%;width:90px;height:32px}.easter-panel h2{font-size:19px;line-height:1.45}.easter-wave{height:36px}}
+
+/* v11.2 — horizontal playback indicator 5.4 */
+body{padding-bottom:118px}
+.global-player.player-54{
+  min-height:92px;
+  grid-template-columns:minmax(230px,1.05fr) minmax(280px,2fr) auto minmax(170px,.75fr);
+  gap:22px;
+  padding:12px 20px;
+  border:1px solid rgba(171,151,255,.22);
+  border-radius:13px;
+  background:linear-gradient(180deg,rgba(10,11,15,.95),rgba(5,6,9,.94));
+  box-shadow:0 14px 50px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.035);
+  overflow:hidden;
+}
+.global-player.player-54:before{
+  content:"";position:absolute;left:18px;right:18px;top:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(175,145,255,.72) 9%,rgba(255,255,255,.14) 28%,transparent 48%);
+  opacity:.72;pointer-events:none
+}
+.gp-track{display:grid;grid-template-columns:62px minmax(0,1fr);align-items:center;gap:14px;min-width:0;padding-right:18px;border-right:1px solid rgba(255,255,255,.08)}
+.global-player.player-54 .gp-track>img{width:60px;height:60px;object-fit:cover;border-radius:8px;border:1px solid rgba(184,161,255,.22);box-shadow:0 0 20px rgba(153,116,255,.08)}
+.player-54 .gp-meta{min-width:0}.player-54 .gp-meta small{font-size:7px;letter-spacing:.19em;color:#7e8791}.player-54 .gp-meta strong{font-size:15px;letter-spacing:.09em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.player-54 .gp-meta span{font-size:8px;letter-spacing:.18em;color:#767e88}
+.gp-timeline{position:relative;min-width:0;padding:5px 0 0}
+.gp-time-row{display:flex;justify-content:space-between;font-size:9px;letter-spacing:.08em;color:#c2c7ce;margin-bottom:7px}
+.gp-wave-track{position:absolute;left:0;right:0;top:34px;height:18px;overflow:hidden;pointer-events:none;opacity:.7}
+.gp-wave-track:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 6px,rgba(229,225,242,.38) 6px 7px,transparent 7px 9px);clip-path:polygon(0 49%,4% 44%,8% 57%,12% 32%,16% 65%,20% 38%,24% 73%,28% 29%,32% 62%,36% 44%,40% 69%,44% 31%,48% 59%,52% 42%,56% 76%,60% 37%,64% 66%,68% 45%,72% 61%,76% 34%,80% 72%,84% 40%,88% 58%,92% 46%,96% 64%,100% 49%,100% 51%,96% 36%,92% 54%,88% 42%,84% 60%,80% 28%,76% 66%,72% 39%,68% 55%,64% 34%,60% 63%,56% 24%,52% 58%,48% 41%,44% 69%,40% 31%,36% 56%,32% 38%,28% 71%,24% 27%,20% 62%,16% 35%,12% 68%,8% 43%,4% 56%,0 51%)}
+.gp-wave-track span{position:absolute;left:0;top:0;bottom:0;width:0;background:linear-gradient(90deg,rgba(139,102,231,.16),rgba(196,168,255,.36));filter:drop-shadow(0 0 5px rgba(168,130,255,.42))}
+.gp-wave-track i{position:absolute;width:1px;top:1px;bottom:1px;left:0;background:#d8c7ff;box-shadow:0 0 10px #b990ff;opacity:.9}
+.gp-seek{position:relative;z-index:2;width:100%;appearance:none;height:34px;margin:4px 0 0;background:transparent;cursor:pointer}
+.gp-seek::-webkit-slider-runnable-track{height:2px;background:linear-gradient(90deg,rgba(177,142,255,.92) 0 var(--seek,0%),#40444b var(--seek,0%) 100%);border-radius:99px}
+.gp-seek::-webkit-slider-thumb{appearance:none;width:13px;height:13px;margin-top:-5.5px;border-radius:50%;background:#0a0b0f;border:2px solid #c6adff;box-shadow:0 0 0 4px rgba(174,137,255,.08),0 0 13px rgba(174,137,255,.55)}
+.gp-seek::-moz-range-track{height:2px;background:#40444b}.gp-seek::-moz-range-progress{height:2px;background:#b48cff}.gp-seek::-moz-range-thumb{width:11px;height:11px;border-radius:50%;background:#0a0b0f;border:2px solid #c6adff}
+.gp-actions{display:flex;align-items:center;gap:7px;padding:0 4px;white-space:nowrap}
+.player-tool{width:34px;height:34px;padding:0;border:0;background:transparent;color:#b8bec6;display:grid;place-items:center;cursor:pointer;border-radius:8px;transition:.2s ease}
+.player-tool svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}.player-tool:hover,.player-tool.active{color:#e8dcff;background:rgba(171,132,255,.08)}
+.player-54 .main-play{width:50px;height:50px;display:grid;place-items:center;position:relative;padding:0}.player-54 .main-play svg{width:48px;height:48px;filter:drop-shadow(0 0 9px rgba(164,126,255,.13))}.player-54 .main-play span{position:absolute;opacity:0;pointer-events:none}.player-54 .main-play svg circle{stroke:#817492}.player-54 .main-play:hover svg circle{stroke:#c7b1ff}
+.gp-volume{display:grid;grid-template-columns:36px minmax(80px,1fr) 38px;align-items:center;gap:8px;padding-left:18px;border-left:1px solid rgba(255,255,255,.08)}
+.player-54 .volume-btn{width:34px;height:34px;padding:0;display:grid;place-items:center}.player-54 .volume-btn svg{width:28px;height:28px}.player-54 .volume-btn span{display:none}
+.gp-volume input{width:100%;appearance:none;height:22px;background:transparent;cursor:pointer}.gp-volume input::-webkit-slider-runnable-track{height:3px;border-radius:99px;background:linear-gradient(90deg,#aa7dff 0 var(--vol,78%),#353943 var(--vol,78%) 100%)}.gp-volume input::-webkit-slider-thumb{appearance:none;width:11px;height:11px;margin-top:-4px;border-radius:50%;background:#0a0b0f;border:2px solid #c4a9ff;box-shadow:0 0 9px rgba(173,132,255,.42)}.gp-volume input::-moz-range-track{height:3px;background:#353943}.gp-volume input::-moz-range-progress{height:3px;background:#aa7dff}.gp-volume input::-moz-range-thumb{width:9px;height:9px;border-radius:50%;background:#0a0b0f;border:2px solid #c4a9ff}
+#volumeValue{font-size:9px;color:#b8a2ea;letter-spacing:.06em;text-align:right}
+@media(max-width:980px){body{padding-bottom:150px}.global-player.player-54{grid-template-columns:minmax(190px,1fr) minmax(240px,1.8fr) auto;gap:14px}.gp-volume{grid-column:2/4;border-left:0;padding-left:0;margin-top:-6px}.gp-actions{grid-row:1/3;grid-column:3}.gp-track{grid-row:1/3}.gp-timeline{align-self:end}}
+@media(max-width:700px){body{padding-bottom:178px}.global-player.player-54{left:8px;right:8px;bottom:8px;grid-template-columns:1fr auto;gap:8px 12px;padding:9px 11px}.gp-track{grid-column:1;border-right:0;padding-right:0;grid-template-columns:48px minmax(0,1fr)}.global-player.player-54 .gp-track>img{width:46px;height:46px}.player-54 .gp-meta small{display:none}.player-54 .gp-meta strong{font-size:12px}.gp-actions{grid-column:2;grid-row:1;gap:2px}.player-tool{display:none}.gp-actions #prevBtn,.gp-actions #nextBtn{display:grid;width:30px;height:30px}.player-54 .main-play{width:42px;height:42px}.player-54 .main-play svg{width:41px;height:41px}.gp-timeline{grid-column:1/-1;grid-row:2;padding-top:0}.gp-time-row{font-size:8px;margin-bottom:0}.gp-wave-track{top:26px;height:13px}.gp-seek{height:27px;margin:0}.gp-volume{grid-column:1/-1;grid-row:3;margin:0;padding:0;border:0;grid-template-columns:30px 1fr 36px}.player-54 .volume-btn{display:grid}.player-54 .volume-btn svg{width:24px;height:24px}}
+
+/* v11.5 PREVIEW — new cinematic hero + approved dark newsletter CTA */
+.hero{
+  min-height: min(860px, 82vw);
+  background:#020305;
+}
+.hero-bg{
+  background-image:
+    linear-gradient(to bottom, rgba(0,0,0,.05) 0%, rgba(0,0,0,.03) 58%, rgba(0,0,0,.35) 100%),
+    url("og-image.png") !important;
+  background-size: cover !important;
+  background-position: center center !important;
+  filter:none !important;
+}
+/* The preview artwork already contains the wordmark and tagline.
+   Hide the HTML copy to prevent duplicated ØRNIVAISE text. */
+.hero-copy{
+  display:none !important;
+}
+.hero-glow{
+  opacity:.16 !important;
+  background:radial-gradient(circle at 50% 38%,rgba(255,255,255,.14),transparent 34%) !important;
+}
+.hero-noise{opacity:.11 !important}
+
+/* Keep the real interactive popular-track card available without competing with the artwork. */
+.popular-card{
+  background:rgba(4,5,7,.78) !important;
+  backdrop-filter:blur(15px);
+  border-color:rgba(255,255,255,.13) !important;
+}
+
+/* Newsletter CTA approved dark treatment */
+.newsletter-row{
+  background:#050608 !important;
+  border-color:#343b44 !important;
+}
+.newsletter-row button{
+  background:#07090c !important;
+  color:#cfd4da !important;
+  border-left:1px solid #343b44 !important;
+  font-weight:500 !important;
+}
+.newsletter-row button:hover{
+  background:#0d1014 !important;
+  color:#fff !important;
+  border-color:#69727c !important;
+}
+.newsletter-row input{
+  background:#050608 !important;
+}
+
+@media(max-width:900px){
+  .hero{
+    min-height:620px;
+  }
+  .hero-bg{
+    background-size:cover !important;
+    background-position:center center !important;
+  }
+}
+@media(max-width:620px){
+  .newsletter-row button{
+    border-left:0 !important;
+    border-top:1px solid #343b44 !important;
+  }
+}
+
+
+/* v11.5 PREVIEW — hero zoom-out adjustment */
+.hero{
+  overflow:hidden;
+  background:#020305 !important;
+}
+.hero-bg{
+  background-size: 88% auto !important;
+  background-repeat:no-repeat !important;
+  background-position:center center !important;
+  transform:none !important;
+}
+@media (max-width:900px){
+  .hero-bg{
+    background-size:auto 82% !important;
+    background-position:center center !important;
+  }
+}
+@media (max-width:620px){
+  .hero-bg{
+    background-size:auto 72% !important;
+    background-position:center 46% !important;
+  }
+}
+
+
+/* v11.6 PREVIEW — hero displayed like the source artwork, without crop */
+.hero{
+  position:relative !important;
+  min-height:0 !important;
+  height:auto !important;
+  aspect-ratio: 16 / 9 !important;
+  background:#000 !important;
+  overflow:hidden !important;
+}
+.hero-bg{
+  position:absolute !important;
+  inset:0 !important;
+  background-image:url("og-image.png") !important;
+  background-size:contain !important;
+  background-repeat:no-repeat !important;
+  background-position:center center !important;
+  transform:none !important;
+  filter:none !important;
+}
+.hero-copy{
+  display:none !important;
+}
+.hero-glow{
+  display:none !important;
+}
+@media(max-width:900px){
+  .hero{
+    aspect-ratio:16 / 9 !important;
+    min-height:0 !important;
+  }
+  .hero-bg{
+    background-size:contain !important;
+    background-position:center center !important;
+  }
+}
+@media(max-width:620px){
+  .hero{
+    aspect-ratio:16 / 9 !important;
+  }
+  .hero-bg{
+    background-size:contain !important;
+    background-position:center center !important;
+  }
+}
+
+
+/* v11.7 PREVIEW — approved clean hero + depth particles */
+.hero{
+  position:relative !important;
+  min-height:0 !important;
+  aspect-ratio:16 / 9 !important;
+  background:#000 !important;
+  overflow:hidden !important;
+}
+.hero-bg{
+  position:absolute !important;
+  inset:0 !important;
+  background-image:url("og-image.png") !important;
+  background-size:cover !important;
+  background-position:center center !important;
+  transform:translate3d(var(--mx,0),var(--my,0),0) scale(1.015) !important;
+  filter:none !important;
+  animation:heroSlowBreath 24s ease-in-out infinite alternate !important;
+}
+.hero-bg::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:radial-gradient(circle at 50% 45%,transparent 0 50%,rgba(0,0,0,.18) 100%);
+}
+.hero-copy,.hero-glow{display:none !important}
+.hero-noise{opacity:.035 !important;inset:0 !important}
+
+/* three depth layers of tiny particles */
+.hero-particles{
+  position:absolute !important;
+  inset:0 !important;
+  z-index:2 !important;
+  overflow:hidden !important;
+  pointer-events:none !important;
+}
+.hero-particles i{
+  position:absolute;
+  border-radius:50%;
+  background:rgba(255,255,255,.9);
+  opacity:var(--op,.22);
+  box-shadow:0 0 var(--blur,5px) rgba(255,255,255,.42);
+  animation:spaceDrift var(--dur,24s) linear infinite;
+  animation-delay:var(--delay,0s);
+  will-change:transform,opacity;
+}
+@keyframes spaceDrift{
+  0%{
+    transform:translate3d(0,18px,0) scale(var(--scale,.7));
+    opacity:0;
+  }
+  12%{opacity:var(--op,.22)}
+  88%{opacity:var(--op,.22)}
+  100%{
+    transform:translate3d(var(--dx,35px),-70px,0) scale(calc(var(--scale,.7) * 1.08));
+    opacity:0;
+  }
+}
+@keyframes heroSlowBreath{
+  from{filter:brightness(.96); transform:translate3d(var(--mx,0),var(--my,0),0) scale(1.012)}
+  to{filter:brightness(1.04); transform:translate3d(var(--mx,0),var(--my,0),0) scale(1.025)}
+}
+
+@media(max-width:900px){
+  .hero{aspect-ratio:16 / 9 !important;min-height:0 !important}
+  .hero-bg{background-size:cover !important;background-position:center !important}
+}
+@media(max-width:620px){
+  .hero{
+    aspect-ratio:auto !important;
+    height:520px !important;
+  }
+  .hero-bg{
+    background-size:auto 100% !important;
+    background-position:center center !important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .hero-bg,.hero-particles i{animation:none !important}
+  .hero-particles{display:none !important}
+}
+
+
+/* v11.8 PREVIEW — stronger, more noticeable hero motion */
+.hero-bg{
+  animation:heroStrongBreath 16s ease-in-out infinite alternate !important;
+  transform:translate3d(var(--mx,0),var(--my,0),0) scale(1.025) !important;
+}
+@keyframes heroStrongBreath{
+  0%{
+    filter:brightness(.93) contrast(1.02);
+    transform:translate3d(calc(var(--mx,0) * .65),calc(var(--my,0) * .65),0) scale(1.018);
+  }
+  50%{
+    filter:brightness(1.035) contrast(1.05);
+  }
+  100%{
+    filter:brightness(1.08) contrast(1.07);
+    transform:translate3d(calc(var(--mx,0) * 1.2),calc(var(--my,0) * 1.2),0) scale(1.045);
+  }
+}
+
+.hero-particles i{
+  animation-name:spaceDriftStrong !important;
+}
+@keyframes spaceDriftStrong{
+  0%{
+    transform:translate3d(calc(var(--dx,50px) * -.35),85px,0) scale(var(--scale,.8));
+    opacity:0;
+  }
+  8%{opacity:var(--op,.3)}
+  82%{opacity:var(--op,.3)}
+  100%{
+    transform:translate3d(var(--dx,70px),-165px,0) scale(calc(var(--scale,.8) * 1.18));
+    opacity:0;
+  }
+}
+
+/* rare foreground particles, clearly visible */
+.hero-particles i.foreground{
+  width:3.6px !important;
+  height:3.6px !important;
+  opacity:.48 !important;
+  filter:blur(.15px);
+  box-shadow:0 0 12px rgba(255,255,255,.65),0 0 26px rgba(255,255,255,.20);
+}
+
+/* soft traveling light sweep to make the scene feel alive */
+.hero::after{
+  content:"";
+  position:absolute;
+  z-index:2;
+  inset:-20% -40%;
+  pointer-events:none;
+  background:
+    linear-gradient(108deg,
+      transparent 38%,
+      rgba(255,255,255,.015) 46%,
+      rgba(255,255,255,.07) 50%,
+      rgba(255,255,255,.018) 54%,
+      transparent 62%);
+  transform:translateX(-40%);
+  animation:heroLightSweep 14s ease-in-out infinite;
+  mix-blend-mode:screen;
+}
+@keyframes heroLightSweep{
+  0%,18%{transform:translateX(-42%);opacity:0}
+  34%{opacity:.65}
+  63%{opacity:.42}
+  82%,100%{transform:translateX(42%);opacity:0}
+}
+
+@media(max-width:620px){
+  .hero::after{opacity:.42}
+}
+@media(prefers-reduced-motion:reduce){
+  .hero::after{display:none !important}
+}
+
+
+/* v11.9 — clean VK link in newsletter */
+.news-social a,
+.news-social .vk-link{
+  border:0 !important;
+  outline:0 !important;
+  background:transparent !important;
+  padding:0 !important;
+  min-width:0 !important;
+  height:auto !important;
+  box-shadow:none !important;
+  color:#737d88 !important;
+  text-decoration:none !important;
+  transition:color .25s ease, opacity .25s ease !important;
+}
+.news-social a:hover,
+.news-social .vk-link:hover{
+  color:#f2f4f6 !important;
+  background:transparent !important;
+}
+
+
+/* v11.10 FIX — actual newsletter VK element is .vk-button */
+.news-alt .vk-button{
+  display:inline !important;
+  width:auto !important;
+  min-width:0 !important;
+  height:auto !important;
+  padding:0 !important;
+  margin:0 !important;
+  border:none !important;
+  outline:none !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  color:#737d88 !important;
+  line-height:inherit !important;
+  text-decoration:none !important;
+  transition:color .25s ease !important;
+}
+.news-alt .vk-button:hover,
+.news-alt .vk-button:focus{
+  border:none !important;
+  outline:none !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  color:#f2f4f6 !important;
+}
+
+
+/* =========================================================
+   ØRNIVAISE v11.11 EXPERIMENTAL
+   Real audio-reactive hero + live player visualizer
+   ========================================================= */
+
+/* Per-release accent is deliberately subtle: the site stays black/graphite. */
+body[data-track-theme="signal001"]{
+  --track-accent: 226,232,238;
+  --track-accent-soft: 173,187,199;
+}
+body[data-track-theme="echo"]{
+  --track-accent: 185,206,222;
+  --track-accent-soft: 120,151,176;
+}
+body[data-track-theme="fractured"]{
+  --track-accent: 230,230,226;
+  --track-accent-soft: 160,160,154;
+}
+body[data-track-theme="afterimage"]{
+  --track-accent: 210,148,103;
+  --track-accent-soft: 146,91,58;
+}
+
+/* Hero receives live values from JS:
+   --audio-energy 0..1, --audio-bass 0..1, --audio-high 0..1 */
+.hero{
+  --audio-energy:0;
+  --audio-bass:0;
+  --audio-high:0;
+}
+.hero-bg{
+  transition:filter .22s linear !important;
+  filter:
+    brightness(calc(.96 + var(--audio-energy) * .12))
+    contrast(calc(1.02 + var(--audio-bass) * .08))
+    saturate(calc(.92 + var(--audio-high) * .12)) !important;
+}
+.hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:2;
+  pointer-events:none;
+  opacity:calc(.035 + var(--audio-energy) * .16);
+  background:
+    radial-gradient(circle at 50% 46%,
+      rgba(var(--track-accent),calc(.02 + var(--audio-bass) * .12)) 0%,
+      rgba(var(--track-accent),calc(.008 + var(--audio-energy) * .05)) 30%,
+      transparent 62%);
+  mix-blend-mode:screen;
+  transition:opacity .16s linear;
+}
+
+/* Existing particles become music-reactive without changing their flight path. */
+.hero-particles{
+  opacity:calc(.72 + var(--audio-high) * .28);
+  filter:brightness(calc(1 + var(--audio-energy) * .45));
+}
+.hero-particles i{
+  box-shadow:
+    0 0 calc(4px + var(--audio-high) * 9px)
+    rgba(var(--track-accent),calc(.18 + var(--audio-high) * .34)) !important;
+}
+
+/* A subtle ring pulse around the hero center on bass hits. */
+.hero-audio-ring{
+  position:absolute;
+  z-index:3;
+  left:50%;
+  top:48%;
+  width:38%;
+  aspect-ratio:1/1;
+  transform:translate(-50%,-50%) scale(calc(.985 + var(--audio-bass) * .045));
+  border-radius:50%;
+  border:1px solid rgba(var(--track-accent),calc(.015 + var(--audio-bass) * .13));
+  box-shadow:
+    0 0 calc(8px + var(--audio-bass) * 34px)
+    rgba(var(--track-accent),calc(.01 + var(--audio-bass) * .075));
+  pointer-events:none;
+  opacity:calc(.25 + var(--audio-bass) * .75);
+  transition:border-color .09s linear, box-shadow .09s linear;
+}
+
+/* Live audio visualizer replaces the purely decorative waveform visually.
+   The old progress fill and playhead remain usable on top. */
+.gp-wave-track{
+  isolation:isolate;
+}
+.gp-live-viz{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:block;
+  z-index:0;
+  opacity:.92;
+}
+.gp-wave-track:before{
+  opacity:.15 !important;
+  z-index:0;
+}
+.gp-wave-track span{
+  z-index:2;
+  mix-blend-mode:screen;
+  background:linear-gradient(
+    90deg,
+    rgba(var(--track-accent-soft),.10),
+    rgba(var(--track-accent),.36)
+  ) !important;
+}
+.gp-wave-track i{
+  z-index:3;
+  background:rgba(var(--track-accent),.95) !important;
+  box-shadow:0 0 10px rgba(var(--track-accent),.72) !important;
+}
+
+/* Tiny active indicator near "СЕЙЧАС ИГРАЕТ". */
+.player-54 .gp-meta small::before{
+  content:"";
+  display:inline-block;
+  width:5px;
+  height:5px;
+  margin-right:7px;
+  border-radius:50%;
+  vertical-align:1px;
+  background:rgba(var(--track-accent),.35);
+  box-shadow:0 0 0 rgba(var(--track-accent),0);
+  transition:.2s ease;
+}
+body.audio-is-playing .player-54 .gp-meta small::before{
+  background:rgba(var(--track-accent),.95);
+  box-shadow:0 0 10px rgba(var(--track-accent),.55);
+  animation:ornPlayingDot .8s ease-in-out infinite alternate;
+}
+@keyframes ornPlayingDot{
+  from{transform:scale(.8);opacity:.48}
+  to{transform:scale(1.25);opacity:1}
+}
+
+@media(max-width:700px){
+  .hero-audio-ring{width:64%;top:44%}
+}
+@media(prefers-reduced-motion:reduce){
+  .hero-audio-ring{display:none!important}
+  body.audio-is-playing .player-54 .gp-meta small::before{animation:none!important}
+}
+
+</style>
+
+<style id="scroll-experiment-v12">
+html{scroll-behavior:smooth} body{overflow-x:hidden}
+:root{--scroll-p:0}
+body:before{content:"";position:fixed;right:0;top:0;width:2px;height:calc(var(--scroll-p)*1%);background:rgba(230,238,255,.78);box-shadow:0 0 14px rgba(210,225,255,.45);z-index:9999;pointer-events:none}
+.hero{overflow:hidden;perspective:1200px}.hero-bg{will-change:transform,filter}.hero-copy{will-change:transform,opacity;transform-origin:center center}
+section:not(.hero),.popular-card,.release-card,.story-copy,.newsletter-wrap{transition:opacity .85s cubic-bezier(.2,.8,.2,1),transform .85s cubic-bezier(.2,.8,.2,1),filter .85s ease}
+.scroll-reveal{opacity:.16;transform:translateY(42px) scale(.985);filter:blur(7px)}.scroll-reveal.is-visible{opacity:1;transform:none;filter:none}
+.release-card{transition:opacity .55s ease,transform .55s cubic-bezier(.2,.8,.2,1),filter .55s ease,box-shadow .55s ease}.release-card.release-focus{transform:translateY(-8px) scale(1.025);filter:brightness(1.08);box-shadow:0 28px 80px rgba(0,0,0,.48)}.release-card.release-dim{opacity:.58;filter:brightness(.62) saturate(.72)}
+.signal-flash{position:fixed;inset:0;z-index:9998;pointer-events:none;opacity:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.05) 0 1px,transparent 1px 5px);mix-blend-mode:screen}.signal-flash.fire{animation:signalFlash .22s steps(2,end)}
+@keyframes signalFlash{0%{opacity:0}25%{opacity:.22;transform:translateX(0)}45%{opacity:.08;transform:translateX(7px)}70%{opacity:.16;transform:translateX(-4px)}100%{opacity:0}}
+.decrypt-ready{position:relative}.decrypt-ready[data-decrypting="1"]{letter-spacing:.06em;text-shadow:2px 0 rgba(255,255,255,.16),-2px 0 rgba(255,255,255,.08)}
+@media(max-width:760px){.scroll-reveal{transform:translateY(22px);filter:blur(4px)}.release-card.release-focus{transform:scale(1.012)}.release-card.release-dim{opacity:.74}.hero-bg{transform:none!important}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.scroll-reveal,.scroll-reveal.is-visible,.release-card,.hero-bg,.hero-copy{transition:none!important;transform:none!important;filter:none!important;opacity:1!important}}
+</style>
+
 </head>
-<body>
-  <div class="page-shell">
-    <section class="hero" id="home">
-      <img class="hero-img" src="hero-reference.png" alt="ØRNIVAISE" />
-      <div class="hero-hit hero-hit-logo" aria-hidden="true"></div>
-      <a class="hero-hit hero-hit-nav home" href="#home" aria-label="Главная"></a>
-      <a class="hero-hit hero-hit-nav music" href="#music" aria-label="Музыка"></a>
-      <a class="hero-hit hero-hit-nav story" href="#story" aria-label="История"></a>
-      <a class="hero-hit hero-hit-nav merch" href="#merch" aria-label="Мерч"></a>
-      <a class="hero-hit hero-hit-nav contact" href="#contact" aria-label="Контакты"></a>
-      <a class="hero-hit hero-hit-social vk" href="#" aria-label="VK"></a>
-      <a class="hero-hit hero-hit-social ig" href="#" aria-label="Instagram"></a>
-      <a class="hero-hit hero-hit-social tg" href="#" aria-label="Telegram"></a>
-      <a class="hero-hit hero-hit-social yt" href="#" aria-label="YouTube"></a>
-      <button class="hero-hit hero-hit-listen" id="heroListen" aria-label="Слушать сигнал"></button>
-    </section>
-
-    <section class="panel release" id="music">
-      <div class="release-cover-wrap">
-        <div class="vinyl"></div>
-        <img class="release-cover" src="cover.png" alt="ØRNIVAISE — SIGNAL 001" />
-      </div>
-      <div class="release-main">
-        <div class="release-copy">
-          <p class="eyebrow">ПОСЛЕДНИЙ РЕЛИЗ</p>
-          <h2>SIGNAL 001</h2>
-          <div class="meta">СИНГЛ • 2024</div>
-          <p class="release-text">Первый обнаруженный сигнал из неизвестного источника.<br>Начало передачи.</p>
-        </div>
-
-        <div class="player-box">
-          <button class="play-btn" id="playBtn" aria-label="Воспроизвести"><span id="playIcon">▶</span></button>
-          <span class="time" id="currentTime">00:00</span>
-          <div class="wave-track" id="waveTrack">
-            <div class="wave-graphic"></div>
-            <input id="seek" type="range" min="0" max="100" value="0" />
-          </div>
-          <span class="time" id="duration">02:43</span>
-          <button class="mute-btn" id="muteBtn" aria-label="Без звука">🔊</button>
-          <audio id="audio" preload="metadata">
-            <source src="signal001.mp3" type="audio/mpeg" />
-          </audio>
-        </div>
-
-        <div class="platforms">
-          <a href="#"><span class="dot spotify"></span><small>Слушать в</small><b>Spotify</b></a>
-          <a href="#"><span class="dot apple"></span><small>Слушать в</small><b>Apple Music</b></a>
-          <a href="#"><span class="dot yandex"></span><small>Слушать в</small><b>Яндекс Музыке</b></a>
-          <a href="#"><span class="dot vk"></span><small>Слушать в</small><b>VK Музыке</b></a>
-        </div>
-      </div>
-    </section>
-
-    <section class="panel story-grid" id="story">
-      <div class="story-copy">
-        <p class="eyebrow">ИСТОРИЯ</p>
-        <h3>СИГНАЛ ИЗ НИОТКУДА</h3>
-        <p>Мы не знаем, откуда он приходит.</p>
-        <p>Мы лишь принимаем.</p>
-        <p>Каждый трек — это фрагмент передачи.<br>Собери их все. Узнай правду.</p>
-        <a href="#" class="ghost-btn">ЧИТАТЬ ДАЛЬШЕ <span>→</span></a>
-      </div>
-      <div class="story-image-wrap">
-        <img src="story-space.png" alt="История ØRNIVAISE" class="story-image" />
-      </div>
-      <div class="future-list">
-        <p class="eyebrow">БУДУЩИЕ ПЕРЕДАЧИ</p>
-        <div><span>002</span><b>APØGEE</b><em>--:--</em></div>
-        <div><span>003</span><b>EVENT HØRIZON</b><em>--:--</em></div>
-        <div><span>004</span><b>LØST TRANSMISSION</b><em>--:--</em></div>
-        <div><span>005</span><b>SIGNAL 002</b><em>--:--</em></div>
-        <a href="#music" class="ghost-btn transmissions">ВСЕ ПЕРЕДАЧИ <span>→</span></a>
-      </div>
-    </section>
-
-    <section class="panel subscribe" id="contact">
-      <div class="subscribe-copy">
-        <h4>ПОДПИШИСЬ НА ПЕРЕДАЧУ</h4>
-        <p>Новые сигналы скоро. Не пропусти.</p>
-      </div>
-      <form class="subscribe-form" onsubmit="return false;">
-        <input type="email" placeholder="Твой e-mail" />
-        <button type="submit">ПОДПИСАТЬСЯ <span>→</span></button>
-      </form>
-    </section>
-
-    <section class="card-row" id="merch">
-      <a class="mini-card" href="#" style="background-image:url('card-vk.png')"><b>VK</b><span>Паблик</span></a>
-      <a class="mini-card" href="#" style="background-image:url('card-tg.png')"><b>Telegram</b><span>Канал</span></a>
-      <a class="mini-card" href="#" style="background-image:url('card-yt.png')"><b>YouTube</b><span>Канал</span></a>
-      <a class="mini-card" href="#" style="background-image:url('card-merch.png')"><b>МЕРЧ</b><span>Скоро</span></a>
-    </section>
-
-    <footer class="footer">
-      <div class="footer-left">
-        <div class="brand-foot">ØRNIVAISE</div>
-        <div class="sub-foot">SIGNAL FROM NØWHERE</div>
-        <div class="foot-wave"></div>
-        <div class="copyright">© ØRNIVAISE 2024</div>
-      </div>
-      <div class="footer-center">ØN</div>
-      <div class="footer-right">
-        <a href="#contact">КОНТАКТЫ</a>
-        <a href="#">ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ</a>
-        <a href="#">УСЛОВИЯ ИСПОЛЬЗОВАНИЯ</a>
-      </div>
-    </footer>
+<body data-track-theme="signal001">
+<header class="site-header">
+  <a class="wordmark" href="#top">ØRNIVAISE</a>
+  <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="mainNav">
+    <span></span><span></span>
+  </button>
+  <nav id="mainNav" class="main-nav">
+    <a href="#top">ГЛАВНАЯ</a>
+    <a href="#music">МУЗЫКА</a>
+    <a href="#releases">РЕЛИЗЫ</a>
+    <a href="#story">ИСТОРИЯ</a>
+  </nav>
+  <div class="social-nav">
+    <a href="https://vk.ru/ornivaise" target="_blank" rel="noopener noreferrer">VK</a>
+    <span>Telegram <em>СКОРО</em></span>
+    <span>YouTube <em>СКОРО</em></span>
   </div>
-  <script src="script.js"></script>
+</header>
+
+<main id="top">
+  <section class="hero" id="heroScene">
+    <div class="hero-bg" id="heroBg" aria-hidden="true"></div>
+    <div class="hero-glow" id="heroGlow" aria-hidden="true"></div>
+    <div class="hero-particles" id="heroParticles" aria-hidden="true"></div>
+    <div class="hero-audio-ring" id="heroAudioRing" aria-hidden="true"></div>
+    <div class="hero-noise" aria-hidden="true"></div>
+    <div class="hero-copy">
+      <p class="kicker">ØN / 2026</p>
+      <button class="easter-hotspot arm" id="easterHotspot" type="button" aria-label="ØN / 2026" title=""></button>
+      <h1>ØRNIVAISE</h1>
+      <p class="hero-sub">МУЗЫКА, КОТОРАЯ МЕНЯЕТСЯ ВМЕСТЕ С ПРОЕКТОМ</p>
+    </div>
+
+    <div class="popular-card" id="music">
+      <div class="popular-cover"><img src="cover-signal001.png" alt="SIGNAL 001"></div>
+      <div class="popular-info">
+        <span class="section-label">ПОПУЛЯРНЫЙ ТРЕК</span>
+        <strong>SIGNAL 001</strong>
+        <small>ØRNIVAISE</small>
+      </div>
+      <button class="signal-btn" data-track="signal001" aria-label="Включить SIGNAL 001">
+        <svg viewBox="0 0 56 56" aria-hidden="true"><circle cx="28" cy="28" r="23"/><path class="play-shape" d="M23 18.5 38 28 23 37.5Z"/><g class="pause-shape"><path d="M21 18h5v20h-5z"/><path d="M30 18h5v20h-5z"/></g><path class="slash" d="M12 40 44 16"/></svg>
+        <span>ВКЛЮЧИТЬ</span>
+      </button>
+      <div class="popular-progress"><div class="signal-line hero-wave" id="heroWave"></div></div>
+      <span class="popular-time" data-time-for="signal001">00:00 / 02:43</span>
+      <a class="jump-link" href="#releases">СМОТРЕТЬ РЕЛИЗЫ ↓</a>
+    </div>
+  </section>
+
+  <section class="section releases-section" id="releases">
+    <div class="section-head">
+      <span class="section-label">КАТАЛОГ</span>
+      <h2>РЕЛИЗЫ</h2>
+      <p>Каждый трек — отдельная работа со своим характером и звучанием.</p>
+    </div>
+
+    <article class="release-card" data-release="signal001">
+      <img src="cover-signal001.png" alt="Обложка SIGNAL 001" class="release-art">
+      <div class="release-body">
+        <span class="release-index">01 / 2026</span>
+        <h3>SIGNAL 001</h3>
+        <div class="release-controls">
+          <button class="signal-btn compact" data-track="signal001">
+            <svg viewBox="0 0 56 56" aria-hidden="true"><circle cx="28" cy="28" r="23"/><path class="play-shape" d="M23 18.5 38 28 23 37.5Z"/><g class="pause-shape"><path d="M21 18h5v20h-5z"/><path d="M30 18h5v20h-5z"/></g><path class="slash" d="M12 40 44 16"/></svg>
+            <span>ВКЛЮЧИТЬ</span>
+          </button>
+          <span class="service-status">VK МУЗЫКА — СКОРО</span>
+          <span class="service-status">ЯНДЕКС МУЗЫКА — СКОРО</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="release-card reverse" data-release="echo">
+      <img src="cover-echo.png" alt="Обложка ECHO FROM NØWHERE" class="release-art">
+      <div class="release-body">
+        <span class="release-index">02 / 2026</span>
+        <h3>ECHO FROM NØWHERE</h3>
+        <div class="release-controls">
+          <button class="signal-btn compact" data-track="echo">
+            <svg viewBox="0 0 56 56" aria-hidden="true"><circle cx="28" cy="28" r="23"/><path class="play-shape" d="M23 18.5 38 28 23 37.5Z"/><g class="pause-shape"><path d="M21 18h5v20h-5z"/><path d="M30 18h5v20h-5z"/></g><path class="slash" d="M12 40 44 16"/></svg>
+            <span>ВКЛЮЧИТЬ</span>
+          </button>
+          <span class="service-status">VK МУЗЫКА — СКОРО</span>
+          <span class="service-status">ЯНДЕКС МУЗЫКА — СКОРО</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="release-card" data-release="fractured">
+      <img src="cover-fractured.png" alt="Обложка FRACTURED" class="release-art">
+      <div class="release-body">
+        <span class="release-index">03 / 2026</span>
+        <h3>FRACTURED</h3>
+        <div class="release-controls">
+          <button class="signal-btn compact" data-track="fractured">
+            <svg viewBox="0 0 56 56" aria-hidden="true"><circle cx="28" cy="28" r="23"/><path class="play-shape" d="M23 18.5 38 28 23 37.5Z"/><g class="pause-shape"><path d="M21 18h5v20h-5z"/><path d="M30 18h5v20h-5z"/></g><path class="slash" d="M12 40 44 16"/></svg>
+            <span>ВКЛЮЧИТЬ</span>
+          </button>
+          <span class="service-status">VK МУЗЫКА — СКОРО</span>
+          <span class="service-status">ЯНДЕКС МУЗЫКА — СКОРО</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="release-card reverse" data-release="afterimage">
+      <img src="cover-afterimage.png" alt="Обложка AFTERIMAGE" class="release-art">
+      <div class="release-body">
+        <span class="release-index">04 / 2026</span>
+        <h3>AFTERIMAGE</h3>
+        <div class="release-controls">
+          <button class="signal-btn compact" data-track="afterimage">
+            <svg viewBox="0 0 56 56" aria-hidden="true"><circle cx="28" cy="28" r="23"/><path class="play-shape" d="M23 18.5 38 28 23 37.5Z"/><g class="pause-shape"><path d="M21 18h5v20h-5z"/><path d="M30 18h5v20h-5z"/></g><path class="slash" d="M12 40 44 16"/></svg>
+            <span>ВКЛЮЧИТЬ</span>
+          </button>
+          <span class="service-status">VK МУЗЫКА — СКОРО</span>
+          <span class="service-status">ЯНДЕКС МУЗЫКА — СКОРО</span>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <section class="section story-section" id="story">
+    <div class="story-number">ØN</div>
+    <div class="story-copy">
+      <span class="section-label">ИСТОРИЯ ØRNIVAISE</span>
+      <h2>БЕЗ ПРИВЯЗКИ<br>К ОДНОМУ ЗВУЧАНИЮ</h2>
+      <p>ØRNIVAISE появился из желания создавать музыку без привязки к одному жанру или определённому звучанию.</p>
+      <p>Проект начался с экспериментов с тёмной электронной музыкой, фонком и атмосферным звучанием. Постепенно появилась идея не повторять одну удачную формулу, а делать каждый новый трек самостоятельным — со своим характером, настроением и звучанием.</p>
+      <p>Здесь могут соседствовать тяжёлый бас, спокойные атмосферные композиции, меланхоличные мелодии, агрессивные ударные и совершенно неожиданные эксперименты.</p>
+      <blockquote>ØRNIVAISE — это музыка, которая меняется вместе с проектом.</blockquote>
+    </div>
+  </section>
+
+  <section class="section news-section" id="news">
+    <span class="section-label">СВЕЖИЕ НОВОСТИ</span>
+    <h2>СЛЕДИ ЗА ØRNIVAISE</h2>
+    <p class="news-lead">Новые релизы и важные обновления проекта публикуются во VK.</p>
+    <div class="news-alt">
+      <a class="vk-button" href="https://vk.ru/ornivaise" target="_blank" rel="noopener noreferrer">ПЕРЕЙТИ В VK ↗</a>
+    </div>
+  </section>
+</main>
+
+
+<div class="easter-overlay" id="easterOverlay" aria-hidden="true">
+  <div class="easter-grid" aria-hidden="true"></div>
+  <div class="easter-panel" role="dialog" aria-modal="true" aria-labelledby="easterTitle">
+    <div class="easter-code">ØN // 000</div>
+    <h2 id="easterTitle">СКРЫТЫЙ СЛОЙ ОБНАРУЖЕН</h2>
+    <div class="easter-wave" aria-hidden="true"></div>
+    <p>UNKNOWN TRANSMISSION // ACCESS GRANTED</p>
+    <button class="easter-close" id="easterClose" type="button">ЗАКРЫТЬ</button>
+  </div>
+</div>
+
+<div class="global-player player-54" id="globalPlayer" aria-live="polite">
+  <div class="gp-track">
+    <img id="playerCover" src="cover-signal001.png" alt="Обложка текущего трека">
+    <div class="gp-meta"><small>СЕЙЧАС ИГРАЕТ</small><strong id="playerTitle">SIGNAL 001</strong><span>ØRNIVAISE</span></div>
+  </div>
+
+  <div class="gp-timeline">
+    <div class="gp-time-row"><span id="gpCurrent">00:00</span><span id="gpDuration">02:43</span></div>
+    <div class="gp-wave-track" aria-hidden="true">
+      <canvas class="gp-live-viz" id="gpLiveViz"></canvas>
+      <span></span><i></i>
+    </div>
+    <input id="gpSeek" class="gp-seek" type="range" min="0" max="100" value="0" aria-label="Позиция воспроизведения">
+  </div>
+
+  <div class="gp-actions">
+    <button class="player-tool" id="shuffleBtn" type="button" aria-label="Случайный порядок" aria-pressed="false">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 9h4c5 0 7 14 13 14h5M23 19l4 4-4 4M5 23h4c2.6 0 4.2-3.7 5.8-7M22 9h5M23 5l4 4-4 4"/></svg>
+    </button>
+    <button class="player-tool" id="prevBtn" type="button" aria-label="Предыдущий трек"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M20.5 8 11 16l9.5 8z"/><path d="M8 8v16"/></svg></button>
+    <button class="main-play" id="mainPlay" type="button" aria-label="Включить">
+      <svg viewBox="0 0 60 60" aria-hidden="true"><circle cx="30" cy="30" r="25"/><path class="play-shape" d="M25 19 42 30 25 41Z"/><g class="pause-shape"><path d="M23 19h5v22h-5z"/><path d="M33 19h5v22h-5z"/></g></svg>
+      <span>ВКЛЮЧИТЬ</span>
+    </button>
+    <button class="player-tool" id="nextBtn" type="button" aria-label="Следующий трек"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="m11.5 8 9.5 8-9.5 8z"/><path d="M24 8v16"/></svg></button>
+    <button class="player-tool" id="repeatBtn" type="button" aria-label="Повтор трека" aria-pressed="false">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M8 10h14l-3-3M22 10l-3 3M24 22H10l3 3M10 22l3-3"/></svg>
+    </button>
+  </div>
+
+  <div class="gp-volume">
+    <button class="volume-btn" id="volumeBtn" type="button" aria-label="Выключить звук">
+      <svg viewBox="0 0 46 46" aria-hidden="true"><path d="M10 19h7l8-7v22l-8-7h-7z"/><path class="waves" d="M30 18c3 3 3 7 0 10M34 14c6 6 6 12 0 18"/><path class="mute-slash" d="M11 36 36 11"/></svg>
+    </button>
+    <input id="volumeRange" type="range" min="0" max="100" value="78" aria-label="Громкость">
+    <output id="volumeValue" for="volumeRange">78%</output>
+  </div>
+</div>
+
+<audio id="audioSignal" preload="metadata" src="signal001.mp3"></audio>
+<audio id="audioEcho" preload="metadata" src="echo-from-nowhere.mp3"></audio>
+<audio id="audioFractured" preload="metadata" src="fractured.mp3"></audio>
+<audio id="audioAfterimage" preload="metadata" src="afterimage.mp3"></audio>
+
+<footer>
+  <div><strong>ØRNIVAISE</strong><span>© ØRNIVAISE 2026</span></div>
+  <div class="footer-links"><a href="mailto:contact@ornivaise.ru">contact@ornivaise.ru</a><a href="privacy.html">ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ</a><a href="terms.html">УСЛОВИЯ ИСПОЛЬЗОВАНИЯ</a><a href="rights.html">ПРАВООБЛАДАТЕЛЯМ</a></div>
+</footer>
+<script>
+const menuToggle=document.getElementById('menuToggle');const mainNav=document.getElementById('mainNav');menuToggle.addEventListener('click',()=>{const open=mainNav.classList.toggle('open');menuToggle.setAttribute('aria-expanded',open)});mainNav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>mainNav.classList.remove('open')));
+const tracks={signal001:{title:'SIGNAL 001',src:'signal001.mp3',cover:'cover-signal001.png',audio:document.getElementById('audioSignal')},echo:{title:'ECHO FROM NØWHERE',src:'echo-from-nowhere.mp3',cover:'cover-echo.png',audio:document.getElementById('audioEcho')},fractured:{title:'FRACTURED',src:'fractured.mp3',cover:'cover-fractured.png',audio:document.getElementById('audioFractured')},afterimage:{title:'AFTERIMAGE',src:'afterimage.mp3',cover:'cover-afterimage.png',audio:document.getElementById('audioAfterimage')}};const order=['signal001','echo','fractured','afterimage'];let current='signal001';const playerCover=document.getElementById('playerCover'),playerTitle=document.getElementById('playerTitle'),mainPlay=document.getElementById('mainPlay'),gpSeek=document.getElementById('gpSeek'),gpCurrent=document.getElementById('gpCurrent'),gpDuration=document.getElementById('gpDuration'),volumeBtn=document.getElementById('volumeBtn'),volumeRange=document.getElementById('volumeRange'),volumeValue=document.getElementById('volumeValue'),shuffleBtn=document.getElementById('shuffleBtn'),repeatBtn=document.getElementById('repeatBtn');
+const fmt=s=>{if(!isFinite(s))return'00:00';const m=Math.floor(s/60),r=Math.floor(s%60);return String(m).padStart(2,'0')+':'+String(r).padStart(2,'0')};function activeAudio(){return tracks[current].audio}function allButtons(){return [...document.querySelectorAll('[data-track]')]}function syncButtons(){const playing=!activeAudio().paused;allButtons().forEach(b=>{const is=b.dataset.track===current&&playing;b.classList.toggle('playing',is);const t=b.querySelector('span');if(t)t.textContent=is?'ПАУЗА':'ВКЛЮЧИТЬ'});mainPlay.classList.toggle('playing',playing);mainPlay.querySelector('span').textContent=playing?'ПАУЗА':'ВКЛЮЧИТЬ'}function setTrack(id,autoplay=false){if(!tracks[id])return;if(id!==current){activeAudio().pause();current=id;playerCover.src=tracks[id].cover;playerTitle.textContent=tracks[id].title;gpSeek.value=0;gpCurrent.textContent='00:00'}const a=activeAudio();if(volumeRange){a.volume=Number(volumeRange.value)/100;a.muted=Number(volumeRange.value)===0}if(autoplay){a.play().catch(()=>{})}syncButtons()}function toggle(id=current){if(id!==current)setTrack(id,false);const a=activeAudio();if(a.paused)a.play().catch(()=>{});else a.pause();syncButtons()}allButtons().forEach(b=>b.addEventListener('click',()=>toggle(b.dataset.track)));mainPlay.addEventListener('click',()=>toggle());let shuffleMode=false,repeatMode=false,lastVolume=.78;
+function nextTrack(direction=1){
+  let id;
+  if(shuffleMode&&order.length>1){
+    const pool=order.filter(x=>x!==current);id=pool[Math.floor(Math.random()*pool.length)];
+  }else{
+    const i=order.indexOf(current);id=order[(i+direction+order.length)%order.length];
+  }
+  setTrack(id,true);
+}
+document.getElementById('prevBtn').addEventListener('click',()=>nextTrack(-1));
+document.getElementById('nextBtn').addEventListener('click',()=>nextTrack(1));
+shuffleBtn?.addEventListener('click',()=>{shuffleMode=!shuffleMode;shuffleBtn.classList.toggle('active',shuffleMode);shuffleBtn.setAttribute('aria-pressed',String(shuffleMode))});
+repeatBtn?.addEventListener('click',()=>{repeatMode=!repeatMode;repeatBtn.classList.toggle('active',repeatMode);repeatBtn.setAttribute('aria-pressed',String(repeatMode))});
+function paintSeek(){const v=Math.max(0,Math.min(100,Number(gpSeek.value)||0));gpSeek.style.setProperty('--seek',v+'%');document.querySelector('.gp-wave-track span')?.style.setProperty('width',v+'%');document.querySelector('.gp-wave-track i')?.style.setProperty('left',`calc(${v}% - 1px)`)}
+function setVolume(v){v=Math.max(0,Math.min(1,v));if(v>0)lastVolume=v;Object.values(tracks).forEach(t=>{t.audio.volume=v;t.audio.muted=v===0});if(volumeRange){volumeRange.value=Math.round(v*100);volumeRange.style.setProperty('--vol',Math.round(v*100)+'%')}if(volumeValue)volumeValue.textContent=Math.round(v*100)+'%';volumeBtn?.classList.toggle('muted',v===0)}
+Object.entries(tracks).forEach(([id,t])=>{
+  t.audio.addEventListener('loadedmetadata',()=>{if(id===current)gpDuration.textContent=fmt(t.audio.duration)});
+  t.audio.addEventListener('timeupdate',()=>{if(id!==current)return;gpCurrent.textContent=fmt(t.audio.currentTime);gpDuration.textContent=fmt(t.audio.duration);gpSeek.value=t.audio.duration?t.audio.currentTime/t.audio.duration*100:0;paintSeek();document.querySelectorAll(`[data-time-for="${id}"]`).forEach(e=>e.textContent=`${fmt(t.audio.currentTime)} / ${fmt(t.audio.duration)}`)});
+  t.audio.addEventListener('play',()=>{Object.values(tracks).forEach(o=>{if(o.audio!==t.audio)o.audio.pause()});syncButtons()});
+  t.audio.addEventListener('pause',syncButtons);
+  t.audio.addEventListener('ended',()=>{if(repeatMode){t.audio.currentTime=0;t.audio.play().catch(()=>{})}else nextTrack(1)})
+});
+gpSeek.addEventListener('input',()=>{const a=activeAudio();if(a.duration)a.currentTime=gpSeek.value/100*a.duration;paintSeek()});
+volumeRange?.addEventListener('input',()=>setVolume(Number(volumeRange.value)/100));
+volumeBtn.addEventListener('click',()=>{const a=activeAudio();const muted=a.muted||a.volume===0;setVolume(muted?(lastVolume||.78):0)});
+setVolume(.78);paintSeek();setTrack('signal001');
+
+
+// v11 — four-release cosmic edition
+const heroScene=document.getElementById('heroScene');
+const heroBg=document.getElementById('heroBg');
+const heroParticles=document.getElementById('heroParticles');
+const heroWave=document.getElementById('heroWave');
+const finePointer=window.matchMedia('(pointer:fine)').matches;
+const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+if(heroParticles && !reducedMotion){
+  heroParticles.innerHTML='';
+  const isMobile=window.innerWidth<=620;
+  const isTablet=window.innerWidth<=900;
+  const count=isMobile?16:isTablet?28:46;
+  for(let i=0;i<count;i++){
+    const p=document.createElement('i');
+    const depth=Math.random();
+    const size=depth>.82?2.2:depth>.52?1.4:.8;
+    const op=depth>.82?.36:depth>.52?.23:.13;
+    const dur=(20-depth*9)+(Math.random()*8);
+    const drift=(-95+Math.random()*190)*(0.55+depth*.9);
+    p.style.left=(Math.random()*100).toFixed(2)+'%';
+    p.style.top=(15+Math.random()*90).toFixed(2)+'%';
+    p.style.width=size+'px';
+    p.style.height=size+'px';
+    p.style.setProperty('--scale',(0.55+depth*.7).toFixed(2));
+    p.style.setProperty('--op',op.toFixed(2));
+    p.style.setProperty('--blur',(2+depth*7).toFixed(1)+'px');
+    p.style.setProperty('--dur',dur.toFixed(1)+'s');
+    p.style.setProperty('--delay',(-Math.random()*dur).toFixed(1)+'s');
+    p.style.setProperty('--dx',drift.toFixed(1)+'px');
+    if(depth>.91){p.classList.add('foreground');}
+    heroParticles.appendChild(p);
+  }
+}
+
+if(heroScene && heroBg && finePointer && !reducedMotion && window.innerWidth>900){
+  let tx=0,ty=0,cx=0,cy=0,raf=0;
+  const tick=()=>{
+    cx+=(tx-cx)*.055;cy+=(ty-cy)*.055;
+    heroBg.style.setProperty('--mx',cx.toFixed(2)+'px');
+    heroBg.style.setProperty('--my',cy.toFixed(2)+'px');
+    if(Math.abs(tx-cx)>.05||Math.abs(ty-cy)>.05)raf=requestAnimationFrame(tick);else raf=0;
+  };
+  heroScene.addEventListener('pointermove',e=>{
+    const r=heroScene.getBoundingClientRect();
+    tx=((e.clientX-r.left)/r.width-.5)*10;
+    ty=((e.clientY-r.top)/r.height-.5)*6;
+    if(!raf)raf=requestAnimationFrame(tick);
+  });
+  heroScene.addEventListener('pointerleave',()=>{tx=0;ty=0;if(!raf)raf=requestAnimationFrame(tick)});
+}
+
+function syncHeroWave(){
+  const a=activeAudio();
+  if(heroWave)heroWave.classList.toggle('is-playing',!!a && !a.paused);
+}
+Object.values(tracks).forEach(t=>{
+  t.audio.addEventListener('play',syncHeroWave);
+  t.audio.addEventListener('pause',syncHeroWave);
+  t.audio.addEventListener('ended',syncHeroWave);
+});
+syncHeroWave();
+
+// v11.1 — easter egg: tap the small “ØN / 2026” twice
+const easterHotspot=document.getElementById('easterHotspot');
+const easterOverlay=document.getElementById('easterOverlay');
+const easterClose=document.getElementById('easterClose');
+let easterCount=0,easterTimer=0;
+function openEaster(){
+  if(!easterOverlay)return;
+  easterOverlay.classList.add('open');
+  easterOverlay.setAttribute('aria-hidden','false');
+  document.body.classList.add('easter-open');
+  easterClose?.focus();
+}
+function closeEaster(){
+  if(!easterOverlay)return;
+  easterOverlay.classList.remove('open');
+  easterOverlay.setAttribute('aria-hidden','true');
+  document.body.classList.remove('easter-open');
+}
+if(easterHotspot){
+  easterHotspot.addEventListener('click',()=>{
+    clearTimeout(easterTimer);
+    easterCount++;
+    if(easterCount===1){easterHotspot.classList.remove('pulse');void easterHotspot.offsetWidth;easterHotspot.classList.add('pulse')}
+    if(easterCount>=2){easterCount=0;openEaster();return}
+    easterTimer=setTimeout(()=>{easterCount=0},2400);
+  });
+}
+easterClose?.addEventListener('click',closeEaster);
+easterOverlay?.addEventListener('click',e=>{if(e.target===easterOverlay)closeEaster()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&easterOverlay?.classList.contains('open'))closeEaster()});
+
+/* =========================================================
+   ØRNIVAISE v11.11 EXPERIMENTAL — audio-reactive layer
+   ========================================================= */
+(() => {
+  const hero = document.getElementById('heroScene');
+  const canvas = document.getElementById('gpLiveViz');
+  if (!hero || !canvas) return;
+
+  const Ctx = window.AudioContext || window.webkitAudioContext;
+  const ctx2d = canvas.getContext('2d');
+  const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+
+  let audioCtx = null;
+  let analyser = null;
+  let freqData = null;
+  let waveData = null;
+  let rafId = 0;
+  let sourcesReady = false;
+  let smoothEnergy = 0;
+  let smoothBass = 0;
+  let smoothHigh = 0;
+
+  function setTheme(id){
+    document.body.dataset.trackTheme = id || 'signal001';
+  }
+
+  // Hook into the site's existing setTrack without changing its behavior.
+  const originalSetTrack = window.setTrack;
+  if (typeof originalSetTrack === 'function') {
+    window.setTrack = function(id, autoplay=false){
+      const result = originalSetTrack(id, autoplay);
+      setTheme(id);
+      return result;
+    };
+  }
+
+  // Existing "current" starts as signal001.
+  setTheme('signal001');
+
+  function ensureAudioGraph(){
+    if (!Ctx || sourcesReady) return;
+    try{
+      audioCtx = new Ctx();
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 512;
+      analyser.smoothingTimeConstant = .82;
+
+      // All four media elements connect to one analyser.
+      Object.values(tracks).forEach(t => {
+        const source = audioCtx.createMediaElementSource(t.audio);
+        source.connect(analyser);
+      });
+      analyser.connect(audioCtx.destination);
+
+      freqData = new Uint8Array(analyser.frequencyBinCount);
+      waveData = new Uint8Array(analyser.fftSize);
+      sourcesReady = true;
+    }catch(err){
+      // If a browser disallows media-element analysis, the normal player
+      // still works and the visual layer simply stays in its fallback state.
+      sourcesReady = false;
+    }
+  }
+
+  function resumeAudioGraph(){
+    ensureAudioGraph();
+    if (audioCtx && audioCtx.state === 'suspended') {
+      audioCtx.resume().catch(()=>{});
+    }
+    if (!rafId) rafId = requestAnimationFrame(draw);
+  }
+
+  document.addEventListener('pointerdown', resumeAudioGraph, {passive:true});
+  document.addEventListener('keydown', resumeAudioGraph);
+
+  Object.entries(tracks).forEach(([id,t]) => {
+    t.audio.addEventListener('play', () => {
+      setTheme(id);
+      document.body.classList.add('audio-is-playing');
+      resumeAudioGraph();
+    });
+    t.audio.addEventListener('pause', () => {
+      if (Object.values(tracks).every(x => x.audio.paused)) {
+        document.body.classList.remove('audio-is-playing');
+      }
+    });
+    t.audio.addEventListener('ended', () => {
+      if (Object.values(tracks).every(x => x.audio.paused || x.audio.ended)) {
+        document.body.classList.remove('audio-is-playing');
+      }
+    });
+  });
+
+  function averageRange(arr, from, to){
+    let sum = 0, n = 0;
+    const end = Math.min(arr.length, to);
+    for(let i=Math.max(0,from); i<end; i++){ sum += arr[i]; n++; }
+    return n ? sum / n / 255 : 0;
+  }
+
+  function resizeCanvas(){
+    const rect = canvas.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const w = Math.max(1, Math.round(rect.width * dpr));
+    const h = Math.max(1, Math.round(rect.height * dpr));
+    if (canvas.width !== w || canvas.height !== h){
+      canvas.width = w;
+      canvas.height = h;
+    }
+    return {w,h,dpr};
+  }
+
+  function drawFallback(w,h){
+    ctx2d.clearRect(0,0,w,h);
+    ctx2d.strokeStyle = 'rgba(210,216,224,.18)';
+    ctx2d.lineWidth = 1;
+    ctx2d.beginPath();
+    const mid = h/2;
+    for(let x=0;x<w;x+=7){
+      const y = mid + Math.sin(x*.035)*h*.11 + Math.sin(x*.11)*h*.035;
+      if(x===0) ctx2d.moveTo(x,y); else ctx2d.lineTo(x,y);
+    }
+    ctx2d.stroke();
+  }
+
+  function draw(){
+    rafId = requestAnimationFrame(draw);
+    const {w,h} = resizeCanvas();
+
+    if (!sourcesReady || !analyser || !freqData || !waveData){
+      drawFallback(w,h);
+      return;
+    }
+
+    analyser.getByteFrequencyData(freqData);
+    analyser.getByteTimeDomainData(waveData);
+
+    // ~low / mids+highs proportions rather than hard physical Hz bins,
+    // sufficient for a responsive visual effect across tracks.
+    const bass = averageRange(freqData, 1, 18);
+    const mids = averageRange(freqData, 18, 78);
+    const high = averageRange(freqData, 78, freqData.length);
+    const energy = Math.min(1, bass*.48 + mids*.38 + high*.22);
+
+    smoothEnergy += (energy - smoothEnergy) * .13;
+    smoothBass += (bass - smoothBass) * .16;
+    smoothHigh += (high - smoothHigh) * .12;
+
+    const playing = !activeAudio().paused;
+    const targetFactor = playing ? 1 : .08;
+    hero.style.setProperty('--audio-energy', (smoothEnergy*targetFactor).toFixed(3));
+    hero.style.setProperty('--audio-bass', (smoothBass*targetFactor).toFixed(3));
+    hero.style.setProperty('--audio-high', (smoothHigh*targetFactor).toFixed(3));
+
+    ctx2d.clearRect(0,0,w,h);
+
+    // Soft frequency glow behind waveform.
+    const grad = ctx2d.createLinearGradient(0,0,w,0);
+    const theme = getComputedStyle(document.body).getPropertyValue('--track-accent').trim() || '226,232,238';
+    grad.addColorStop(0, `rgba(${theme},.05)`);
+    grad.addColorStop(.55, `rgba(${theme},${0.13 + smoothEnergy*.20})`);
+    grad.addColorStop(1, `rgba(${theme},.05)`);
+
+    ctx2d.strokeStyle = grad;
+    ctx2d.lineWidth = Math.max(1, (window.devicePixelRatio || 1) * .8);
+    ctx2d.beginPath();
+
+    const step = Math.max(1, Math.floor(w / 170));
+    const mid = h/2;
+    for(let x=0; x<w; x+=step){
+      const idx = Math.min(waveData.length-1, Math.floor(x/w * waveData.length));
+      const normalized = (waveData[idx]-128)/128;
+      const amp = playing ? (.24 + smoothEnergy*.7) : .13;
+      const y = mid + normalized * h * amp;
+      if(x===0) ctx2d.moveTo(x,y); else ctx2d.lineTo(x,y);
+    }
+    ctx2d.stroke();
+
+    // A few real-frequency bars add movement without turning into an EDM EQ.
+    const bars = 38;
+    const gap = w/bars;
+    ctx2d.fillStyle = `rgba(${theme},${.035 + smoothHigh*.12})`;
+    for(let i=0;i<bars;i++){
+      const idx = Math.floor(i/bars * freqData.length*.62);
+      const v = freqData[idx]/255;
+      const bh = Math.max(1, v*h*.42);
+      const x = i*gap + gap*.38;
+      ctx2d.fillRect(x, mid-bh/2, Math.max(1,gap*.13), bh);
+    }
+  }
+
+  // Start fallback rendering immediately; analyzer wakes after interaction.
+  if (!reduced) rafId = requestAnimationFrame(draw);
+  else drawFallback(...Object.values(resizeCanvas()).slice(0,2));
+})();
+
+</script>
+
+<div class="signal-flash" id="signalFlash" aria-hidden="true"></div>
+<script id="scroll-experiment-v12-js">
+(()=>{
+ const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+ const root=document.documentElement, hero=document.querySelector('.hero'), bg=document.querySelector('.hero-bg'), copy=document.querySelector('.hero-copy');
+ const flash=document.getElementById('signalFlash');
+ function tick(){const y=scrollY,max=document.documentElement.scrollHeight-innerHeight;root.style.setProperty('--scroll-p',max?Math.min(100,y/max*100):0);if(!reduce&&hero){const r=hero.getBoundingClientRect(),progress=Math.max(0,Math.min(1,-r.top/Math.max(1,r.height)));if(bg)bg.style.transform=`translate3d(0,${progress*70}px,0) scale(${1+progress*.09})`;if(copy){copy.style.transform=`translate3d(0,${-progress*48}px,0) scale(${1-progress*.035})`;copy.style.opacity=String(1-progress*.78)}} requestAnimationFrame(tick)} requestAnimationFrame(tick);
+ const targets=[...document.querySelectorAll('main section:not(.hero), .popular-card, .release-card, .story-copy, .newsletter-wrap')];targets.forEach(x=>x.classList.add('scroll-reveal'));
+ const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('is-visible')}),{threshold:.12,rootMargin:'0px 0px -8% 0px'});targets.forEach(x=>io.observe(x));
+ const cards=[...document.querySelectorAll('.release-card')];function focusCards(){let best=null,bd=1e9;cards.forEach(c=>{const r=c.getBoundingClientRect(),d=Math.abs(r.top+r.height/2-innerHeight/2);if(d<bd){bd=d;best=c}});cards.forEach(c=>{c.classList.toggle('release-focus',c===best&&bd<innerHeight*.48);c.classList.toggle('release-dim',best&&c!==best&&bd<innerHeight*.48)})}addEventListener('scroll',()=>requestAnimationFrame(focusCards),{passive:true});focusCards();
+ const heads=[...document.querySelectorAll('section h2, section .section-title')];const chars='ØN01/\\ΞΔ░';heads.forEach(h=>{h.classList.add('decrypt-ready');const walker=document.createTreeWalker(h,NodeFilter.SHOW_TEXT);const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);const originals=nodes.map(node=>node.textContent);const total=originals.reduce((sum,text)=>sum+text.length,0);let done=false;new IntersectionObserver(es=>{if(done||!es[0].isIntersecting||reduce)return;done=true;h.dataset.decrypting='1';let n=0;const iv=setInterval(()=>{let offset=0;nodes.forEach((node,index)=>{const original=originals[index];node.textContent=[...original].map((ch,i)=>ch===' '?ch:(offset+i<n?ch:chars[Math.floor(Math.random()*chars.length)])).join('');offset+=original.length});n+=Math.max(1,Math.ceil(total/7));if(n>=total){clearInterval(iv);nodes.forEach((node,index)=>node.textContent=originals[index]);delete h.dataset.decrypting}},45)},{threshold:.65}).observe(h)});
+ let last=0;document.querySelectorAll('#music,#releases,#story').forEach(el=>new IntersectionObserver(es=>{if(es[0].isIntersecting&&Date.now()-last>1200&&!reduce){last=Date.now();flash.classList.remove('fire');void flash.offsetWidth;flash.classList.add('fire')}},{threshold:.08}).observe(el));
+})();
+</script>
+
 </body>
 </html>
