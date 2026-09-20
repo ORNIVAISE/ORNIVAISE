@@ -667,6 +667,77 @@ section:not(.hero),.popular-card,.release-card,.story-copy,.newsletter-wrap{tran
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.scroll-reveal,.scroll-reveal.is-visible,.release-card,.hero-bg,.hero-copy{transition:none!important;transform:none!important;filter:none!important;opacity:1!important}}
 </style>
 
+<style id="responsive-v13">
+/* Fluid layout: phones, tablets, laptops, desktops and wide displays */
+:root{--safe-x:max(16px,env(safe-area-inset-left));--safe-r:max(16px,env(safe-area-inset-right))}
+img,svg,canvas{max-width:100%}
+.site-header{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
+.wordmark{font-size:clamp(14px,1.2vw,18px);letter-spacing:clamp(.16em,.7vw,.28em)}
+.section{width:min(1180px,100%);padding-inline:clamp(16px,4vw,28px)}
+.section h2{font-size:clamp(30px,4.2vw,46px)}
+.release-body h3{font-size:clamp(28px,4.2vw,48px);overflow-wrap:anywhere}
+
+/* Keep the complete 16:9 hero artwork visible instead of cropping it on tall phones. */
+.hero{width:100%;aspect-ratio:16/9!important;height:auto!important;min-height:0!important}
+.hero-bg{inset:0!important;background-size:contain!important;background-position:center center!important;background-repeat:no-repeat!important}
+.hero-noise,.hero-particles{inset:0!important}
+.popular-card{width:min(920px,calc(100% - 32px));max-width:calc(100% - 32px)}
+
+@media(max-width:1100px){
+  .main-nav{gap:clamp(14px,2vw,30px)}
+  .global-player.player-54{left:10px;right:10px}
+}
+@media(max-width:900px){
+  .hero{aspect-ratio:16/9!important;height:auto!important}
+  .hero-bg{background-size:contain!important}
+  .popular-card{width:calc(100% - 24px);max-width:calc(100% - 24px);bottom:clamp(8px,2vw,18px)}
+  .release-card,.release-card.reverse{min-height:0}
+}
+@media(max-width:700px){
+  body{padding-bottom:calc(178px + env(safe-area-inset-bottom))}
+  .site-header{padding-left:max(14px,env(safe-area-inset-left));padding-right:max(14px,env(safe-area-inset-right))}
+  .hero{aspect-ratio:16/9!important;height:auto!important}
+  .hero-bg{background-size:contain!important;background-position:center center!important}
+  .popular-card{position:absolute;bottom:6px;width:calc(100% - 16px);max-width:calc(100% - 16px);min-height:72px;padding:8px;gap:8px;grid-template-columns:52px minmax(0,1fr) auto}
+  .popular-cover img{width:48px;height:48px}
+  .popular-info strong{font-size:clamp(13px,4vw,18px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .popular-info small{font-size:9px}
+  .popular-card .signal-btn svg{width:40px;height:40px}
+  .global-player.player-54{left:max(8px,env(safe-area-inset-left));right:max(8px,env(safe-area-inset-right));bottom:max(8px,env(safe-area-inset-bottom));max-height:calc(100dvh - 16px)}
+  .section{padding-block:clamp(48px,12vw,64px)}
+  .release-body{padding:clamp(20px,6vw,28px)}
+}
+@media(max-width:430px){
+  .wordmark{font-size:14px;letter-spacing:.2em}
+  .popular-card{grid-template-columns:44px minmax(0,1fr) 38px}
+  .popular-cover img{width:42px;height:42px}
+  .popular-card .signal-btn svg{width:36px;height:36px}
+  .section{padding-inline:14px}
+  .story-copy blockquote{font-size:clamp(17px,5vw,20px)}
+  .global-player.player-54{padding:8px 9px;gap:6px 9px}
+  .gp-track{grid-template-columns:42px minmax(0,1fr);gap:9px}
+  .global-player.player-54 .gp-track>img{width:40px;height:40px}
+  .player-54 .gp-meta strong{font-size:11px}
+  .gp-actions #prevBtn,.gp-actions #nextBtn{width:26px;height:26px}
+  .player-54 .main-play,.player-54 .main-play svg{width:38px;height:38px}
+}
+@media(max-width:360px){
+  .popular-info small{display:none}
+  .popular-card{grid-template-columns:40px minmax(0,1fr) 34px}
+  .popular-cover img{width:38px;height:38px}
+  .global-player.player-54{left:4px;right:4px;padding-inline:7px}
+}
+@media(min-width:1600px){
+  .section{max-width:1320px}
+  .popular-card{width:min(1040px,calc(100% - 64px))}
+}
+@media(orientation:landscape) and (max-height:520px){
+  .site-header{height:54px}
+  .main-nav{top:54px}
+  .global-player.player-54{bottom:4px}
+}
+</style>
+
 <style id="audit-accessibility">
 :focus-visible{outline:2px solid #e3e8ee;outline-offset:4px}
 html{scroll-padding-top:80px}
