@@ -782,7 +782,7 @@ html{scroll-padding-top:80px}
     </div>
 
     <div class="popular-card" id="music">
-      <div class="popular-cover"><img src="cover-signal001.png" alt="SIGNAL 001"></div>
+      <div class="popular-cover"><img src="cover-signal001-new.jpg" alt="SIGNAL 001"></div>
       <div class="popular-info">
         <span class="section-label">ПОПУЛЯРНЫЙ ТРЕК</span>
         <strong>SIGNAL 001</strong>
@@ -806,7 +806,7 @@ html{scroll-padding-top:80px}
     </div>
 
     <article class="release-card" data-release="signal001">
-      <img src="cover-signal001.png" alt="Обложка SIGNAL 001" class="release-art" width="1200" height="1200" loading="lazy" decoding="async">
+      <img src="cover-signal001-new.jpg" alt="Обложка SIGNAL 001" class="release-art" width="1200" height="1200" loading="lazy" decoding="async">
       <div class="release-body">
         <span class="release-index">01 / 2026</span>
         <h3>SIGNAL 001</h3>
@@ -907,7 +907,7 @@ html{scroll-padding-top:80px}
 <p id="playerStatus" class="hero-copy-accessible" role="status"></p>
 <div class="global-player player-54" id="globalPlayer" role="region" aria-label="Аудиоплеер">
   <div class="gp-track">
-    <img id="playerCover" src="cover-signal001.png" alt="Обложка текущего трека">
+    <img id="playerCover" src="cover-signal001-new.jpg" alt="Обложка текущего трека">
     <div class="gp-meta"><small>СЕЙЧАС ИГРАЕТ</small><strong id="playerTitle">SIGNAL 001</strong><span>ØRNIVAISE</span></div>
   </div>
 
@@ -969,7 +969,7 @@ menuToggle.addEventListener('click',()=>setMenu(!mainNav.classList.contains('ope
 mainNav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>setMenu(false)));
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&mainNav.classList.contains('open')){setMenu(false);menuToggle.focus();}});
 window.matchMedia('(max-width:900px)').addEventListener('change',()=>setMenu(false));
-const tracks={signal001:{title:'SIGNAL 001',src:'signal001.mp3',cover:'cover-signal001.png',audio:document.getElementById('audioSignal')},echo:{title:'ECHO FROM NØWHERE',src:'echo-from-nowhere.mp3',cover:'cover-echo.png',audio:document.getElementById('audioEcho')},fractured:{title:'FRACTURED',src:'fractured.mp3',cover:'cover-fractured.png',audio:document.getElementById('audioFractured')},afterimage:{title:'AFTERIMAGE',src:'afterimage.mp3',cover:'cover-afterimage.png',audio:document.getElementById('audioAfterimage')}};const order=['signal001','echo','fractured','afterimage'];let current='signal001';const playerCover=document.getElementById('playerCover'),playerTitle=document.getElementById('playerTitle'),mainPlay=document.getElementById('mainPlay'),gpSeek=document.getElementById('gpSeek'),gpCurrent=document.getElementById('gpCurrent'),gpDuration=document.getElementById('gpDuration'),volumeBtn=document.getElementById('volumeBtn'),volumeRange=document.getElementById('volumeRange'),volumeValue=document.getElementById('volumeValue'),shuffleBtn=document.getElementById('shuffleBtn'),repeatBtn=document.getElementById('repeatBtn');
+const tracks={signal001:{title:'SIGNAL 001',src:'signal001.mp3',cover:'cover-signal001-new.jpg',audio:document.getElementById('audioSignal')},echo:{title:'ECHO FROM NØWHERE',src:'echo-from-nowhere.mp3',cover:'cover-echo.png',audio:document.getElementById('audioEcho')},fractured:{title:'FRACTURED',src:'fractured.mp3',cover:'cover-fractured.png',audio:document.getElementById('audioFractured')},afterimage:{title:'AFTERIMAGE',src:'afterimage.mp3',cover:'cover-afterimage.png',audio:document.getElementById('audioAfterimage')}};const order=['signal001','echo','fractured','afterimage'];let current='signal001';const playerCover=document.getElementById('playerCover'),playerTitle=document.getElementById('playerTitle'),mainPlay=document.getElementById('mainPlay'),gpSeek=document.getElementById('gpSeek'),gpCurrent=document.getElementById('gpCurrent'),gpDuration=document.getElementById('gpDuration'),volumeBtn=document.getElementById('volumeBtn'),volumeRange=document.getElementById('volumeRange'),volumeValue=document.getElementById('volumeValue'),shuffleBtn=document.getElementById('shuffleBtn'),repeatBtn=document.getElementById('repeatBtn');
 const fmt=s=>{if(!isFinite(s))return'00:00';const m=Math.floor(s/60),r=Math.floor(s%60);return String(m).padStart(2,'0')+':'+String(r).padStart(2,'0')};
 const playerStatus=document.getElementById('playerStatus');
 function activeAudio(){return tracks[current].audio}
