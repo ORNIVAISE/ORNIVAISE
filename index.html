@@ -746,6 +746,27 @@ html{scroll-padding-top:80px}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
 .lang-switch{position:absolute;right:250px;top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:4px;z-index:2}.lang-switch button{border:0;background:transparent;color:#777f88;font:inherit;font-size:10px;letter-spacing:.12em;padding:8px 5px;cursor:pointer}.lang-switch button.active{color:#f1f3f5}.lang-switch span{color:#4e555d;font-size:9px}@media(max-width:1100px) and (min-width:901px){.lang-switch{right:210px}}@media(max-width:900px){.lang-switch{position:static;transform:none;grid-column:2;grid-row:1;margin-right:4px}.menu-toggle{grid-column:3;grid-row:1}.site-header{grid-template-columns:1fr auto auto!important}}
 </style>
+
+<style id="shigure-preview-style">
+.shigure-preview-section{position:relative;overflow:hidden}
+.shigure-preview-section:before{content:"";position:absolute;inset:14% -10% auto;height:70%;background:radial-gradient(circle at 50% 50%,rgba(111,84,160,.12),transparent 62%);pointer-events:none}
+.shigure-preview-wrap{position:relative;border:1px solid rgba(210,218,232,.14);border-radius:20px;background:linear-gradient(145deg,rgba(12,14,19,.96),rgba(7,8,12,.92));box-shadow:0 30px 90px rgba(0,0,0,.34);padding:34px;overflow:hidden}
+.shigure-preview-wrap:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(120deg,transparent 0 42%,rgba(188,171,224,.045) 50%,transparent 58%)}
+.shigure-preview-head{position:relative;z-index:1;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:28px}
+.shigure-preview-title .section-label{display:block;margin-bottom:10px}.shigure-preview-title h2{margin:0;font-size:clamp(38px,6vw,70px);line-height:.95;letter-spacing:.12em}
+.shigure-preview-pills{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.shigure-pill{border:1px solid rgba(221,226,237,.17);border-radius:999px;padding:9px 12px;font-size:9px;letter-spacing:.14em;color:#aeb6c2;background:rgba(255,255,255,.025);white-space:nowrap}
+.shigure-player{position:relative;z-index:1;display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:24px;padding:24px;border:1px solid rgba(220,226,238,.12);border-radius:16px;background:rgba(4,5,8,.52)}
+.shigure-play{width:76px;height:76px;border-radius:50%;border:1px solid rgba(230,234,241,.28);background:rgba(255,255,255,.025);color:#f4f6f8;display:grid;place-items:center;cursor:pointer;transition:transform .2s ease,border-color .2s ease,background .2s ease}
+.shigure-play:hover{transform:scale(1.03);border-color:rgba(235,239,247,.5);background:rgba(255,255,255,.05)}
+.shigure-play svg{width:42px;height:42px;fill:none;stroke:currentColor;stroke-width:1.5}.shigure-play .sp-play,.shigure-play .sp-pause{fill:currentColor;stroke:none}.shigure-play .sp-pause{display:none}.shigure-play.playing .sp-play{display:none}.shigure-play.playing .sp-pause{display:block}
+.shigure-player-main{min-width:0}.shigure-meta{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:14px}.shigure-meta small{font-size:9px;letter-spacing:.16em;color:#7f8996}.shigure-meta strong{font-size:18px;letter-spacing:.13em}
+.shigure-wave{height:48px;display:flex;align-items:center;gap:3px;overflow:hidden;margin-bottom:10px}.shigure-wave span{display:block;flex:1;min-width:2px;max-width:5px;height:var(--h);background:rgba(218,224,235,.28);border-radius:999px;transition:background .18s ease,opacity .18s ease,transform .18s ease;opacity:.58}.shigure-wave span.active{background:rgba(239,242,248,.9);opacity:1;transform:scaleY(1.08)}
+.shigure-seek{--p:0%;appearance:none;width:100%;height:12px;background:transparent;cursor:pointer;margin:0}.shigure-seek::-webkit-slider-runnable-track{height:2px;background:linear-gradient(90deg,#e8ecf3 0 var(--p),rgba(255,255,255,.18) var(--p) 100%)}.shigure-seek::-webkit-slider-thumb{appearance:none;width:10px;height:10px;border-radius:50%;background:#f5f7fa;margin-top:-4px;box-shadow:0 0 12px rgba(226,231,241,.35)}.shigure-seek::-moz-range-track{height:2px;background:rgba(255,255,255,.18)}.shigure-seek::-moz-range-progress{height:2px;background:#e8ecf3}.shigure-seek::-moz-range-thumb{width:10px;height:10px;border:0;border-radius:50%;background:#f5f7fa}
+.shigure-time{display:flex;justify-content:space-between;margin-top:4px;font-size:9px;letter-spacing:.1em;color:#87919d}.shigure-status{min-height:16px;margin:10px 0 0;font-size:10px;color:#aab2bd}
+@media(max-width:700px){.shigure-preview-wrap{padding:22px 16px}.shigure-preview-head{align-items:flex-start;flex-direction:column}.shigure-preview-pills{justify-content:flex-start}.shigure-player{grid-template-columns:1fr;gap:18px}.shigure-play{width:64px;height:64px}.shigure-meta{align-items:flex-start;flex-direction:column;gap:4px}.shigure-wave{height:42px;gap:2px}}
+@media(max-width:420px){.shigure-preview-title h2{font-size:36px}.shigure-pill{font-size:8px;padding:8px 10px}.shigure-player{padding:18px 14px}}
+</style>
 </head>
 <body data-track-theme="signal001">
 <header class="site-header">
@@ -869,6 +890,45 @@ html{scroll-padding-top:80px}
       </div>
     </article>
   </section>
+
+
+  <section class="section shigure-preview-section" id="next-transmission" aria-labelledby="shigureTitle">
+    <div class="shigure-preview-wrap">
+      <div class="shigure-preview-head">
+        <div class="shigure-preview-title">
+          <span class="section-label" data-shigure-label>NEXT TRANSMISSION</span>
+          <h2 id="shigureTitle">SHIGURE</h2>
+        </div>
+        <div class="shigure-preview-pills" aria-label="Статус трека">
+          <span class="shigure-pill">PREVIEW 00:25</span>
+          <span class="shigure-pill" data-shigure-soon>FULL TRANSMISSION — SOON</span>
+        </div>
+      </div>
+
+      <div class="shigure-player" role="region" aria-label="Превью SHIGURE">
+        <button class="shigure-play" id="shigurePlay" type="button" aria-label="Включить превью SHIGURE">
+          <svg viewBox="0 0 48 48" aria-hidden="true">
+            <circle cx="24" cy="24" r="20"></circle>
+            <path class="sp-play" d="M20 15.5 33 24 20 32.5Z"></path>
+            <g class="sp-pause"><path d="M18 15h5v18h-5z"></path><path d="M26 15h5v18h-5z"></path></g>
+          </svg>
+        </button>
+
+        <div class="shigure-player-main">
+          <div class="shigure-meta">
+            <small>ØRNIVAISE / NEXT TRANSMISSION</small>
+            <strong>SHIGURE</strong>
+          </div>
+          <div class="shigure-wave" id="shigureWave" aria-hidden="true"></div>
+          <input class="shigure-seek" id="shigureSeek" type="range" min="0" max="100" step="0.1" value="0" aria-label="Позиция превью SHIGURE">
+          <div class="shigure-time"><span id="shigureCurrent">00:00</span><span>00:25</span></div>
+          <p class="shigure-status" id="shigureStatus" role="status"></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <audio id="audioShigurePreview" preload="metadata" src="shigure-preview.mp3"></audio>
 
   <section class="section story-section" id="story">
     <div class="story-number">ØN</div>
@@ -1360,6 +1420,74 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&easterOverlay?.clas
 })();
 </script>
 
+
+<script id="shigure-preview-script">
+(() => {
+  const audio=document.getElementById('audioShigurePreview');
+  const play=document.getElementById('shigurePlay');
+  const seek=document.getElementById('shigureSeek');
+  const current=document.getElementById('shigureCurrent');
+  const wave=document.getElementById('shigureWave');
+  const status=document.getElementById('shigureStatus');
+  if(!audio||!play||!seek||!current||!wave)return;
+
+  const fmt=s=>{if(!Number.isFinite(s))return'00:00';const m=Math.floor(s/60),r=Math.floor(s%60);return String(m).padStart(2,'0')+':'+String(r).padStart(2,'0')};
+  const bars=[];
+  for(let i=0;i<54;i++){
+    const b=document.createElement('span');
+    const h=18+Math.abs(Math.sin(i*.71)+Math.sin(i*.19)*.65)*24;
+    b.style.setProperty('--h',Math.min(46,h).toFixed(0)+'px');
+    wave.appendChild(b);bars.push(b);
+  }
+
+  function sync(){
+    const playing=!audio.paused;
+    play.classList.toggle('playing',playing);
+    play.setAttribute('aria-label',playing?'Пауза превью SHIGURE':'Включить превью SHIGURE');
+    const duration=Number.isFinite(audio.duration)&&audio.duration>0?audio.duration:25;
+    const p=Math.max(0,Math.min(100,(audio.currentTime/duration)*100||0));
+    seek.value=p;seek.style.setProperty('--p',p+'%');
+    current.textContent=fmt(audio.currentTime);
+    const active=Math.round((p/100)*bars.length);
+    bars.forEach((b,i)=>b.classList.toggle('active',i<active));
+  }
+
+  play.addEventListener('click',()=>{
+    status.textContent='';
+    if(audio.paused){
+      try{if(typeof tracks!=='undefined')Object.values(tracks).forEach(t=>t.audio.pause())}catch(e){}
+      audio.play().catch(()=>{status.textContent=document.documentElement.lang==='en'?'Could not play the preview. Try again.':'Не удалось включить превью. Попробуйте ещё раз.';sync()});
+    }else audio.pause();
+    sync();
+  });
+
+  seek.addEventListener('input',()=>{
+    const d=Number.isFinite(audio.duration)&&audio.duration>0?audio.duration:25;
+    audio.currentTime=(Number(seek.value)/100)*d;sync();
+  });
+  audio.addEventListener('timeupdate',sync);
+  audio.addEventListener('play',sync);
+  audio.addEventListener('pause',sync);
+  audio.addEventListener('loadedmetadata',sync);
+  audio.addEventListener('ended',()=>{audio.currentTime=0;sync()});
+
+  try{
+    if(typeof tracks!=='undefined'){
+      Object.values(tracks).forEach(t=>t.audio.addEventListener('play',()=>{if(!audio.paused)audio.pause()}));
+    }
+  }catch(e){}
+
+  function lang(){
+    const en=document.documentElement.lang==='en';
+    document.querySelector('[data-shigure-label]')?.replaceChildren(document.createTextNode('NEXT TRANSMISSION'));
+    document.querySelector('[data-shigure-soon]')?.replaceChildren(document.createTextNode(en?'FULL TRANSMISSION — SOON':'FULL TRANSMISSION — SOON'));
+    play.setAttribute('aria-label',audio.paused?(en?'Play SHIGURE preview':'Включить превью SHIGURE'):(en?'Pause SHIGURE preview':'Пауза превью SHIGURE'));
+    seek.setAttribute('aria-label',en?'SHIGURE preview position':'Позиция превью SHIGURE');
+  }
+  new MutationObserver(lang).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});
+  lang();sync();
+})();
+</script>
 </body>
 </html>
 
