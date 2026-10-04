@@ -653,18 +653,36 @@ body.audio-is-playing .player-54 .gp-meta small::before{
 </style>
 
 <style id="scroll-experiment-v12">
-html{scroll-behavior:smooth} body{overflow-x:hidden}
-:root{--scroll-p:0}
-body:before{content:"";position:fixed;right:0;top:0;width:2px;height:calc(var(--scroll-p)*1%);background:rgba(230,238,255,.78);box-shadow:0 0 14px rgba(210,225,255,.45);z-index:9999;pointer-events:none}
-.hero{overflow:hidden;perspective:1200px}.hero-bg{will-change:transform,filter}.hero-copy{will-change:transform,opacity;transform-origin:center center}
-section:not(.hero),.popular-card,.release-card,.story-copy,.newsletter-wrap{transition:opacity .85s cubic-bezier(.2,.8,.2,1),transform .85s cubic-bezier(.2,.8,.2,1),filter .85s ease}
-.scroll-reveal{opacity:.16;transform:translateY(42px) scale(.985);filter:blur(7px)}.scroll-reveal.is-visible{opacity:1;transform:none;filter:none}.popular-card.scroll-reveal{transform:translateX(-50%) translateY(42px) scale(.985)}.popular-card.scroll-reveal.is-visible{transform:translateX(-50%)}
-.release-card{transition:opacity .55s ease,transform .55s cubic-bezier(.2,.8,.2,1),filter .55s ease,box-shadow .55s ease}.release-card.release-focus{transform:translateY(-8px) scale(1.025);filter:brightness(1.08);box-shadow:0 28px 80px rgba(0,0,0,.48)}.release-card.release-dim{opacity:.58;filter:brightness(.62) saturate(.72)}
-.signal-flash{position:fixed;inset:0;z-index:9998;pointer-events:none;opacity:0;background:repeating-linear-gradient(0deg,rgba(255,255,255,.05) 0 1px,transparent 1px 5px);mix-blend-mode:screen}.signal-flash.fire{animation:signalFlash .22s steps(2,end)}
-@keyframes signalFlash{0%{opacity:0}25%{opacity:.22;transform:translateX(0)}45%{opacity:.08;transform:translateX(7px)}70%{opacity:.16;transform:translateX(-4px)}100%{opacity:0}}
-.decrypt-ready{position:relative}.decrypt-ready[data-decrypting="1"]{letter-spacing:.06em;text-shadow:2px 0 rgba(255,255,255,.16),-2px 0 rgba(255,255,255,.08)}
-@media(max-width:760px){.scroll-reveal{transform:translateY(22px);filter:blur(4px)}.release-card.release-focus{transform:scale(1.012)}.release-card.release-dim{opacity:.74}.hero-bg{transform:none!important}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.scroll-reveal,.scroll-reveal.is-visible,.release-card,.hero-bg,.hero-copy{transition:none!important;transform:none!important;filter:none!important;opacity:1!important}}
+/* Stability pass 2026-10-04: lightweight one-time reveals, no per-scroll filters/transforms. */
+html{scroll-behavior:smooth}
+body{overflow-x:hidden}
+section:not(.hero),.popular-card{
+  transition:opacity .45s cubic-bezier(.2,.8,.2,1),transform .45s cubic-bezier(.2,.8,.2,1)
+}
+.scroll-reveal{opacity:.55;transform:translateY(16px)}
+.scroll-reveal.is-visible{opacity:1;transform:none}
+.popular-card.scroll-reveal{transform:translateX(-50%) translateY(16px)}
+.popular-card.scroll-reveal.is-visible{transform:translateX(-50%)}
+.release-card{transition:box-shadow .25s ease}
+.release-card.release-focus,.release-card.release-dim{transform:none!important;filter:none!important;opacity:1!important}
+.signal-flash{display:none!important}
+.hero.hero-offscreen .hero-particles i,
+.hero.hero-offscreen .hero-glow,
+.hero.hero-offscreen .hero-audio-ring{animation-play-state:paused!important}
+.hero.hero-offscreen .hero-bg,
+.hero.hero-offscreen .hero-copy{will-change:auto!important}
+@media(max-width:760px){
+  .scroll-reveal{transform:translateY(10px)}
+  .popular-card.scroll-reveal{transform:translateX(-50%) translateY(10px)}
+  .popular-card.scroll-reveal.is-visible{transform:translateX(-50%)}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  .scroll-reveal,.scroll-reveal.is-visible,.release-card,.hero-bg,.hero-copy{
+    transition:none!important;transform:none!important;filter:none!important;opacity:1!important
+  }
+  .popular-card.scroll-reveal,.popular-card.scroll-reveal.is-visible{transform:translateX(-50%)!important}
+}
 </style>
 
 <style id="responsive-v13">
@@ -1404,19 +1422,30 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&easterOverlay?.clas
 <div class="signal-flash" id="signalFlash" aria-hidden="true"></div>
 <script id="scroll-experiment-v12-js">
 (()=>{
- const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
- const root=document.documentElement, hero=document.querySelector('.hero'), bg=document.querySelector('.hero-bg'), copy=document.querySelector('.hero-copy');
- const flash=document.getElementById('signalFlash');
- function tick(){const y=scrollY,max=document.documentElement.scrollHeight-innerHeight;root.style.setProperty('--scroll-p',max?Math.min(100,y/max*100):0);if(!reduce&&hero){const r=hero.getBoundingClientRect(),progress=Math.max(0,Math.min(1,-r.top/Math.max(1,r.height)));if(bg)bg.style.transform=`translate3d(0,${progress*70}px,0) scale(${1+progress*.09})`;if(copy){copy.style.transform=`translate3d(0,${-progress*48}px,0) scale(${1-progress*.035})`;copy.style.opacity=String(1-progress*.78)}}}
- let scrollFrame=0;
- function queueScroll(){if(!scrollFrame)scrollFrame=requestAnimationFrame(()=>{scrollFrame=0;tick();});}
- addEventListener('scroll',queueScroll,{passive:true});addEventListener('resize',queueScroll);tick();
- if(reduce || !('IntersectionObserver' in window))return;
- const targets=[...document.querySelectorAll('main section:not(.hero), .popular-card, .release-card, .story-copy, .newsletter-wrap')];targets.forEach(x=>x.classList.add('scroll-reveal'));
- const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('is-visible')}),{threshold:.12,rootMargin:'0px 0px -8% 0px'});targets.forEach(x=>io.observe(x));
- const cards=[...document.querySelectorAll('.release-card')];function focusCards(){let best=null,bd=1e9;cards.forEach(c=>{const r=c.getBoundingClientRect(),d=Math.abs(r.top+r.height/2-innerHeight/2);if(d<bd){bd=d;best=c}});cards.forEach(c=>{c.classList.toggle('release-focus',c===best&&bd<innerHeight*.48);c.classList.toggle('release-dim',best&&c!==best&&bd<innerHeight*.48)})}addEventListener('scroll',()=>requestAnimationFrame(focusCards),{passive:true});focusCards();
- const heads=[...document.querySelectorAll('section h2, section .section-title')];const chars='ØN01/\\ΞΔ░';heads.forEach(h=>{h.classList.add('decrypt-ready');const walker=document.createTreeWalker(h,NodeFilter.SHOW_TEXT);const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);const originals=nodes.map(node=>node.textContent);const total=originals.reduce((sum,text)=>sum+text.length,0);let done=false;new IntersectionObserver(es=>{if(done||!es[0].isIntersecting||reduce)return;done=true;h.dataset.decrypting='1';let n=0;const iv=setInterval(()=>{let offset=0;nodes.forEach((node,index)=>{const original=originals[index];node.textContent=[...original].map((ch,i)=>ch===' '?ch:(offset+i<n?ch:chars[Math.floor(Math.random()*chars.length)])).join('');offset+=original.length});n+=Math.max(1,Math.ceil(total/7));if(n>=total){clearInterval(iv);nodes.forEach((node,index)=>node.textContent=originals[index]);delete h.dataset.decrypting}},45)},{threshold:.65}).observe(h)});
- let last=0;document.querySelectorAll('#music,#releases,#story').forEach(el=>new IntersectionObserver(es=>{if(es[0].isIntersecting&&Date.now()-last>1200&&!reduce){last=Date.now();flash.classList.remove('fire');void flash.offsetWidth;flash.classList.add('fire')}},{threshold:.08}).observe(el));
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const hero=document.querySelector('.hero');
+
+  if(hero && 'IntersectionObserver' in window){
+    const heroObserver=new IntersectionObserver(([entry])=>{
+      hero.classList.toggle('hero-offscreen',!entry.isIntersecting);
+    },{threshold:.01});
+    heroObserver.observe(hero);
+  }
+
+  if(reduce || !('IntersectionObserver' in window))return;
+
+  const targets=[...document.querySelectorAll('main > section:not(.hero), .popular-card')];
+  targets.forEach(el=>el.classList.add('scroll-reveal'));
+
+  const revealObserver=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(!entry.isIntersecting)return;
+      entry.target.classList.add('is-visible');
+      revealObserver.unobserve(entry.target);
+    });
+  },{threshold:.08,rootMargin:'0px 0px -4% 0px'});
+
+  targets.forEach(el=>revealObserver.observe(el));
 })();
 </script>
 
