@@ -886,6 +886,14 @@ html{scroll-padding-top:80px}
   .runner-control-buttons{justify-content:stretch}
   .runner-primary,.runner-secondary{flex:1}
 }
+.runner-sound{width:42px;height:42px;flex:0 0 42px;display:grid;place-items:center;border:1px solid rgba(228,235,244,.2);border-radius:50%;background:rgba(255,255,255,.025);color:#d9e0e8;cursor:pointer}
+.runner-sound:hover{border-color:rgba(238,243,249,.48);color:#fff}
+.runner-sound svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.runner-sound .sound-off{display:none}
+.runner-sound.muted .sound-on{display:none}
+.runner-sound.muted .sound-off{display:block}
+@media(max-width:700px){.runner-sound{width:44px;flex-basis:44px}}
+
 
 </style>
 </head>
@@ -1092,6 +1100,12 @@ html{scroll-padding-top:80px}
         <div class="runner-controls">
           <span>ПРОБЕЛ / ТАП — ПРЫЖОК · ESC — ВЫХОД</span>
           <div class="runner-control-buttons">
+            <button class="runner-sound" id="runnerSoundToggle" type="button" aria-label="Выключить музыку игры" title="Выключить музыку игры" aria-pressed="false">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <g class="sound-on"><path d="M4 10v4h4l5 4V6L8 10H4z"/><path d="M16 9c1.4 1.5 1.4 4.5 0 6"/><path d="M18.5 6.5c3 3.2 3 7.8 0 11"/></g>
+                <g class="sound-off"><path d="M4 10v4h4l5 4V6L8 10H4z"/><path d="m16 9 5 6"/><path d="m21 9-5 6"/></g>
+              </svg>
+            </button>
             <button class="runner-primary" id="runnerJump" type="button">ПРЫЖОК</button>
             <button class="runner-secondary" id="runnerBack" type="button">НАЗАД К ПРИЁМНИКУ</button>
           </div>
@@ -1105,6 +1119,8 @@ html{scroll-padding-top:80px}
     </div>
   </div>
 </div>
+
+<audio id="signalRunnerMusic" preload="auto" loop src="signal-runner-loop-v2.mp3"></audio>
 
 <p id="playerStatus" class="hero-copy-accessible" role="status"></p>
 <div class="global-player player-54" id="globalPlayer" role="region" aria-label="Аудиоплеер">
@@ -1172,7 +1188,7 @@ const gameI18n={
     nearLock:'ПОЧТИ ЗАХВАЧЕН',nearHint:'ВЫРАВНИВАНИЕ ЧАСТОТЫ // ОЧЕНЬ БЛИЗКО',
     stabilizing:'СТАБИЛИЗАЦИЯ',hold:'УДЕРЖИВАЙ ЧАСТОТУ // НЕ ДВИГАЙ',
     decryptComplete:'РАСШИФРОВКА ЗАВЕРШЕНА // ØN-003',
-    lost:'ПЕРЕДАЧА ПОТЕРЯНА',reconnect:'ПЕРЕПОДКЛЮЧИТЬСЯ',speed:'СКОРОСТЬ',calmSpace:'СПОКОЙНЫЙ КОСМОС',signalDrift:'ДРЕЙФ СИГНАЛА',distortionField:'ПОЛЕ ИСКАЖЕНИЙ'
+    lost:'ПЕРЕДАЧА ПОТЕРЯНА',reconnect:'ПЕРЕПОДКЛЮЧИТЬСЯ',speed:'СКОРОСТЬ',soundOff:'Выключить музыку игры',soundOn:'Включить музыку игры',calmSpace:'СПОКОЙНЫЙ КОСМОС',signalDrift:'ДРЕЙФ СИГНАЛА',distortionField:'ПОЛЕ ИСКАЖЕНИЙ'
   },
   en:{
     intercept:'ØN // INTERCEPT 003',previous:'PREVIOUS LOCK // VERIFIED',
@@ -1190,7 +1206,7 @@ const gameI18n={
     nearLock:'NEAR LOCK',nearHint:'FREQUENCY ALIGNMENT // VERY CLOSE',
     stabilizing:'STABILIZING',hold:'HOLD FREQUENCY // DO NOT MOVE',
     decryptComplete:'DECRYPTION COMPLETE // ØN-003',
-    lost:'TRANSMISSION LOST',reconnect:'RECONNECT',speed:'SPEED',calmSpace:'CALM SPACE',signalDrift:'SIGNAL DRIFT',distortionField:'DISTORTION FIELD'
+    lost:'TRANSMISSION LOST',reconnect:'RECONNECT',speed:'SPEED',soundOff:'Turn game music off',soundOn:'Turn game music on',calmSpace:'CALM SPACE',signalDrift:'SIGNAL DRIFT',distortionField:'DISTORTION FIELD'
   }
 };
 function gameText(key){
@@ -1400,6 +1416,8 @@ const runnerSignals=document.getElementById('runnerSignals');
 const runnerBest=document.getElementById('runnerBest');
 const runnerJump=document.getElementById('runnerJump');
 const runnerBack=document.getElementById('runnerBack');
+const runnerSoundToggle=document.getElementById('runnerSoundToggle');
+const runnerMusic=document.getElementById('signalRunnerMusic');
 const signalZoneBadge=document.getElementById('signalZoneBadge');
 
 const SIGNAL_TARGET=101.7;
@@ -1498,6 +1516,58 @@ let runnerDistanceValue=0,runnerSignalCount=0,runnerSpeed=300,runnerSpawn=0,runn
 let runnerObstacles=[],runnerOrbs=[],runnerDust=[],runnerStars=[],runnerSecret=false,runnerStage=0,runnerStageTimer=0;
 const runnerPlayer={x:104,y:RUNNER_GROUND-42,w:42,h:42,vy:0,onGround:true};
 
+let runnerMusicFade=0;
+function getRunnerMusicMuted(){
+  try{return localStorage.getItem('ornivaise-runner-music-muted')==='1'}catch(e){return false}
+}
+function setRunnerMusicMuted(muted){
+  try{localStorage.setItem('ornivaise-runner-music-muted',muted?'1':'0')}catch(e){}
+  syncRunnerSoundButton();
+  if(!runnerMusic)return;
+  if(muted){
+    runnerMusic.pause();
+  }else if(runnerRunning){
+    runnerMusic.volume=.26;
+    runnerMusic.play().catch(()=>{});
+  }
+}
+function syncRunnerSoundButton(){
+  if(!runnerSoundToggle)return;
+  const muted=getRunnerMusicMuted();
+  runnerSoundToggle.classList.toggle('muted',muted);
+  runnerSoundToggle.setAttribute('aria-pressed',String(muted));
+  const label=gameText(muted?'soundOn':'soundOff');
+  runnerSoundToggle.setAttribute('aria-label',label);
+  runnerSoundToggle.setAttribute('title',label);
+}
+function fadeRunnerMusic(target,duration=260,pauseAfter=false){
+  if(!runnerMusic)return;
+  cancelAnimationFrame(runnerMusicFade);
+  const from=runnerMusic.volume;
+  const start=performance.now();
+  const tick=now=>{
+    const p=Math.min(1,(now-start)/duration);
+    runnerMusic.volume=from+(target-from)*p;
+    if(p<1)runnerMusicFade=requestAnimationFrame(tick);
+    else if(pauseAfter)runnerMusic.pause();
+  };
+  runnerMusicFade=requestAnimationFrame(tick);
+}
+function startRunnerMusic(){
+  if(!runnerMusic||getRunnerMusicMuted())return;
+  document.getElementById('audioShigurePreview')?.pause();
+  try{activeAudio()?.pause()}catch(e){}
+  runnerMusic.volume=.26;
+  runnerMusic.play().catch(()=>{});
+}
+function stopRunnerMusic(reset=true){
+  if(!runnerMusic)return;
+  cancelAnimationFrame(runnerMusicFade);
+  runnerMusic.pause();
+  runnerMusic.volume=.26;
+  if(reset)runnerMusic.currentTime=0;
+}
+
 function getRunnerBest(){
   try{return Number(localStorage.getItem('ornivaise-runner-best')||0)||0}catch(e){return 0}
 }
@@ -1572,6 +1642,7 @@ function openRunner(){
 }
 function closeRunner(){
   cancelAnimationFrame(runnerRaf);runnerRaf=0;runnerRunning=false;
+  stopRunnerMusic(true);
   signalRunner?.classList.remove('open');
   signalRunner?.setAttribute('aria-hidden','true');
   signalGame?.classList.remove('runner-mode');
@@ -1593,6 +1664,7 @@ function runnerJumpAction(){
 function startRunner(){
   resetRunner();
   runnerRunning=true;
+  startRunnerMusic();
   hideRunnerOverlay();
   runnerLast=performance.now();
   runnerRaf=requestAnimationFrame(runnerLoop);
@@ -1618,6 +1690,7 @@ function rectHit(a,b,pad=4){
 function gameOverRunner(){
   runnerRunning=false;runnerGameOver=true;
   cancelAnimationFrame(runnerRaf);runnerRaf=0;
+  if(!getRunnerMusicMuted())fadeRunnerMusic(.11,320,false);
   const best=Math.max(getRunnerBest(),runnerDistanceValue);
   setRunnerBest(best);updateRunnerHud();
   showRunnerOverlay(gameText('lost'),`${gameText('distance')} // ${padRunner(runnerDistanceValue)} · ${gameText('signals')} // ${padRunner(runnerSignalCount,2)}`,gameText('reconnect'));
@@ -1851,6 +1924,7 @@ function drawRunner(){
 runnerOverlayButton?.addEventListener('click',startRunner);
 signalRunnerStart?.addEventListener('click',openRunner);
 runnerBack?.addEventListener('click',()=>{closeRunner();signalTuner?.focus()});
+runnerSoundToggle?.addEventListener('click',()=>setRunnerMusicMuted(!getRunnerMusicMuted()));
 runnerJump?.addEventListener('click',runnerJumpAction);
 runnerCanvas?.addEventListener('pointerdown',e=>{e.preventDefault();runnerJumpAction()});
 runnerCanvas?.addEventListener('keydown',e=>{
@@ -1862,6 +1936,7 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){e.preventDefault();closeRunner();signalTuner?.focus()}
 });
 updateRunnerHud();
+syncRunnerSoundButton();
 drawRunner();
 
 function openEaster(){
@@ -1903,6 +1978,7 @@ updateSignalGame();
 
 window.refreshGameLanguage=()=>{
   const title=document.getElementById('easterTitle');
+  syncRunnerSoundButton();
   if(signalZoneBadge)signalZoneBadge.textContent=getRunnerStageLabel(runnerStage);
   if(signalRunner?.classList.contains('open')){
     if(title)title.textContent=gameText('runnerTitle');
