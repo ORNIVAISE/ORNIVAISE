@@ -1172,7 +1172,7 @@ const gameI18n={
     nearLock:'ПОЧТИ ЗАХВАЧЕН',nearHint:'ВЫРАВНИВАНИЕ ЧАСТОТЫ // ОЧЕНЬ БЛИЗКО',
     stabilizing:'СТАБИЛИЗАЦИЯ',hold:'УДЕРЖИВАЙ ЧАСТОТУ // НЕ ДВИГАЙ',
     decryptComplete:'РАСШИФРОВКА ЗАВЕРШЕНА // ØN-003',
-    lost:'ПЕРЕДАЧА ПОТЕРЯНА',reconnect:'ПЕРЕПОДКЛЮЧИТЬСЯ',speed:'СКОРОСТЬ'
+    lost:'ПЕРЕДАЧА ПОТЕРЯНА',reconnect:'ПЕРЕПОДКЛЮЧИТЬСЯ',speed:'СКОРОСТЬ',calmSpace:'СПОКОЙНЫЙ КОСМОС',signalDrift:'ДРЕЙФ СИГНАЛА',distortionField:'ПОЛЕ ИСКАЖЕНИЙ'
   },
   en:{
     intercept:'ØN // INTERCEPT 003',previous:'PREVIOUS LOCK // VERIFIED',
@@ -1190,7 +1190,7 @@ const gameI18n={
     nearLock:'NEAR LOCK',nearHint:'FREQUENCY ALIGNMENT // VERY CLOSE',
     stabilizing:'STABILIZING',hold:'HOLD FREQUENCY // DO NOT MOVE',
     decryptComplete:'DECRYPTION COMPLETE // ØN-003',
-    lost:'TRANSMISSION LOST',reconnect:'RECONNECT',speed:'SPEED'
+    lost:'TRANSMISSION LOST',reconnect:'RECONNECT',speed:'SPEED',calmSpace:'CALM SPACE',signalDrift:'SIGNAL DRIFT',distortionField:'DISTORTION FIELD'
   }
 };
 function gameText(key){
@@ -1211,7 +1211,7 @@ function applyGameLanguage(lang){
   set('.runner-stat:nth-child(1) small','distance');
   set('.runner-stat:nth-child(2) small','signals');
   set('.runner-stat:nth-child(3) small','best');
-  set('#signalZoneBadge','unknownTransmission');
+  if(signalZoneBadge)signalZoneBadge.textContent=getRunnerStageLabel(typeof runnerStage==='number'?runnerStage:0);
   set('.runner-overlay small','runProtocol');
   set('.runner-controls > span','controls');
   set('#runnerJump','jump');
@@ -1494,9 +1494,9 @@ function updateSignalGame(){
 const runnerCtx=runnerCanvas?.getContext('2d');
 const RUNNER_W=960,RUNNER_H=360,RUNNER_GROUND=292;
 let runnerRaf=0,runnerRunning=false,runnerGameOver=false,runnerLast=0;
-let runnerDistanceValue=0,runnerSignalCount=0,runnerSpeed=330,runnerSpawn=0,runnerOrbSpawn=0;
-let runnerObstacles=[],runnerOrbs=[],runnerDust=[],runnerStars=[],runnerSecret=false;
-const runnerPlayer={x:104,y:RUNNER_GROUND-44,w:34,h:44,vy:0,onGround:true};
+let runnerDistanceValue=0,runnerSignalCount=0,runnerSpeed=300,runnerSpawn=0,runnerOrbSpawn=0;
+let runnerObstacles=[],runnerOrbs=[],runnerDust=[],runnerStars=[],runnerSecret=false,runnerStage=0,runnerStageTimer=0;
+const runnerPlayer={x:104,y:RUNNER_GROUND-42,w:42,h:42,vy:0,onGround:true};
 
 function getRunnerBest(){
   try{return Number(localStorage.getItem('ornivaise-runner-best')||0)||0}catch(e){return 0}
@@ -1515,6 +1515,26 @@ function seedRunnerStars(){
 }
 seedRunnerStars();
 
+function getRunnerStage(distance=runnerDistanceValue){
+  if(distance>=3000)return 3;
+  if(distance>=1900)return 2;
+  if(distance>=900)return 1;
+  return 0;
+}
+function getRunnerStageLabel(stage){
+  if(stage===1)return gameText('signalDrift');
+  if(stage===2)return gameText('distortionField');
+  if(stage===3)return gameText('unknownTransmission');
+  return gameText('calmSpace');
+}
+function announceRunnerStage(stage){
+  runnerStageTimer=stage===3?999:1.8;
+  if(signalZoneBadge){
+    signalZoneBadge.textContent=getRunnerStageLabel(stage);
+    signalZoneBadge.classList.add('visible');
+  }
+}
+
 function showRunnerOverlay(title,textValue,buttonText){
   if(!runnerOverlay)return;
   runnerOverlayTitle.textContent=title;
@@ -1531,12 +1551,12 @@ function updateRunnerHud(){
 function resetRunner(){
   cancelAnimationFrame(runnerRaf);runnerRaf=0;
   runnerRunning=false;runnerGameOver=false;runnerLast=0;
-  runnerDistanceValue=0;runnerSignalCount=0;runnerSpeed=330;
-  runnerSpawn=.85;runnerOrbSpawn=1.9;
+  runnerDistanceValue=0;runnerSignalCount=0;runnerSpeed=300;
+  runnerSpawn=.95;runnerOrbSpawn=1.9;
   runnerObstacles=[];runnerOrbs=[];runnerDust=[];
-  runnerSecret=false;
+  runnerSecret=false;runnerStage=0;runnerStageTimer=0;
   signalZoneBadge?.classList.remove('visible');
-  Object.assign(runnerPlayer,{x:104,y:RUNNER_GROUND-44,vy:0,onGround:true});
+  Object.assign(runnerPlayer,{x:104,y:RUNNER_GROUND-42,vy:0,onGround:true});
   updateRunnerHud();
   drawRunner();
 }
@@ -1567,7 +1587,7 @@ function runnerJumpAction(){
   if(runnerPlayer.onGround){
     runnerPlayer.vy=-640;
     runnerPlayer.onGround=false;
-    for(let i=0;i<7;i++)runnerDust.push({x:runnerPlayer.x+8,y:RUNNER_GROUND-3,vx:-60-Math.random()*90,vy:-20-Math.random()*55,life:.4+Math.random()*.25});
+    for(let i=0;i<7;i++)runnerDust.push({x:runnerPlayer.x+20,y:RUNNER_GROUND-4,vx:-60-Math.random()*90,vy:-20-Math.random()*55,life:.4+Math.random()*.25});
   }
 }
 function startRunner(){
@@ -1611,10 +1631,17 @@ function runnerLoop(ts){
 }
 function updateRunner(dt){
   runnerDistanceValue+=runnerSpeed*dt*.18;
-  runnerSpeed=Math.min(590,330+runnerDistanceValue*.055);
-  if(!runnerSecret&&runnerDistanceValue>=3000){
-    runnerSecret=true;
-    signalZoneBadge?.classList.add('visible');
+  // Chrome-Dino style difficulty curve: smooth continuous acceleration with a safe cap.
+  runnerSpeed=Math.min(680,300+runnerDistanceValue*.072);
+  const nextStage=getRunnerStage(runnerDistanceValue);
+  if(nextStage!==runnerStage){
+    runnerStage=nextStage;
+    runnerSecret=runnerStage===3;
+    announceRunnerStage(runnerStage);
+  }
+  if(runnerStageTimer>0&&runnerStage!==3){
+    runnerStageTimer-=dt;
+    if(runnerStageTimer<=0)signalZoneBadge?.classList.remove('visible');
   }
 
   runnerPlayer.vy+=1780*dt;
@@ -1626,7 +1653,7 @@ function updateRunner(dt){
   runnerSpawn-=dt;
   if(runnerSpawn<=0){
     spawnRunnerObstacle();
-    runnerSpawn=Math.max(.72,1.42-runnerSpeed*.0009)+Math.random()*.58;
+    runnerSpawn=Math.max(.58,1.48-runnerSpeed*.00105)+Math.random()*.46;
   }
   runnerOrbSpawn-=dt;
   if(runnerOrbSpawn<=0){
@@ -1661,43 +1688,101 @@ function drawRunner(){
   const ctx=runnerCtx;
   ctx.clearRect(0,0,RUNNER_W,RUNNER_H);
 
+  const stage=getRunnerStage(runnerDistanceValue);
+  const palettes=[
+    ['#07101a','#05090e','#020406'],
+    ['#09101a','#090812','#030407'],
+    ['#0d0a17','#070713','#030307'],
+    ['#12091c','#07040d','#020205']
+  ];
+  const p=palettes[stage];
   const bg=ctx.createLinearGradient(0,0,0,RUNNER_H);
-  if(runnerSecret){
-    bg.addColorStop(0,'#090710');bg.addColorStop(.7,'#05070a');bg.addColorStop(1,'#030406');
-  }else{
-    bg.addColorStop(0,'#080b10');bg.addColorStop(.7,'#05070a');bg.addColorStop(1,'#030406');
-  }
+  bg.addColorStop(0,p[0]);bg.addColorStop(.68,p[1]);bg.addColorStop(1,p[2]);
   ctx.fillStyle=bg;ctx.fillRect(0,0,RUNNER_W,RUNNER_H);
 
+  // Moving nebulae: become stronger as the run progresses.
   ctx.save();
-  runnerStars.forEach(s=>{
-    let x=(s.x-runnerDistanceValue*(s.r*.19))%RUNNER_W;if(x<0)x+=RUNNER_W;
-    ctx.globalAlpha=s.a+(runnerSecret?.09:0);
-    ctx.fillStyle='#eef3f8';ctx.fillRect(x,s.y,s.r,s.r);
+  const nebulaAlpha=.045+stage*.035;
+  const n1x=(RUNNER_W*.78-(runnerDistanceValue*.035)%RUNNER_W+RUNNER_W)%RUNNER_W;
+  let glow=ctx.createRadialGradient(n1x,115,15,n1x,115,250);
+  glow.addColorStop(0,stage>=2?`rgba(131,92,186,${nebulaAlpha+.04})`:`rgba(87,118,151,${nebulaAlpha})`);
+  glow.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=glow;ctx.fillRect(0,0,RUNNER_W,RUNNER_H);
+  const n2x=(RUNNER_W*.25-(runnerDistanceValue*.018)%RUNNER_W+RUNNER_W)%RUNNER_W;
+  glow=ctx.createRadialGradient(n2x,210,10,n2x,210,190);
+  glow.addColorStop(0,stage===3?'rgba(164,102,202,.12)':'rgba(70,92,122,.045)');
+  glow.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=glow;ctx.fillRect(0,0,RUNNER_W,RUNNER_H);
+  ctx.restore();
+
+  // Multi-depth star parallax.
+  ctx.save();
+  runnerStars.forEach((s,i)=>{
+    const layer=1+(i%3);
+    let x=(s.x-runnerDistanceValue*(.08*layer+s.r*.08))%RUNNER_W;if(x<0)x+=RUNNER_W;
+    ctx.globalAlpha=s.a+stage*.035;
+    ctx.fillStyle=stage===3&&i%8===0?'#d4bdea':'#eef3f8';
+    ctx.fillRect(x,s.y,s.r+(layer===3?.25:0),s.r+(layer===3?.25:0));
   });
   ctx.restore();
 
-  if(runnerSecret){
+  // Distant orbital planet enters from stage 1 onward.
+  if(stage>=1){
+    const planetX=RUNNER_W-155-((runnerDistanceValue*.018)%150);
+    const planetY=92;
     ctx.save();
-    const glow=ctx.createRadialGradient(RUNNER_W*.7,RUNNER_H*.38,10,RUNNER_W*.7,RUNNER_H*.38,260);
-    glow.addColorStop(0,'rgba(138,104,188,.14)');glow.addColorStop(1,'rgba(20,12,32,0)');
-    ctx.fillStyle=glow;ctx.fillRect(0,0,RUNNER_W,RUNNER_H);
+    ctx.globalAlpha=.28+stage*.07;
+    ctx.strokeStyle=stage>=2?'rgba(202,181,226,.32)':'rgba(183,201,220,.22)';
+    ctx.lineWidth=1.2;
+    ctx.beginPath();ctx.ellipse(planetX,planetY,68,17,-.22,0,Math.PI*2);ctx.stroke();
+    const pg=ctx.createRadialGradient(planetX-12,planetY-15,5,planetX,planetY,45);
+    pg.addColorStop(0,stage===3?'rgba(125,92,155,.62)':'rgba(99,117,136,.45)');
+    pg.addColorStop(1,'rgba(18,22,30,.62)');
+    ctx.fillStyle=pg;ctx.beginPath();ctx.arc(planetX,planetY,34,0,Math.PI*2);ctx.fill();
     ctx.restore();
   }
 
-  ctx.strokeStyle='rgba(220,229,239,.16)';ctx.lineWidth=1;
+  // Scan / distortion field, intentionally subtle.
+  if(stage>=2){
+    ctx.save();
+    ctx.globalAlpha=stage===3?.12:.065;
+    ctx.strokeStyle=stage===3?'rgba(214,183,236,.35)':'rgba(188,204,222,.24)';
+    for(let y=35;y<RUNNER_GROUND;y+=34){
+      const shift=Math.sin((runnerDistanceValue*.03+y)*.08)*8;
+      ctx.beginPath();ctx.moveTo(shift,y+.5);ctx.lineTo(RUNNER_W+shift,y+.5);ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  if(stage===3){
+    // Unknown Transmission anomaly.
+    ctx.save();
+    const ax=RUNNER_W*.72,ay=132;
+    const anomaly=ctx.createRadialGradient(ax,ay,10,ax,ay,165);
+    anomaly.addColorStop(0,'rgba(151,98,192,.18)');
+    anomaly.addColorStop(.45,'rgba(78,48,112,.09)');
+    anomaly.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=anomaly;ctx.fillRect(0,0,RUNNER_W,RUNNER_H);
+    ctx.fillStyle='rgba(1,1,3,.88)';ctx.beginPath();ctx.arc(ax,ay,49,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='rgba(198,164,226,.28)';ctx.lineWidth=1.4;
+    ctx.beginPath();ctx.ellipse(ax,ay,84,20,-.28,0,Math.PI*2);ctx.stroke();
+    ctx.restore();
+  }
+
+  ctx.strokeStyle=stage===3?'rgba(204,177,226,.24)':'rgba(220,229,239,.16)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(0,RUNNER_GROUND+.5);ctx.lineTo(RUNNER_W,RUNNER_GROUND+.5);ctx.stroke();
 
   const dashOffset=(runnerDistanceValue*5)%48;
-  ctx.strokeStyle='rgba(220,229,239,.07)';
+  ctx.strokeStyle=stage===3?'rgba(183,146,215,.12)':'rgba(220,229,239,.07)';
   for(let x=-dashOffset;x<RUNNER_W;x+=48){
     ctx.beginPath();ctx.moveTo(x,RUNNER_GROUND+16);ctx.lineTo(x+22,RUNNER_GROUND+16);ctx.stroke();
   }
 
   runnerObstacles.forEach(o=>{
     ctx.save();
-    ctx.fillStyle=runnerSecret?'rgba(190,168,220,.25)':'rgba(205,215,226,.18)';
-    ctx.strokeStyle=runnerSecret?'rgba(219,202,240,.58)':'rgba(222,230,239,.48)';
+    const hot=stage>=2;
+    ctx.fillStyle=hot?'rgba(174,153,205,.22)':'rgba(205,215,226,.18)';
+    ctx.strokeStyle=hot?'rgba(215,196,232,.5)':'rgba(222,230,239,.48)';
     ctx.lineWidth=1;
     if(o.type==='spire'){
       ctx.beginPath();ctx.moveTo(o.x,o.y+o.h);ctx.lineTo(o.x+o.w*.5,o.y);ctx.lineTo(o.x+o.w,o.y+o.h);ctx.closePath();ctx.fill();ctx.stroke();
@@ -1712,32 +1797,54 @@ function drawRunner(){
   runnerOrbs.forEach(o=>{
     ctx.save();
     const pr=o.r+Math.sin(o.pulse)*2;
-    ctx.strokeStyle='rgba(235,240,247,.72)';ctx.fillStyle='rgba(235,240,247,.055)';
-    ctx.shadowBlur=12;ctx.shadowColor='rgba(220,228,241,.3)';
+    ctx.strokeStyle=stage===3?'rgba(222,194,241,.78)':'rgba(235,240,247,.72)';
+    ctx.fillStyle=stage===3?'rgba(175,122,214,.09)':'rgba(235,240,247,.055)';
+    ctx.shadowBlur=12;ctx.shadowColor=stage===3?'rgba(181,135,220,.36)':'rgba(220,228,241,.3)';
     ctx.beginPath();ctx.arc(o.x,o.y,pr,0,Math.PI*2);ctx.fill();ctx.stroke();
     ctx.shadowBlur=0;ctx.fillStyle='#e8edf3';ctx.font='bold 12px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('Ø',o.x,o.y+.5);
     ctx.restore();
   });
 
-  runnerDust.forEach(p=>{
-    ctx.save();ctx.globalAlpha=Math.max(0,p.life*1.8);ctx.fillStyle='#dbe3ec';ctx.fillRect(p.x,p.y,2,2);ctx.restore();
+  runnerDust.forEach(particle=>{
+    ctx.save();ctx.globalAlpha=Math.max(0,particle.life*1.8);
+    ctx.fillStyle=stage===3?'#d9bfe9':'#dbe3ec';
+    ctx.fillRect(particle.x,particle.y,2,2);ctx.restore();
   });
 
+  // Planet Ø: ringed sphere with soft motion trail.
   ctx.save();
-  const px=runnerPlayer.x,py=runnerPlayer.y;
-  ctx.translate(px,py);
-  ctx.fillStyle='#e7edf4';ctx.strokeStyle='rgba(255,255,255,.72)';
-  ctx.shadowBlur=runnerSecret?18:9;ctx.shadowColor=runnerSecret?'rgba(187,153,225,.42)':'rgba(218,229,242,.25)';
-  ctx.fillRect(5,4,24,32);
+  const cx=runnerPlayer.x+runnerPlayer.w/2,cy=runnerPlayer.y+runnerPlayer.h/2;
+  for(let i=3;i>=1;i--){
+    const tx=cx-i*(7+runnerSpeed*.008);
+    ctx.globalAlpha=.035*i;
+    ctx.fillStyle=stage===3?'#bd8ddb':'#c8d7e5';
+    ctx.beginPath();ctx.arc(tx,cy+i*.8,10+i*1.5,0,Math.PI*2);ctx.fill();
+  }
+  ctx.globalAlpha=1;
+  ctx.translate(cx,cy);
+  const spin=runnerDistanceValue*.035;
+  ctx.rotate(Math.sin(spin)*.045);
+
+  ctx.strokeStyle=stage===3?'rgba(222,192,241,.82)':'rgba(225,234,243,.76)';
+  ctx.lineWidth=2;
+  ctx.beginPath();ctx.ellipse(0,1,28,8,-.24,0,Math.PI*2);ctx.stroke();
+
+  const planetGrad=ctx.createRadialGradient(-8,-9,3,0,0,22);
+  planetGrad.addColorStop(0,stage===3?'#9d78b8':'#7f96aa');
+  planetGrad.addColorStop(.48,stage===3?'#3e2d52':'#2f4252');
+  planetGrad.addColorStop(1,'#090d12');
+  ctx.shadowBlur=stage===3?22:13;
+  ctx.shadowColor=stage===3?'rgba(185,137,220,.5)':'rgba(189,211,232,.34)';
+  ctx.fillStyle=planetGrad;ctx.beginPath();ctx.arc(0,0,19,0,Math.PI*2);ctx.fill();
   ctx.shadowBlur=0;
-  ctx.fillStyle='#05070a';ctx.font='bold 17px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('Ø',17,20);
-  ctx.strokeStyle='rgba(230,237,246,.75)';ctx.lineWidth=2;
-  const leg=Math.sin(runnerDistanceValue*.35)*4;
-  ctx.beginPath();ctx.moveTo(10,36);ctx.lineTo(8+leg,44);ctx.moveTo(24,36);ctx.lineTo(26-leg,44);ctx.stroke();
+
+  ctx.strokeStyle='rgba(245,248,251,.22)';ctx.lineWidth=.8;
+  ctx.beginPath();ctx.arc(-2,-1,12,-.6,1.8);ctx.stroke();
+  ctx.fillStyle='#f0f4f7';ctx.font='bold 19px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('Ø',0,1);
   ctx.restore();
 
   ctx.save();
-  ctx.fillStyle='rgba(210,219,229,.45)';ctx.font='9px Arial';ctx.textAlign='right';
+  ctx.fillStyle='rgba(210,219,229,.48)';ctx.font='9px Arial';ctx.textAlign='right';
   ctx.fillText('ØN // '+gameText('speed')+' '+Math.round(runnerSpeed),RUNNER_W-18,24);
   ctx.restore();
 }
