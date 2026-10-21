@@ -1211,7 +1211,7 @@ function applyGameLanguage(lang){
   set('.runner-stat:nth-child(1) small','distance');
   set('.runner-stat:nth-child(2) small','signals');
   set('.runner-stat:nth-child(3) small','best');
-  if(signalZoneBadge)signalZoneBadge.textContent=getRunnerStageLabel(typeof runnerStage==='number'?runnerStage:0);
+  set('#signalZoneBadge','unknownTransmission');
   set('.runner-overlay small','runProtocol');
   set('.runner-controls > span','controls');
   set('#runnerJump','jump');
@@ -1903,6 +1903,7 @@ updateSignalGame();
 
 window.refreshGameLanguage=()=>{
   const title=document.getElementById('easterTitle');
+  if(signalZoneBadge)signalZoneBadge.textContent=getRunnerStageLabel(runnerStage);
   if(signalRunner?.classList.contains('open')){
     if(title)title.textContent=gameText('runnerTitle');
     if(runnerOverlay?.classList.contains('visible')){
