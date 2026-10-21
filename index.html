@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#050608">
   <meta name="referrer" content="no-referrer">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; style-src 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; script-src 'unsafe-inline'; connect-src 'none'; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: blob:; style-src 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' data: blob:; script-src 'unsafe-inline'; connect-src 'https://fnomjabadilhfatharve.supabase.co'; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'none'">
   <title>ØRNIVAISE (ORNIVAISE) — музыка и релизы</title>
   <link rel="canonical" href="https://ornivaise.ru/">
   <meta property="og:url" content="https://ornivaise.ru/">
@@ -895,6 +895,34 @@ html{scroll-padding-top:80px}
 @media(max-width:700px){.runner-sound{width:44px;flex-basis:44px}}
 
 
+
+.runner-leaderboard{border-top:1px solid rgba(226,233,242,.09);padding:14px}
+.runner-lb-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.runner-lb-head strong{font-size:11px;letter-spacing:.14em}
+.runner-lb-head span{font-size:8px;letter-spacing:.12em;color:#6f7985}
+.runner-score-submit{display:none;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin:0 0 12px}
+.runner-score-submit.visible{display:grid}
+.runner-score-submit input{min-width:0;height:42px;border:1px solid rgba(228,235,244,.16);border-radius:10px;background:rgba(255,255,255,.025);color:#eef2f6;padding:0 12px;font:inherit;font-size:13px;letter-spacing:.05em;outline:none}
+.runner-score-submit input:focus{border-color:rgba(238,243,249,.42)}
+.runner-score-submit button{min-height:42px;border:1px solid rgba(228,235,244,.2);border-radius:10px;background:rgba(255,255,255,.035);color:#d9e0e8;padding:0 14px;font:inherit;font-size:9px;letter-spacing:.12em;cursor:pointer}
+.runner-score-submit button:disabled{opacity:.45;cursor:not-allowed}
+.runner-score-status{grid-column:1/-1;min-height:16px;margin:0;font-size:9px;letter-spacing:.08em;color:#8e99a6}
+.runner-lb-table{width:100%;border-collapse:collapse;table-layout:fixed}
+.runner-lb-table th,.runner-lb-table td{padding:8px 6px;border-top:1px solid rgba(226,233,242,.07);font-size:9px;letter-spacing:.08em;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.runner-lb-table th{color:#69737f;font-weight:400;font-size:7px}
+.runner-lb-table th:nth-child(1),.runner-lb-table td:nth-child(1){width:38px;text-align:center}
+.runner-lb-table th:nth-child(3),.runner-lb-table td:nth-child(3){width:82px;text-align:right}
+.runner-lb-table th:nth-child(4),.runner-lb-table td:nth-child(4){width:58px;text-align:right}
+.runner-lb-table tr.current td{color:#fff;background:rgba(255,255,255,.025)}
+.runner-lb-empty{padding:14px 6px;color:#6f7985;font-size:9px;letter-spacing:.08em}
+@media(max-width:560px){
+  .runner-score-submit{grid-template-columns:1fr}
+  .runner-score-submit button{width:100%}
+  .runner-lb-table th,.runner-lb-table td{font-size:8px;padding:7px 4px}
+  .runner-lb-table th:nth-child(3),.runner-lb-table td:nth-child(3){width:68px}
+  .runner-lb-table th:nth-child(4),.runner-lb-table td:nth-child(4){width:46px}
+}
+
 </style>
 </head>
 <body data-track-theme="signal001">
@@ -1110,6 +1138,20 @@ html{scroll-padding-top:80px}
             <button class="runner-secondary" id="runnerBack" type="button">НАЗАД К ПРИЁМНИКУ</button>
           </div>
         </div>
+
+        <div class="runner-leaderboard" id="runnerLeaderboard">
+          <div class="runner-lb-head">
+            <strong id="runnerLbTitle">ТАБЛИЦА ЛИДЕРОВ</strong>
+            <span>TOP 20</span>
+          </div>
+          <form class="runner-score-submit" id="runnerScoreForm">
+            <input id="runnerNameInput" type="text" maxlength="20" autocomplete="nickname" placeholder="Введи имя" aria-label="Имя игрока">
+            <button id="runnerScoreSave" type="submit">СОХРАНИТЬ РЕЗУЛЬТАТ</button>
+            <p class="runner-score-status" id="runnerScoreStatus" role="status"></p>
+          </form>
+          <div id="runnerLeaderboardBody" class="runner-lb-empty">Загрузка рейтинга…</div>
+        </div>
+
       </div>
     </div>
 
@@ -1188,7 +1230,7 @@ const gameI18n={
     nearLock:'ПОЧТИ ЗАХВАЧЕН',nearHint:'ВЫРАВНИВАНИЕ ЧАСТОТЫ // ОЧЕНЬ БЛИЗКО',
     stabilizing:'СТАБИЛИЗАЦИЯ',hold:'УДЕРЖИВАЙ ЧАСТОТУ // НЕ ДВИГАЙ',
     decryptComplete:'РАСШИФРОВКА ЗАВЕРШЕНА // ØN-003',
-    lost:'ПЕРЕДАЧА ПОТЕРЯНА',reconnect:'ПЕРЕПОДКЛЮЧИТЬСЯ',speed:'СКОРОСТЬ',soundOff:'Выключить музыку игры',soundOn:'Включить музыку игры',calmSpace:'СПОКОЙНЫЙ КОСМОС',signalDrift:'ДРЕЙФ СИГНАЛА',distortionField:'ПОЛЕ ИСКАЖЕНИЙ'
+    lost:'ПЕРЕДАЧА ПОТЕРЯНА',reconnect:'ПЕРЕПОДКЛЮЧИТЬСЯ',speed:'СКОРОСТЬ',soundOff:'Выключить музыку игры',soundOn:'Включить музыку игры',calmSpace:'СПОКОЙНЫЙ КОСМОС',signalDrift:'ДРЕЙФ СИГНАЛА',distortionField:'ПОЛЕ ИСКАЖЕНИЙ',leaderboard:'ТАБЛИЦА ЛИДЕРОВ',player:'ИГРОК',saveScore:'СОХРАНИТЬ РЕЗУЛЬТАТ',namePlaceholder:'Введи имя',loadingBoard:'Загрузка рейтинга…',emptyBoard:'Пока нет результатов',saveOk:'РЕЗУЛЬТАТ СОХРАНЁН',saveError:'Не удалось сохранить результат',nameError:'Введи имя от 1 до 20 символов'
   },
   en:{
     intercept:'ØN // INTERCEPT 003',previous:'PREVIOUS LOCK // VERIFIED',
@@ -1206,7 +1248,7 @@ const gameI18n={
     nearLock:'NEAR LOCK',nearHint:'FREQUENCY ALIGNMENT // VERY CLOSE',
     stabilizing:'STABILIZING',hold:'HOLD FREQUENCY // DO NOT MOVE',
     decryptComplete:'DECRYPTION COMPLETE // ØN-003',
-    lost:'TRANSMISSION LOST',reconnect:'RECONNECT',speed:'SPEED',soundOff:'Turn game music off',soundOn:'Turn game music on',calmSpace:'CALM SPACE',signalDrift:'SIGNAL DRIFT',distortionField:'DISTORTION FIELD'
+    lost:'TRANSMISSION LOST',reconnect:'RECONNECT',speed:'SPEED',soundOff:'Turn game music off',soundOn:'Turn game music on',calmSpace:'CALM SPACE',signalDrift:'SIGNAL DRIFT',distortionField:'DISTORTION FIELD',leaderboard:'LEADERBOARD',player:'PLAYER',saveScore:'SAVE RESULT',namePlaceholder:'Enter name',loadingBoard:'Loading leaderboard…',emptyBoard:'No scores yet',saveOk:'RESULT SAVED',saveError:'Could not save result',nameError:'Enter a name from 1 to 20 characters'
   }
 };
 function gameText(key){
@@ -1419,6 +1461,12 @@ const runnerBack=document.getElementById('runnerBack');
 const runnerSoundToggle=document.getElementById('runnerSoundToggle');
 const runnerMusic=document.getElementById('signalRunnerMusic');
 const signalZoneBadge=document.getElementById('signalZoneBadge');
+const runnerLeaderboardBody=document.getElementById('runnerLeaderboardBody');
+const runnerLbTitle=document.getElementById('runnerLbTitle');
+const runnerScoreForm=document.getElementById('runnerScoreForm');
+const runnerNameInput=document.getElementById('runnerNameInput');
+const runnerScoreSave=document.getElementById('runnerScoreSave');
+const runnerScoreStatus=document.getElementById('runnerScoreStatus');
 
 const SIGNAL_TARGET=101.7;
 const SIGNAL_TOLERANCE=.25;
@@ -1505,6 +1553,103 @@ function updateSignalGame(){
   }else{
     clearTimeout(signalLockTimer);signalLockTimer=0;
     signalGame?.classList.remove('locking');
+  }
+}
+
+
+const RUNNER_SUPABASE_URL='https://fnomjabadilhfatharve.supabase.co';
+const RUNNER_SUPABASE_KEY='sb_publishable_yGUJGhufjYGpTNgPsDq1Aw_aFp5EapE';
+let runnerCurrentRunId='';
+let runnerLastSavedRunId='';
+let runnerLeaderboardRows=[];
+
+function newRunnerRunId(){
+  if(window.crypto?.randomUUID)return crypto.randomUUID();
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{
+    const r=Math.random()*16|0,v=c==='x'?r:(r&3|8);return v.toString(16);
+  });
+}
+function renderRunnerLeaderboard(rows=runnerLeaderboardRows){
+  if(!runnerLeaderboardBody)return;
+  runnerLeaderboardRows=Array.isArray(rows)?rows:[];
+  if(!runnerLeaderboardRows.length){
+    runnerLeaderboardBody.className='runner-lb-empty';
+    runnerLeaderboardBody.textContent=gameText('emptyBoard');
+    return;
+  }
+  runnerLeaderboardBody.className='';
+  const table=document.createElement('table');
+  table.className='runner-lb-table';
+  const thead=document.createElement('thead');
+  thead.innerHTML='<tr><th>#</th><th></th><th></th><th>Ø</th></tr>';
+  thead.children[0].children[1].textContent=gameText('player');
+  thead.children[0].children[2].textContent=gameText('distance');
+  table.appendChild(thead);
+  const tbody=document.createElement('tbody');
+  runnerLeaderboardRows.forEach((row,i)=>{
+    const tr=document.createElement('tr');
+    if(row.run_id&&row.run_id===runnerLastSavedRunId)tr.classList.add('current');
+    const values=[String(i+1).padStart(2,'0'),String(row.player_name||''),padRunner(row.distance||0),padRunner(row.signals||0,2)];
+    values.forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.appendChild(td)});
+    tbody.appendChild(tr);
+  });
+  table.appendChild(tbody);
+  runnerLeaderboardBody.replaceChildren(table);
+}
+async function loadRunnerLeaderboard(){
+  if(!runnerLeaderboardBody)return;
+  runnerLeaderboardBody.className='runner-lb-empty';
+  runnerLeaderboardBody.textContent=gameText('loadingBoard');
+  try{
+    const endpoint=RUNNER_SUPABASE_URL+'/rest/v1/runner_scores?select=player_name,distance,signals,run_id,created_at&order=distance.desc,signals.desc,created_at.asc&limit=20';
+    const res=await fetch(endpoint,{headers:{apikey:RUNNER_SUPABASE_KEY}});
+    if(!res.ok)throw new Error('leaderboard '+res.status);
+    const data=await res.json();
+    renderRunnerLeaderboard(data);
+  }catch(e){
+    runnerLeaderboardBody.className='runner-lb-empty';
+    runnerLeaderboardBody.textContent=gameText('emptyBoard');
+  }
+}
+function showRunnerScoreForm(){
+  if(!runnerScoreForm)return;
+  runnerScoreForm.classList.add('visible');
+  if(runnerScoreStatus)runnerScoreStatus.textContent='';
+  try{
+    const saved=localStorage.getItem('ornivaise-runner-name')||'';
+    if(runnerNameInput&&!runnerNameInput.value)runnerNameInput.value=saved.slice(0,20);
+  }catch(e){}
+}
+function hideRunnerScoreForm(){
+  runnerScoreForm?.classList.remove('visible');
+  if(runnerScoreStatus)runnerScoreStatus.textContent='';
+}
+async function saveRunnerScore(){
+  const name=(runnerNameInput?.value||'').trim().slice(0,20);
+  if(!name){
+    if(runnerScoreStatus)runnerScoreStatus.textContent=gameText('nameError');
+    runnerNameInput?.focus();
+    return;
+  }
+  if(!runnerCurrentRunId||runnerCurrentRunId===runnerLastSavedRunId)return;
+  runnerScoreSave.disabled=true;
+  if(runnerScoreStatus)runnerScoreStatus.textContent='';
+  try{
+    const payload={player_name:name,distance:Math.floor(runnerDistanceValue),signals:Math.floor(runnerSignalCount),run_id:runnerCurrentRunId};
+    const res=await fetch(RUNNER_SUPABASE_URL+'/rest/v1/runner_scores',{
+      method:'POST',
+      headers:{apikey:RUNNER_SUPABASE_KEY,'Content-Type':'application/json',Prefer:'return=representation'},
+      body:JSON.stringify(payload)
+    });
+    if(!res.ok)throw new Error('save '+res.status);
+    runnerLastSavedRunId=runnerCurrentRunId;
+    try{localStorage.setItem('ornivaise-runner-name',name)}catch(e){}
+    if(runnerScoreStatus)runnerScoreStatus.textContent=gameText('saveOk');
+    await loadRunnerLeaderboard();
+  }catch(e){
+    if(runnerScoreStatus)runnerScoreStatus.textContent=gameText('saveError');
+  }finally{
+    runnerScoreSave.disabled=false;
   }
 }
 
@@ -1637,12 +1782,14 @@ function openRunner(){
   signalRunner.setAttribute('aria-hidden','false');
   document.getElementById('easterTitle').textContent=gameText('runnerTitle');
   resetRunner();
+  loadRunnerLeaderboard();
   showRunnerOverlay(gameText('runnerTitle'),gameText('jumpHint'),gameText('startRun'));
   setTimeout(()=>runnerCanvas?.focus(),0);
 }
 function closeRunner(){
   cancelAnimationFrame(runnerRaf);runnerRaf=0;runnerRunning=false;
   stopRunnerMusic(true);
+  hideRunnerScoreForm();
   signalRunner?.classList.remove('open');
   signalRunner?.setAttribute('aria-hidden','true');
   signalGame?.classList.remove('runner-mode');
@@ -1663,6 +1810,9 @@ function runnerJumpAction(){
 }
 function startRunner(){
   resetRunner();
+  runnerCurrentRunId=newRunnerRunId();
+  runnerLastSavedRunId='';
+  hideRunnerScoreForm();
   runnerRunning=true;
   startRunnerMusic();
   hideRunnerOverlay();
@@ -1693,6 +1843,7 @@ function gameOverRunner(){
   if(!getRunnerMusicMuted())fadeRunnerMusic(.11,320,false);
   const best=Math.max(getRunnerBest(),runnerDistanceValue);
   setRunnerBest(best);updateRunnerHud();
+  showRunnerScoreForm();
   showRunnerOverlay(gameText('lost'),`${gameText('distance')} // ${padRunner(runnerDistanceValue)} · ${gameText('signals')} // ${padRunner(runnerSignalCount,2)}`,gameText('reconnect'));
 }
 function runnerLoop(ts){
@@ -1921,6 +2072,7 @@ function drawRunner(){
   ctx.fillText('ØN // '+gameText('speed')+' '+Math.round(runnerSpeed),RUNNER_W-18,24);
   ctx.restore();
 }
+runnerScoreForm?.addEventListener('submit',e=>{e.preventDefault();saveRunnerScore()});
 runnerOverlayButton?.addEventListener('click',startRunner);
 signalRunnerStart?.addEventListener('click',openRunner);
 runnerBack?.addEventListener('click',()=>{closeRunner();signalTuner?.focus()});
@@ -1979,7 +2131,11 @@ updateSignalGame();
 window.refreshGameLanguage=()=>{
   const title=document.getElementById('easterTitle');
   syncRunnerSoundButton();
+  if(runnerLbTitle)runnerLbTitle.textContent=gameText('leaderboard');
+  if(runnerNameInput)runnerNameInput.placeholder=gameText('namePlaceholder');
+  if(runnerScoreSave)runnerScoreSave.textContent=gameText('saveScore');
   if(signalZoneBadge)signalZoneBadge.textContent=getRunnerStageLabel(runnerStage);
+  renderRunnerLeaderboard();
   if(signalRunner?.classList.contains('open')){
     if(title)title.textContent=gameText('runnerTitle');
     if(runnerOverlay?.classList.contains('visible')){
