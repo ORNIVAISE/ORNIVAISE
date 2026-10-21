@@ -852,7 +852,7 @@ html{scroll-padding-top:80px}
 .signal-game.runner-mode .signal-game-intro,
 .signal-game.runner-mode .signal-receiver{display:none}
 .runner-shell{border:1px solid rgba(226,233,242,.16);border-radius:16px;overflow:hidden;background:#07090d;box-shadow:0 24px 70px rgba(0,0,0,.35)}
-.runner-hud{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;border-bottom:1px solid rgba(226,233,242,.1);background:rgba(255,255,255,.025)}
+.runner-hud{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;border-bottom:1px solid rgba(226,233,242,.1);background:rgba(255,255,255,.025)}
 .runner-stat{padding:12px 14px;min-width:0}
 .runner-stat small{display:block;margin-bottom:5px;font-size:7px;letter-spacing:.18em;color:#69737f}
 .runner-stat strong{display:block;font-size:13px;letter-spacing:.12em;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -879,7 +879,7 @@ html{scroll-padding-top:80px}
 .signal-zone-badge.visible{display:block}
 @media(max-width:700px){
   .runner-canvas-wrap{aspect-ratio:4/3;min-height:260px}
-  .runner-hud{grid-template-columns:1fr 1fr 1fr}
+  .runner-hud{grid-template-columns:1fr 1fr}
   .runner-stat{padding:10px}
   .runner-stat strong{font-size:11px}
   .runner-controls{align-items:stretch;flex-direction:column}
@@ -922,6 +922,39 @@ html{scroll-padding-top:80px}
   .runner-lb-table th:nth-child(3),.runner-lb-table td:nth-child(3){width:68px}
   .runner-lb-table th:nth-child(4),.runner-lb-table td:nth-child(4){width:46px}
 }
+
+.runner-store-toggle{min-height:42px;border:1px solid rgba(228,235,244,.2);border-radius:999px;background:rgba(255,255,255,.025);color:#d9e0e8;padding:0 15px;font:inherit;font-size:9px;letter-spacing:.12em;cursor:pointer}
+.runner-store-toggle:hover{border-color:rgba(238,243,249,.48);color:#fff}
+.runner-store-panel{display:none;border-top:1px solid rgba(226,233,242,.09);padding:16px 14px 18px;background:linear-gradient(180deg,rgba(255,255,255,.012),rgba(255,255,255,.004))}
+.runner-store-panel.open{display:block}
+.runner-store-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.runner-store-head strong{font-size:11px;letter-spacing:.15em}
+.runner-store-balance{font-size:9px;letter-spacing:.12em;color:#bbc4ce}
+.runner-store-status{min-height:16px;margin:0 0 10px;color:#8f9aa6;font-size:9px;letter-spacing:.08em}
+.runner-store-category{margin-top:16px}
+.runner-store-category h4{margin:0 0 8px;color:#747f8b;font-size:8px;font-weight:400;letter-spacing:.18em}
+.runner-store-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.runner-shop-card{min-width:0;border:1px solid rgba(225,232,241,.11);border-radius:12px;padding:11px;background:rgba(255,255,255,.018)}
+.runner-shop-card.equipped{border-color:rgba(231,238,246,.34);background:rgba(255,255,255,.035)}
+.runner-shop-preview{height:74px;position:relative;display:grid;place-items:center;margin-bottom:10px;border-radius:9px;overflow:hidden;background:linear-gradient(145deg,#090d13,#050609)}
+.runner-shop-preview:before,.runner-shop-preview:after{content:"";position:absolute}
+.runner-shop-preview.avatar:before{width:32px;height:32px;border-radius:50%;border:1px solid rgba(236,242,248,.6);background:radial-gradient(circle at 35% 30%,#879daf,#263746 55%,#080c11)}
+.runner-shop-preview.avatar:after{width:48px;height:12px;border:1px solid rgba(231,239,247,.62);border-radius:50%;transform:rotate(-13deg)}
+.runner-shop-preview.frost_moon:before{background:radial-gradient(circle at 35% 30%,#e9f4fa,#80a9bd 45%,#152b39 75%);box-shadow:0 0 18px rgba(177,221,238,.28)}
+.runner-shop-preview.void_core:before{background:#020204;border-color:rgba(205,170,231,.5);box-shadow:0 0 18px rgba(157,97,204,.34)}
+.runner-shop-preview.void_core:after{border-color:rgba(210,166,239,.86);box-shadow:0 0 12px rgba(183,112,226,.26)}
+.runner-shop-preview.background:before{inset:0;background:radial-gradient(circle at 65% 35%,rgba(98,126,155,.22),transparent 35%),linear-gradient(#07101a,#020406)}
+.runner-shop-preview.violet_nebula:before{background:radial-gradient(circle at 62% 35%,rgba(148,94,198,.32),transparent 38%),radial-gradient(circle at 25% 70%,rgba(75,95,160,.16),transparent 34%),linear-gradient(#0d0918,#030307)}
+.runner-shop-preview.black_sun:before{background:radial-gradient(circle at 60% 45%,#020204 0 14%,rgba(224,202,164,.18) 15% 17%,transparent 24%),linear-gradient(#090807,#020202)}
+.runner-shop-preview.obstacle:before{width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;border-bottom:42px solid rgba(213,224,236,.45)}
+.runner-shop-preview.crystal_shards:before{border-bottom-color:rgba(182,153,216,.52);filter:drop-shadow(0 0 7px rgba(174,132,216,.22))}
+.runner-shop-preview.orbital_debris:before{width:38px;height:24px;border:1px solid rgba(218,228,238,.55);background:rgba(191,207,222,.12);transform:rotate(-12deg)}
+.runner-shop-preview.orbital_debris:after{width:58px;height:1px;background:rgba(218,228,238,.35);transform:rotate(18deg)}
+.runner-shop-card strong{display:block;font-size:10px;letter-spacing:.1em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.runner-shop-card small{display:block;min-height:28px;margin:5px 0 9px;color:#717c88;font-size:8px;line-height:1.5;letter-spacing:.05em}
+.runner-shop-card button{width:100%;min-height:36px;border:1px solid rgba(225,232,241,.16);border-radius:999px;background:transparent;color:#cbd3dc;font:inherit;font-size:8px;letter-spacing:.1em;cursor:pointer}
+.runner-shop-card button:disabled{opacity:.5;cursor:default}
+@media(max-width:700px){.runner-store-grid{grid-template-columns:1fr}.runner-store-toggle{flex:1}.runner-shop-preview{height:62px}}
 
 </style>
 </head>
@@ -1114,6 +1147,7 @@ html{scroll-padding-top:80px}
           <div class="runner-stat"><small>ДИСТАНЦИЯ</small><strong id="runnerDistance">00000</strong></div>
           <div class="runner-stat"><small>СИГНАЛЫ</small><strong id="runnerSignals">00</strong></div>
           <div class="runner-stat"><small>РЕКОРД</small><strong id="runnerBest">00000</strong></div>
+          <div class="runner-stat"><small>Ø-CREDITS</small><strong id="runnerCredits">0000</strong></div>
         </div>
         <div class="runner-canvas-wrap" id="runnerCanvasWrap">
           <canvas id="signalRunnerCanvas" width="960" height="360" tabindex="0" aria-label="SIGNAL RUNNER. Нажми пробел или коснись экрана, чтобы прыгнуть."></canvas>
@@ -1134,9 +1168,20 @@ html{scroll-padding-top:80px}
                 <g class="sound-off"><path d="M4 10v4h4l5 4V6L8 10H4z"/><path d="m16 9 5 6"/><path d="m21 9-5 6"/></g>
               </svg>
             </button>
+            <button class="runner-store-toggle" id="runnerStoreToggle" type="button">МАГАЗИН</button>
             <button class="runner-primary" id="runnerJump" type="button">ПРЫЖОК</button>
             <button class="runner-secondary" id="runnerBack" type="button">НАЗАД К ПРИЁМНИКУ</button>
           </div>
+        </div>
+
+
+        <div class="runner-store-panel" id="runnerStorePanel">
+          <div class="runner-store-head">
+            <strong id="runnerStoreTitle">ØN // МАГАЗИН</strong>
+            <span class="runner-store-balance"><span id="runnerStoreBalance">0000</span> Ø-CREDITS</span>
+          </div>
+          <p class="runner-store-status" id="runnerStoreStatus" role="status"></p>
+          <div id="runnerStoreContent"></div>
         </div>
 
         <div class="runner-leaderboard" id="runnerLeaderboard">
@@ -1230,7 +1275,7 @@ const gameI18n={
     nearLock:'ПОЧТИ ЗАХВАЧЕН',nearHint:'ВЫРАВНИВАНИЕ ЧАСТОТЫ // ОЧЕНЬ БЛИЗКО',
     stabilizing:'СТАБИЛИЗАЦИЯ',hold:'УДЕРЖИВАЙ ЧАСТОТУ // НЕ ДВИГАЙ',
     decryptComplete:'РАСШИФРОВКА ЗАВЕРШЕНА // ØN-003',
-    lost:'ПЕРЕДАЧА ПОТЕРЯНА',reconnect:'ПЕРЕПОДКЛЮЧИТЬСЯ',speed:'СКОРОСТЬ',soundOff:'Выключить музыку игры',soundOn:'Включить музыку игры',calmSpace:'СПОКОЙНЫЙ КОСМОС',signalDrift:'ДРЕЙФ СИГНАЛА',distortionField:'ПОЛЕ ИСКАЖЕНИЙ',leaderboard:'ТАБЛИЦА ЛИДЕРОВ',player:'ИГРОК',saveScore:'СОХРАНИТЬ РЕЗУЛЬТАТ',namePlaceholder:'Введи имя',loadingBoard:'Загрузка рейтинга…',emptyBoard:'Пока нет результатов',saveOk:'РЕЗУЛЬТАТ СОХРАНЁН',saveError:'Не удалось сохранить результат',nameError:'Введи имя от 1 до 20 символов'
+    lost:'ПЕРЕДАЧА ПОТЕРЯНА',reconnect:'ПЕРЕПОДКЛЮЧИТЬСЯ',speed:'СКОРОСТЬ',soundOff:'Выключить музыку игры',soundOn:'Включить музыку игры',calmSpace:'СПОКОЙНЫЙ КОСМОС',signalDrift:'ДРЕЙФ СИГНАЛА',distortionField:'ПОЛЕ ИСКАЖЕНИЙ',leaderboard:'ТАБЛИЦА ЛИДЕРОВ',player:'ИГРОК',saveScore:'СОХРАНИТЬ РЕЗУЛЬТАТ',namePlaceholder:'Введи имя',loadingBoard:'Загрузка рейтинга…',emptyBoard:'Пока нет результатов',saveOk:'РЕЗУЛЬТАТ СОХРАНЁН',saveError:'Не удалось сохранить результат',nameError:'Введи имя от 1 до 20 символов',store:'МАГАЗИН',storeClose:'ЗАКРЫТЬ МАГАЗИН',storeTitle:'ØN // МАГАЗИН',avatars:'ПЛАНЕТЫ',backgrounds:'ФОНЫ',obstacles:'ПРЕПЯТСТВИЯ',buy:'КУПИТЬ',equip:'ВЫБРАТЬ',equipped:'ИСПОЛЬЗУЕТСЯ',owned:'КУПЛЕНО',notEnough:'НЕ ХВАТАЕТ Ø-CREDITS',storeError:'Ошибка магазина',connecting:'ПОДКЛЮЧЕНИЕ…',earned:'ЗАРАБОТАНО',position:'ПОЗИЦИЯ'
   },
   en:{
     intercept:'ØN // INTERCEPT 003',previous:'PREVIOUS LOCK // VERIFIED',
@@ -1248,7 +1293,7 @@ const gameI18n={
     nearLock:'NEAR LOCK',nearHint:'FREQUENCY ALIGNMENT // VERY CLOSE',
     stabilizing:'STABILIZING',hold:'HOLD FREQUENCY // DO NOT MOVE',
     decryptComplete:'DECRYPTION COMPLETE // ØN-003',
-    lost:'TRANSMISSION LOST',reconnect:'RECONNECT',speed:'SPEED',soundOff:'Turn game music off',soundOn:'Turn game music on',calmSpace:'CALM SPACE',signalDrift:'SIGNAL DRIFT',distortionField:'DISTORTION FIELD',leaderboard:'LEADERBOARD',player:'PLAYER',saveScore:'SAVE RESULT',namePlaceholder:'Enter name',loadingBoard:'Loading leaderboard…',emptyBoard:'No scores yet',saveOk:'RESULT SAVED',saveError:'Could not save result',nameError:'Enter a name from 1 to 20 characters'
+    lost:'TRANSMISSION LOST',reconnect:'RECONNECT',speed:'SPEED',soundOff:'Turn game music off',soundOn:'Turn game music on',calmSpace:'CALM SPACE',signalDrift:'SIGNAL DRIFT',distortionField:'DISTORTION FIELD',leaderboard:'LEADERBOARD',player:'PLAYER',saveScore:'SAVE RESULT',namePlaceholder:'Enter name',loadingBoard:'Loading leaderboard…',emptyBoard:'No scores yet',saveOk:'RESULT SAVED',saveError:'Could not save result',nameError:'Enter a name from 1 to 20 characters',store:'STORE',storeClose:'CLOSE STORE',storeTitle:'ØN // STORE',avatars:'PLANETS',backgrounds:'BACKGROUNDS',obstacles:'OBSTACLES',buy:'BUY',equip:'EQUIP',equipped:'EQUIPPED',owned:'OWNED',notEnough:'NOT ENOUGH Ø-CREDITS',storeError:'Store error',connecting:'CONNECTING…',earned:'EARNED',position:'POSITION'
   }
 };
 function gameText(key){
@@ -1269,6 +1314,9 @@ function applyGameLanguage(lang){
   set('.runner-stat:nth-child(1) small','distance');
   set('.runner-stat:nth-child(2) small','signals');
   set('.runner-stat:nth-child(3) small','best');
+  const storeButton=document.getElementById('runnerStoreToggle');
+  if(storeButton)storeButton.textContent=document.getElementById('runnerStorePanel')?.classList.contains('open')?g.storeClose:g.store;
+  const storeTitle=document.getElementById('runnerStoreTitle');if(storeTitle)storeTitle.textContent=g.storeTitle;
   set('#signalZoneBadge','unknownTransmission');
   set('.runner-overlay small','runProtocol');
   set('.runner-controls > span','controls');
@@ -1467,6 +1515,13 @@ const runnerScoreForm=document.getElementById('runnerScoreForm');
 const runnerNameInput=document.getElementById('runnerNameInput');
 const runnerScoreSave=document.getElementById('runnerScoreSave');
 const runnerScoreStatus=document.getElementById('runnerScoreStatus');
+const runnerCredits=document.getElementById('runnerCredits');
+const runnerStoreToggle=document.getElementById('runnerStoreToggle');
+const runnerStorePanel=document.getElementById('runnerStorePanel');
+const runnerStoreTitle=document.getElementById('runnerStoreTitle');
+const runnerStoreBalance=document.getElementById('runnerStoreBalance');
+const runnerStoreContent=document.getElementById('runnerStoreContent');
+const runnerStoreStatus=document.getElementById('runnerStoreStatus');
 
 const SIGNAL_TARGET=101.7;
 const SIGNAL_TOLERANCE=.25;
@@ -1563,6 +1618,134 @@ let runnerCurrentRunId='';
 let runnerLastSavedRunId='';
 let runnerLeaderboardRows=[];
 
+
+const RUNNER_STORE_URL=RUNNER_SUPABASE_URL+'/functions/v1/runner-store';
+let runnerStoreState={
+  credits:0,
+  inventory:[],
+  items:[],
+  selected_avatar:'orbit_o',
+  selected_background:'deep_space',
+  selected_obstacle:'signal_spires'
+};
+const RUNNER_ITEM_META={
+  orbit_o:{ru:['ORBIT Ø','Базовая планета ØRNIVAISE'],en:['ORBIT Ø','Default ØRNIVAISE planet']},
+  frost_moon:{ru:['FROST MOON','Холодная ледяная сфера'],en:['FROST MOON','Cold ice sphere']},
+  void_core:{ru:['VOID CORE','Тёмное ядро аномалии'],en:['VOID CORE','Dark anomaly core']},
+  deep_space:{ru:['DEEP SPACE','Базовый глубокий космос'],en:['DEEP SPACE','Default deep space']},
+  violet_nebula:{ru:['VIOLET NEBULA','Фиолетовая сигнальная туманность'],en:['VIOLET NEBULA','Violet signal nebula']},
+  black_sun:{ru:['BLACK SUN','Затмение в мёртвой системе'],en:['BLACK SUN','Eclipse in a dead system']},
+  signal_spires:{ru:['SIGNAL SPIRES','Базовые сигнальные шпили'],en:['SIGNAL SPIRES','Default signal spires']},
+  crystal_shards:{ru:['CRYSTAL SHARDS','Осколки аномального кристалла'],en:['CRYSTAL SHARDS','Anomalous crystal shards']},
+  orbital_debris:{ru:['ORBITAL DEBRIS','Обломки спутников и модулей'],en:['ORBITAL DEBRIS','Satellite and module debris']}
+};
+function runnerPlayerToken(){
+  try{
+    let token=localStorage.getItem('ornivaise-runner-player-token')||'';
+    if(!/^[a-f0-9]{64}$/i.test(token)){
+      const bytes=new Uint8Array(32);crypto.getRandomValues(bytes);
+      token=Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('');
+      localStorage.setItem('ornivaise-runner-player-token',token);
+    }
+    return token;
+  }catch(e){
+    if(!window.__runnerTempToken){
+      const bytes=new Uint8Array(32);crypto.getRandomValues(bytes);
+      window.__runnerTempToken=Array.from(bytes,b=>b.toString(16).padStart(2,'0')).join('');
+    }
+    return window.__runnerTempToken;
+  }
+}
+async function runnerApi(action,payload={}){
+  const res=await fetch(RUNNER_STORE_URL,{
+    method:'POST',
+    headers:{apikey:RUNNER_SUPABASE_KEY,'Content-Type':'application/json'},
+    body:JSON.stringify({action,token:runnerPlayerToken(),...payload})
+  });
+  let data={};try{data=await res.json()}catch(e){}
+  if(!res.ok)throw new Error(data?.error||('runner api '+res.status));
+  return data;
+}
+function applyRunnerStoreState(data){
+  const p=data?.player||data;
+  if(p&&Number.isFinite(Number(p.credits)))runnerStoreState.credits=Number(p.credits);
+  if(p?.selected_avatar)runnerStoreState.selected_avatar=p.selected_avatar;
+  if(p?.selected_background)runnerStoreState.selected_background=p.selected_background;
+  if(p?.selected_obstacle)runnerStoreState.selected_obstacle=p.selected_obstacle;
+  if(Array.isArray(data?.inventory))runnerStoreState.inventory=data.inventory;
+  if(Array.isArray(data?.items))runnerStoreState.items=data.items;
+  updateRunnerCredits();
+  renderRunnerStore();
+  drawRunner();
+}
+function updateRunnerCredits(){
+  const value=String(Math.max(0,Math.floor(runnerStoreState.credits||0))).padStart(4,'0');
+  if(runnerCredits)runnerCredits.textContent=value;
+  if(runnerStoreBalance)runnerStoreBalance.textContent=value;
+}
+function runnerCategorySelection(category){
+  if(category==='avatar')return runnerStoreState.selected_avatar;
+  if(category==='background')return runnerStoreState.selected_background;
+  return runnerStoreState.selected_obstacle;
+}
+function renderRunnerStore(){
+  if(!runnerStoreContent)return;
+  const lang=document.documentElement.lang==='en'?'en':'ru';
+  const groups=[['avatar','avatars'],['background','backgrounds'],['obstacle','obstacles']];
+  const frag=document.createDocumentFragment();
+  groups.forEach(([category,labelKey])=>{
+    const section=document.createElement('section');section.className='runner-store-category';
+    const h=document.createElement('h4');h.textContent=gameText(labelKey);section.appendChild(h);
+    const grid=document.createElement('div');grid.className='runner-store-grid';
+    runnerStoreState.items.filter(i=>i.category===category).sort((a,b)=>a.sort_order-b.sort_order).forEach(item=>{
+      const meta=RUNNER_ITEM_META[item.item_id]?.[lang]||[item.item_id,''];
+      const owned=item.price===0||runnerStoreState.inventory.includes(item.item_id);
+      const equipped=runnerCategorySelection(category)===item.item_id;
+      const card=document.createElement('article');card.className='runner-shop-card'+(equipped?' equipped':'');
+      const preview=document.createElement('div');preview.className='runner-shop-preview '+category+' '+item.item_id;
+      const title=document.createElement('strong');title.textContent=meta[0];
+      const desc=document.createElement('small');desc.textContent=meta[1];
+      const btn=document.createElement('button');btn.type='button';btn.dataset.item=item.item_id;btn.dataset.owned=owned?'1':'0';
+      btn.textContent=equipped?gameText('equipped'):(owned?gameText('equip'):(gameText('buy')+' · '+item.price+' Ø'));
+      btn.disabled=equipped;
+      card.append(preview,title,desc,btn);grid.appendChild(card);
+    });
+    section.appendChild(grid);frag.appendChild(section);
+  });
+  runnerStoreContent.replaceChildren(frag);
+}
+async function loadRunnerStoreState(){
+  try{
+    const data=await runnerApi('state');
+    applyRunnerStoreState(data);
+    if(runnerStoreStatus)runnerStoreStatus.textContent='';
+  }catch(e){
+    if(runnerStoreStatus)runnerStoreStatus.textContent=gameText('storeError');
+  }
+}
+async function handleRunnerStoreItem(itemId,owned){
+  if(!itemId)return;
+  if(runnerStoreStatus)runnerStoreStatus.textContent=gameText('connecting');
+  try{
+    if(!owned){
+      const bought=await runnerApi('buy',{item_id:itemId});
+      applyRunnerStoreState(bought);
+    }
+    const equipped=await runnerApi('equip',{item_id:itemId});
+    applyRunnerStoreState(equipped);
+    if(runnerStoreStatus)runnerStoreStatus.textContent='';
+  }catch(e){
+    if(runnerStoreStatus)runnerStoreStatus.textContent=String(e.message).includes('not_enough_credits')?gameText('notEnough'):gameText('storeError');
+  }
+}
+function toggleRunnerStore(){
+  const open=!runnerStorePanel?.classList.contains('open');
+  runnerStorePanel?.classList.toggle('open',open);
+  if(runnerStoreToggle)runnerStoreToggle.textContent=gameText(open?'storeClose':'store');
+  if(open)loadRunnerStoreState();
+}
+
+
 function newRunnerRunId(){
   if(window.crypto?.randomUUID)return crypto.randomUUID();
   return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{
@@ -1631,20 +1814,24 @@ async function saveRunnerScore(){
     runnerNameInput?.focus();
     return;
   }
-  if(!runnerCurrentRunId||runnerCurrentRunId===runnerLastSavedRunId)return;
+  if(!runnerCurrentRunId||runnerCurrentRunId===runnerLastSavedRunId){
+    if(runnerScoreStatus&&!runnerLastSavedRunId)runnerScoreStatus.textContent=gameText('saveError');
+    return;
+  }
   runnerScoreSave.disabled=true;
-  if(runnerScoreStatus)runnerScoreStatus.textContent='';
+  if(runnerScoreStatus)runnerScoreStatus.textContent=gameText('connecting');
   try{
-    const payload={player_name:name,distance:Math.floor(runnerDistanceValue),signals:Math.floor(runnerSignalCount),run_id:runnerCurrentRunId};
-    const res=await fetch(RUNNER_SUPABASE_URL+'/rest/v1/runner_scores',{
-      method:'POST',
-      headers:{apikey:RUNNER_SUPABASE_KEY,'Content-Type':'application/json',Prefer:'return=representation'},
-      body:JSON.stringify(payload)
+    const data=await runnerApi('finish_run',{
+      run_id:runnerCurrentRunId,
+      player_name:name,
+      distance:Math.floor(runnerDistanceValue),
+      signals:Math.floor(runnerSignalCount)
     });
-    if(!res.ok)throw new Error('save '+res.status);
     runnerLastSavedRunId=runnerCurrentRunId;
+    if(Number.isFinite(Number(data.credits)))runnerStoreState.credits=Number(data.credits);
+    updateRunnerCredits();
     try{localStorage.setItem('ornivaise-runner-name',name)}catch(e){}
-    if(runnerScoreStatus)runnerScoreStatus.textContent=gameText('saveOk');
+    if(runnerScoreStatus)runnerScoreStatus.textContent=gameText('saveOk')+' // '+gameText('earned')+' +'+(data.earned||0)+' Ø // '+gameText('position')+' #'+(data.rank||'—');
     await loadRunnerLeaderboard();
   }catch(e){
     if(runnerScoreStatus)runnerScoreStatus.textContent=gameText('saveError');
@@ -1762,6 +1949,7 @@ function updateRunnerHud(){
   if(runnerDistance)runnerDistance.textContent=padRunner(runnerDistanceValue);
   if(runnerSignals)runnerSignals.textContent=padRunner(runnerSignalCount,2);
   if(runnerBest)runnerBest.textContent=padRunner(Math.max(getRunnerBest(),runnerDistanceValue));
+  updateRunnerCredits();
 }
 function resetRunner(){
   cancelAnimationFrame(runnerRaf);runnerRaf=0;
@@ -1783,6 +1971,7 @@ function openRunner(){
   document.getElementById('easterTitle').textContent=gameText('runnerTitle');
   resetRunner();
   loadRunnerLeaderboard();
+  loadRunnerStoreState();
   showRunnerOverlay(gameText('runnerTitle'),gameText('jumpHint'),gameText('startRun'));
   setTimeout(()=>runnerCanvas?.focus(),0);
 }
@@ -1790,6 +1979,7 @@ function closeRunner(){
   cancelAnimationFrame(runnerRaf);runnerRaf=0;runnerRunning=false;
   stopRunnerMusic(true);
   hideRunnerScoreForm();
+  runnerStorePanel?.classList.remove('open');
   signalRunner?.classList.remove('open');
   signalRunner?.setAttribute('aria-hidden','true');
   signalGame?.classList.remove('runner-mode');
@@ -1808,11 +1998,19 @@ function runnerJumpAction(){
     for(let i=0;i<7;i++)runnerDust.push({x:runnerPlayer.x+20,y:RUNNER_GROUND-4,vx:-60-Math.random()*90,vy:-20-Math.random()*55,life:.4+Math.random()*.25});
   }
 }
-function startRunner(){
+async function startRunner(){
   resetRunner();
-  runnerCurrentRunId=newRunnerRunId();
   runnerLastSavedRunId='';
   hideRunnerScoreForm();
+  if(runnerOverlayButton){runnerOverlayButton.disabled=true;runnerOverlayButton.textContent=gameText('connecting')}
+  try{
+    const data=await runnerApi('start_run');
+    runnerCurrentRunId=data.run_id||'';
+  }catch(e){
+    runnerCurrentRunId='';
+  }finally{
+    if(runnerOverlayButton)runnerOverlayButton.disabled=false;
+  }
   runnerRunning=true;
   startRunnerMusic();
   hideRunnerOverlay();
@@ -1919,7 +2117,14 @@ function drawRunner(){
     ['#0d0a17','#070713','#030307'],
     ['#12091c','#07040d','#020205']
   ];
-  const p=palettes[stage];
+  let p=palettes[stage];
+  if(runnerStoreState.selected_background==='violet_nebula'){
+    const violet=[['#100a19','#080712','#030307'],['#140b20','#0b0817','#030307'],['#180c25','#0d091b','#030307'],['#1b0b28','#090512','#020205']];
+    p=violet[stage];
+  }else if(runnerStoreState.selected_background==='black_sun'){
+    const eclipse=[['#0b0a09','#060606','#020202'],['#0d0b09','#070606','#020202'],['#100c09','#070504','#020202'],['#120c09','#060403','#010101']];
+    p=eclipse[stage];
+  }
   const bg=ctx.createLinearGradient(0,0,0,RUNNER_H);
   bg.addColorStop(0,p[0]);bg.addColorStop(.68,p[1]);bg.addColorStop(1,p[2]);
   ctx.fillStyle=bg;ctx.fillRect(0,0,RUNNER_W,RUNNER_H);
@@ -1938,6 +2143,20 @@ function drawRunner(){
   glow.addColorStop(1,'rgba(0,0,0,0)');
   ctx.fillStyle=glow;ctx.fillRect(0,0,RUNNER_W,RUNNER_H);
   ctx.restore();
+
+  if(runnerStoreState.selected_background==='black_sun'){
+    ctx.save();
+    const sx=RUNNER_W*.76,sy=92;
+    const halo=ctx.createRadialGradient(sx,sy,29,sx,sy,66);
+    halo.addColorStop(0,'rgba(4,4,5,.98)');halo.addColorStop(.48,'rgba(4,4,5,.98)');halo.addColorStop(.55,'rgba(231,214,180,.13)');halo.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=halo;ctx.fillRect(sx-80,sy-80,160,160);
+    ctx.restore();
+  }else if(runnerStoreState.selected_background==='violet_nebula'){
+    ctx.save();
+    const vg=ctx.createRadialGradient(RUNNER_W*.38,125,15,RUNNER_W*.38,125,270);
+    vg.addColorStop(0,'rgba(138,79,188,.12)');vg.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=vg;ctx.fillRect(0,0,RUNNER_W,RUNNER_H);ctx.restore();
+  }
 
   // Multi-depth star parallax.
   ctx.save();
@@ -2004,16 +2223,26 @@ function drawRunner(){
 
   runnerObstacles.forEach(o=>{
     ctx.save();
+    const skin=runnerStoreState.selected_obstacle;
     const hot=stage>=2;
-    ctx.fillStyle=hot?'rgba(174,153,205,.22)':'rgba(205,215,226,.18)';
-    ctx.strokeStyle=hot?'rgba(215,196,232,.5)':'rgba(222,230,239,.48)';
-    ctx.lineWidth=1;
-    if(o.type==='spire'){
-      ctx.beginPath();ctx.moveTo(o.x,o.y+o.h);ctx.lineTo(o.x+o.w*.5,o.y);ctx.lineTo(o.x+o.w,o.y+o.h);ctx.closePath();ctx.fill();ctx.stroke();
+    if(skin==='crystal_shards'){
+      ctx.fillStyle=hot?'rgba(172,126,218,.28)':'rgba(155,135,203,.22)';
+      ctx.strokeStyle='rgba(220,198,241,.58)';ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(o.x,o.y+o.h);ctx.lineTo(o.x+o.w*.22,o.y+o.h*.25);ctx.lineTo(o.x+o.w*.48,o.y);ctx.lineTo(o.x+o.w*.66,o.y+o.h*.38);ctx.lineTo(o.x+o.w,o.y+o.h);ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.strokeStyle='rgba(239,226,249,.22)';ctx.beginPath();ctx.moveTo(o.x+o.w*.48,o.y+3);ctx.lineTo(o.x+o.w*.42,o.y+o.h*.82);ctx.stroke();
+    }else if(skin==='orbital_debris'){
+      ctx.translate(o.x+o.w/2,o.y+o.h/2);ctx.rotate(-.18);
+      ctx.fillStyle='rgba(157,174,190,.2)';ctx.strokeStyle='rgba(218,228,237,.5)';
+      ctx.fillRect(-o.w/2,-o.h/2,o.w,o.h);ctx.strokeRect(-o.w/2+.5,-o.h/2+.5,o.w-1,o.h-1);
+      ctx.strokeStyle='rgba(218,228,237,.28)';ctx.beginPath();ctx.moveTo(-o.w*.8,0);ctx.lineTo(o.w*.8,0);ctx.moveTo(0,-o.h*.8);ctx.lineTo(0,o.h*.8);ctx.stroke();
     }else{
-      ctx.fillRect(o.x,o.y,o.w,o.h);ctx.strokeRect(o.x+.5,o.y+.5,o.w-1,o.h-1);
-      ctx.strokeStyle='rgba(230,236,244,.16)';
-      ctx.beginPath();ctx.moveTo(o.x+7,o.y+5);ctx.lineTo(o.x+o.w-6,o.y+o.h-6);ctx.stroke();
+      ctx.fillStyle=hot?'rgba(174,153,205,.22)':'rgba(205,215,226,.18)';
+      ctx.strokeStyle=hot?'rgba(215,196,232,.5)':'rgba(222,230,239,.48)';ctx.lineWidth=1;
+      if(o.type==='spire'){
+        ctx.beginPath();ctx.moveTo(o.x,o.y+o.h);ctx.lineTo(o.x+o.w*.5,o.y);ctx.lineTo(o.x+o.w,o.y+o.h);ctx.closePath();ctx.fill();ctx.stroke();
+      }else{
+        ctx.fillRect(o.x,o.y,o.w,o.h);ctx.strokeRect(o.x+.5,o.y+.5,o.w-1,o.h-1);
+      }
     }
     ctx.restore();
   });
@@ -2048,22 +2277,30 @@ function drawRunner(){
   ctx.translate(cx,cy);
   const spin=runnerDistanceValue*.035;
   ctx.rotate(Math.sin(spin)*.045);
+  const avatar=runnerStoreState.selected_avatar;
 
-  ctx.strokeStyle=stage===3?'rgba(222,192,241,.82)':'rgba(225,234,243,.76)';
-  ctx.lineWidth=2;
-  ctx.beginPath();ctx.ellipse(0,1,28,8,-.24,0,Math.PI*2);ctx.stroke();
-
-  const planetGrad=ctx.createRadialGradient(-8,-9,3,0,0,22);
-  planetGrad.addColorStop(0,stage===3?'#9d78b8':'#7f96aa');
-  planetGrad.addColorStop(.48,stage===3?'#3e2d52':'#2f4252');
-  planetGrad.addColorStop(1,'#090d12');
-  ctx.shadowBlur=stage===3?22:13;
-  ctx.shadowColor=stage===3?'rgba(185,137,220,.5)':'rgba(189,211,232,.34)';
-  ctx.fillStyle=planetGrad;ctx.beginPath();ctx.arc(0,0,19,0,Math.PI*2);ctx.fill();
-  ctx.shadowBlur=0;
-
-  ctx.strokeStyle='rgba(245,248,251,.22)';ctx.lineWidth=.8;
-  ctx.beginPath();ctx.arc(-2,-1,12,-.6,1.8);ctx.stroke();
+  if(avatar==='void_core'){
+    ctx.strokeStyle='rgba(210,166,239,.86)';ctx.lineWidth=2.2;ctx.shadowBlur=18;ctx.shadowColor='rgba(171,97,218,.45)';
+    ctx.beginPath();ctx.ellipse(0,1,30,8,-.24,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;
+    const core=ctx.createRadialGradient(-5,-6,2,0,0,21);
+    core.addColorStop(0,'#16101d');core.addColorStop(.58,'#050307');core.addColorStop(1,'#000');
+    ctx.fillStyle=core;ctx.beginPath();ctx.arc(0,0,19,0,Math.PI*2);ctx.fill();
+  }else{
+    ctx.strokeStyle=avatar==='frost_moon'?'rgba(218,244,251,.84)':(stage===3?'rgba(222,192,241,.82)':'rgba(225,234,243,.76)');
+    ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(0,1,28,8,-.24,0,Math.PI*2);ctx.stroke();
+    const planetGrad=ctx.createRadialGradient(-8,-9,3,0,0,22);
+    if(avatar==='frost_moon'){
+      planetGrad.addColorStop(0,'#effaff');planetGrad.addColorStop(.45,'#84b7cb');planetGrad.addColorStop(1,'#102936');
+      ctx.shadowColor='rgba(173,226,241,.45)';
+    }else{
+      planetGrad.addColorStop(0,stage===3?'#9d78b8':'#7f96aa');
+      planetGrad.addColorStop(.48,stage===3?'#3e2d52':'#2f4252');
+      planetGrad.addColorStop(1,'#090d12');
+      ctx.shadowColor=stage===3?'rgba(185,137,220,.5)':'rgba(189,211,232,.34)';
+    }
+    ctx.shadowBlur=stage===3?22:13;ctx.fillStyle=planetGrad;ctx.beginPath();ctx.arc(0,0,19,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+  }
+  ctx.strokeStyle='rgba(245,248,251,.22)';ctx.lineWidth=.8;ctx.beginPath();ctx.arc(-2,-1,12,-.6,1.8);ctx.stroke();
   ctx.fillStyle='#f0f4f7';ctx.font='bold 19px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('Ø',0,1);
   ctx.restore();
 
@@ -2076,6 +2313,11 @@ runnerScoreForm?.addEventListener('submit',e=>{e.preventDefault();saveRunnerScor
 runnerOverlayButton?.addEventListener('click',startRunner);
 signalRunnerStart?.addEventListener('click',openRunner);
 runnerBack?.addEventListener('click',()=>{closeRunner();signalTuner?.focus()});
+runnerStoreToggle?.addEventListener('click',toggleRunnerStore);
+runnerStoreContent?.addEventListener('click',e=>{
+  const btn=e.target.closest('button[data-item]');if(!btn)return;
+  handleRunnerStoreItem(btn.dataset.item,btn.dataset.owned==='1');
+});
 runnerSoundToggle?.addEventListener('click',()=>setRunnerMusicMuted(!getRunnerMusicMuted()));
 runnerJump?.addEventListener('click',runnerJumpAction);
 runnerCanvas?.addEventListener('pointerdown',e=>{e.preventDefault();runnerJumpAction()});
@@ -2132,6 +2374,9 @@ window.refreshGameLanguage=()=>{
   const title=document.getElementById('easterTitle');
   syncRunnerSoundButton();
   if(runnerLbTitle)runnerLbTitle.textContent=gameText('leaderboard');
+  if(runnerStoreTitle)runnerStoreTitle.textContent=gameText('storeTitle');
+  if(runnerStoreToggle)runnerStoreToggle.textContent=gameText(runnerStorePanel?.classList.contains('open')?'storeClose':'store');
+  renderRunnerStore();
   if(runnerNameInput)runnerNameInput.placeholder=gameText('namePlaceholder');
   if(runnerScoreSave)runnerScoreSave.textContent=gameText('saveScore');
   if(signalZoneBadge)signalZoneBadge.textContent=getRunnerStageLabel(runnerStage);
