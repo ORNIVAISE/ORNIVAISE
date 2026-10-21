@@ -925,36 +925,73 @@ html{scroll-padding-top:80px}
 
 .runner-store-toggle{min-height:42px;border:1px solid rgba(228,235,244,.2);border-radius:999px;background:rgba(255,255,255,.025);color:#d9e0e8;padding:0 15px;font:inherit;font-size:9px;letter-spacing:.12em;cursor:pointer}
 .runner-store-toggle:hover{border-color:rgba(238,243,249,.48);color:#fff}
-.runner-store-panel{display:none;border-top:1px solid rgba(226,233,242,.09);padding:16px 14px 18px;background:linear-gradient(180deg,rgba(255,255,255,.012),rgba(255,255,255,.004))}
+.runner-store-panel{display:none;border-top:1px solid rgba(226,233,242,.09);padding:18px 14px 20px;background:linear-gradient(180deg,rgba(255,255,255,.018),rgba(255,255,255,.004))}
 .runner-store-panel.open{display:block}
-.runner-store-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
-.runner-store-head strong{font-size:11px;letter-spacing:.15em}
-.runner-store-balance{font-size:9px;letter-spacing:.12em;color:#bbc4ce}
+.runner-store-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:14px}
+.runner-store-kicker{display:block;margin-bottom:5px;color:#697582;font-size:7px;letter-spacing:.22em}
+.runner-store-head strong{display:block;font-size:15px;letter-spacing:.16em;color:#eef3f7}
+.runner-store-subtitle{margin:7px 0 0;color:#798592;font-size:8px;line-height:1.55;letter-spacing:.08em}
+.runner-store-balance-box{min-width:126px;padding:10px 12px;border:1px solid rgba(230,237,245,.13);border-radius:12px;background:rgba(255,255,255,.025);text-align:right}
+.runner-store-balance-box small{display:block;margin-bottom:4px;color:#6f7a86;font-size:7px;letter-spacing:.15em}
+.runner-store-balance{font-size:13px;letter-spacing:.1em;color:#f0f4f8}
 .runner-store-status{min-height:16px;margin:0 0 10px;color:#8f9aa6;font-size:9px;letter-spacing:.08em}
-.runner-store-category{margin-top:16px}
-.runner-store-category h4{margin:0 0 8px;color:#747f8b;font-size:8px;font-weight:400;letter-spacing:.18em}
-.runner-store-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
-.runner-shop-card{min-width:0;border:1px solid rgba(225,232,241,.11);border-radius:12px;padding:11px;background:rgba(255,255,255,.018)}
-.runner-shop-card.equipped{border-color:rgba(231,238,246,.34);background:rgba(255,255,255,.035)}
-.runner-shop-preview{height:74px;position:relative;display:grid;place-items:center;margin-bottom:10px;border-radius:9px;overflow:hidden;background:linear-gradient(145deg,#090d13,#050609)}
-.runner-shop-preview:before,.runner-shop-preview:after{content:"";position:absolute}
-.runner-shop-preview.avatar:before{width:32px;height:32px;border-radius:50%;border:1px solid rgba(236,242,248,.6);background:radial-gradient(circle at 35% 30%,#879daf,#263746 55%,#080c11)}
-.runner-shop-preview.avatar:after{width:48px;height:12px;border:1px solid rgba(231,239,247,.62);border-radius:50%;transform:rotate(-13deg)}
-.runner-shop-preview.frost_moon:before{background:radial-gradient(circle at 35% 30%,#e9f4fa,#80a9bd 45%,#152b39 75%);box-shadow:0 0 18px rgba(177,221,238,.28)}
-.runner-shop-preview.void_core:before{background:#020204;border-color:rgba(205,170,231,.5);box-shadow:0 0 18px rgba(157,97,204,.34)}
-.runner-shop-preview.void_core:after{border-color:rgba(210,166,239,.86);box-shadow:0 0 12px rgba(183,112,226,.26)}
-.runner-shop-preview.background:before{inset:0;background:radial-gradient(circle at 65% 35%,rgba(98,126,155,.22),transparent 35%),linear-gradient(#07101a,#020406)}
-.runner-shop-preview.violet_nebula:before{background:radial-gradient(circle at 62% 35%,rgba(148,94,198,.32),transparent 38%),radial-gradient(circle at 25% 70%,rgba(75,95,160,.16),transparent 34%),linear-gradient(#0d0918,#030307)}
-.runner-shop-preview.black_sun:before{background:radial-gradient(circle at 60% 45%,#020204 0 14%,rgba(224,202,164,.18) 15% 17%,transparent 24%),linear-gradient(#090807,#020202)}
-.runner-shop-preview.obstacle:before{width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;border-bottom:42px solid rgba(213,224,236,.45)}
-.runner-shop-preview.crystal_shards:before{border-bottom-color:rgba(182,153,216,.52);filter:drop-shadow(0 0 7px rgba(174,132,216,.22))}
-.runner-shop-preview.orbital_debris:before{width:38px;height:24px;border:1px solid rgba(218,228,238,.55);background:rgba(191,207,222,.12);transform:rotate(-12deg)}
-.runner-shop-preview.orbital_debris:after{width:58px;height:1px;background:rgba(218,228,238,.35);transform:rotate(18deg)}
-.runner-shop-card strong{display:block;font-size:10px;letter-spacing:.1em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.runner-shop-card small{display:block;min-height:28px;margin:5px 0 9px;color:#717c88;font-size:8px;line-height:1.5;letter-spacing:.05em}
-.runner-shop-card button{width:100%;min-height:36px;border:1px solid rgba(225,232,241,.16);border-radius:999px;background:transparent;color:#cbd3dc;font:inherit;font-size:8px;letter-spacing:.1em;cursor:pointer}
-.runner-shop-card button:disabled{opacity:.5;cursor:default}
-@media(max-width:700px){.runner-store-grid{grid-template-columns:1fr}.runner-store-toggle{flex:1}.runner-shop-preview{height:62px}}
+.runner-store-category{margin-top:20px}
+.runner-store-category-title{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:9px}
+.runner-store-category h4{margin:0;color:#a9b3be;font-size:9px;font-weight:500;letter-spacing:.19em}
+.runner-store-category-count{color:#5f6a75;font-size:7px;letter-spacing:.14em}
+.runner-store-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.runner-shop-card{min-width:0;position:relative;border:1px solid rgba(225,232,241,.11);border-radius:14px;padding:10px;background:linear-gradient(180deg,rgba(255,255,255,.026),rgba(255,255,255,.012));transition:border-color .18s ease,background .18s ease,transform .18s ease}
+.runner-shop-card:hover{border-color:rgba(231,238,246,.25);background:linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,.015));transform:translateY(-1px)}
+.runner-shop-card.equipped{border-color:rgba(222,232,243,.38);box-shadow:inset 0 0 0 1px rgba(255,255,255,.025)}
+.runner-shop-card.equipped:after{content:"";position:absolute;inset:0;border-radius:14px;pointer-events:none;box-shadow:0 0 24px rgba(173,193,216,.045)}
+.runner-shop-preview{height:112px;position:relative;margin-bottom:11px;border:1px solid rgba(225,233,242,.08);border-radius:11px;overflow:hidden;background:#05070a;isolation:isolate}
+.runner-preview-scene{position:absolute;inset:0;overflow:hidden;background:linear-gradient(180deg,#07101a,#020406)}
+.runner-preview-scene:before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle at 14% 24%,rgba(255,255,255,.8) 0 1px,transparent 1.2px),radial-gradient(circle at 74% 18%,rgba(255,255,255,.55) 0 1px,transparent 1.2px),radial-gradient(circle at 47% 38%,rgba(255,255,255,.42) 0 1px,transparent 1.2px),radial-gradient(circle at 86% 58%,rgba(255,255,255,.36) 0 1px,transparent 1.2px),radial-gradient(circle at 28% 67%,rgba(255,255,255,.32) 0 1px,transparent 1.2px);opacity:.7}
+.runner-preview-scene.violet_nebula{background:radial-gradient(circle at 70% 28%,rgba(144,83,195,.34),transparent 36%),radial-gradient(circle at 25% 66%,rgba(67,91,161,.2),transparent 34%),linear-gradient(180deg,#120a1c,#05030a)}
+.runner-preview-scene.black_sun{background:radial-gradient(circle at 74% 33%,#010102 0 14%,rgba(231,209,168,.18) 15% 17%,transparent 25%),linear-gradient(180deg,#0b0907,#020202)}
+.runner-preview-ground{position:absolute;left:0;right:0;bottom:22px;height:1px;background:rgba(224,233,242,.22)}
+.runner-preview-ground:after{content:"";position:absolute;left:8%;right:8%;top:10px;height:1px;background:repeating-linear-gradient(90deg,rgba(224,233,242,.09) 0 18px,transparent 18px 30px)}
+.runner-preview-planet{position:absolute;left:50%;top:50%;width:42px;height:42px;border-radius:50%;transform:translate(-50%,-56%);background:radial-gradient(circle at 35% 28%,#879daf,#2b3f4e 54%,#080c11 78%);border:1px solid rgba(235,242,248,.6);box-shadow:0 0 16px rgba(173,201,225,.16)}
+.runner-preview-planet:before{content:"";position:absolute;left:50%;top:50%;width:62px;height:15px;border:1px solid rgba(232,240,247,.66);border-radius:50%;transform:translate(-50%,-50%) rotate(-13deg)}
+.runner-preview-planet:after{content:"Ø";position:absolute;inset:0;display:grid;place-items:center;color:#f2f5f8;font:700 17px Arial,sans-serif}
+.runner-preview-planet.frost_moon{background:radial-gradient(circle at 34% 27%,#f2fbff,#91bfd0 43%,#234455 67%,#09131a 88%);box-shadow:0 0 22px rgba(168,222,240,.28)}
+.runner-preview-planet.frost_moon:before{border-color:rgba(218,245,251,.84)}
+.runner-preview-planet.void_core{background:radial-gradient(circle at 43% 36%,#21152d,#060309 54%,#000 82%);border-color:rgba(205,165,231,.46);box-shadow:0 0 24px rgba(153,80,207,.34)}
+.runner-preview-planet.void_core:before{border-color:rgba(211,164,239,.86);box-shadow:0 0 13px rgba(178,105,226,.2)}
+.runner-preview-mini-planet{position:absolute;left:20px;bottom:35px;width:24px;height:24px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#8398aa,#293b49 58%,#080b10);border:1px solid rgba(235,242,248,.52);z-index:2}
+.runner-preview-mini-planet:before{content:"";position:absolute;width:35px;height:9px;left:50%;top:50%;border:1px solid rgba(230,238,246,.55);border-radius:50%;transform:translate(-50%,-50%) rotate(-12deg)}
+.runner-preview-mini-planet:after{content:"Ø";position:absolute;inset:0;display:grid;place-items:center;color:#eef3f7;font:700 10px Arial,sans-serif}
+.runner-preview-obstacles{position:absolute;right:17px;bottom:23px;width:72px;height:55px;z-index:2}
+.runner-preview-obstacles.signal_spires i,.runner-preview-obstacles.crystal_shards i{position:absolute;bottom:0;width:0;height:0;border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:38px solid rgba(210,221,232,.42);filter:drop-shadow(0 0 4px rgba(210,221,232,.05))}
+.runner-preview-obstacles.signal_spires i:nth-child(1),.runner-preview-obstacles.crystal_shards i:nth-child(1){left:0;border-left-width:8px;border-right-width:8px;border-bottom-width:29px}
+.runner-preview-obstacles.signal_spires i:nth-child(2),.runner-preview-obstacles.crystal_shards i:nth-child(2){left:23px}
+.runner-preview-obstacles.signal_spires i:nth-child(3),.runner-preview-obstacles.crystal_shards i:nth-child(3){left:48px;border-left-width:7px;border-right-width:7px;border-bottom-width:24px}
+.runner-preview-obstacles.crystal_shards i{border-bottom-color:rgba(182,143,219,.58);filter:drop-shadow(0 0 7px rgba(171,119,216,.18))}
+.runner-preview-obstacles.orbital_debris i{position:absolute;border:1px solid rgba(220,230,239,.48);background:rgba(165,184,201,.14)}
+.runner-preview-obstacles.orbital_debris i:nth-child(1){width:35px;height:19px;left:6px;bottom:6px;transform:rotate(-13deg)}
+.runner-preview-obstacles.orbital_debris i:nth-child(2){width:17px;height:28px;right:4px;bottom:12px;transform:rotate(20deg)}
+.runner-preview-obstacles.orbital_debris i:nth-child(3){width:46px;height:1px;left:12px;bottom:33px;background:rgba(219,229,238,.3);transform:rotate(11deg)}
+.runner-preview-background-planet{position:absolute;right:25px;top:20px;width:28px;height:28px;border-radius:50%;background:radial-gradient(circle at 34% 28%,#7e91a3,#22323f 60%,#06090c);border:1px solid rgba(235,241,248,.42)}
+.runner-preview-background-planet:before{content:"";position:absolute;width:42px;height:10px;left:50%;top:50%;border:1px solid rgba(231,238,245,.4);border-radius:50%;transform:translate(-50%,-50%) rotate(-14deg)}
+.runner-shop-body{min-height:72px}
+.runner-shop-topline{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+.runner-shop-card strong{display:block;min-width:0;font-size:10px;letter-spacing:.1em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.runner-rarity{flex:0 0 auto;padding:3px 6px;border:1px solid rgba(222,231,240,.13);border-radius:999px;color:#7f8a96;font-size:6px;letter-spacing:.12em}
+.runner-rarity.rare{color:#aabfd4;border-color:rgba(173,199,224,.2)}
+.runner-rarity.void{color:#c6a6dd;border-color:rgba(192,151,222,.22)}
+.runner-shop-card small{display:block;min-height:32px;margin:0 0 9px;color:#717c88;font-size:8px;line-height:1.5;letter-spacing:.04em}
+.runner-shop-price{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px;color:#bec7d0;font-size:8px;letter-spacing:.1em}
+.runner-shop-price b{font-size:10px;color:#eef2f6;font-weight:500}
+.runner-shop-card button{width:100%;min-height:38px;border:1px solid rgba(225,232,241,.16);border-radius:999px;background:rgba(255,255,255,.02);color:#d3dae2;font:inherit;font-size:8px;letter-spacing:.1em;cursor:pointer}
+.runner-shop-card button:hover:not(:disabled){border-color:rgba(235,241,247,.36);background:rgba(255,255,255,.045);color:#fff}
+.runner-shop-card button:disabled{opacity:1;cursor:default;background:rgba(255,255,255,.04);color:#eef3f7;border-color:rgba(226,235,244,.25)}
+@media(max-width:700px){
+  .runner-store-head{align-items:stretch;flex-direction:column}
+  .runner-store-balance-box{text-align:left;min-width:0}
+  .runner-store-grid{grid-template-columns:1fr}
+  .runner-store-toggle{flex:1}
+  .runner-shop-preview{height:118px}
+}
 
 </style>
 </head>
@@ -1177,8 +1214,15 @@ html{scroll-padding-top:80px}
 
         <div class="runner-store-panel" id="runnerStorePanel">
           <div class="runner-store-head">
-            <strong id="runnerStoreTitle">ØN // МАГАЗИН</strong>
-            <span class="runner-store-balance"><span id="runnerStoreBalance">0000</span> Ø-CREDITS</span>
+            <div>
+              <span class="runner-store-kicker">SIGNAL RUNNER</span>
+              <strong id="runnerStoreTitle">ØN // МАГАЗИН</strong>
+              <p class="runner-store-subtitle" id="runnerStoreSubtitle">Косметика для сигнала: меняй планету, пространство и препятствия.</p>
+            </div>
+            <div class="runner-store-balance-box">
+              <small>Ø-CREDITS</small>
+              <span class="runner-store-balance"><span id="runnerStoreBalance">0000</span> Ø</span>
+            </div>
           </div>
           <p class="runner-store-status" id="runnerStoreStatus" role="status"></p>
           <div id="runnerStoreContent"></div>
@@ -1275,7 +1319,7 @@ const gameI18n={
     nearLock:'ПОЧТИ ЗАХВАЧЕН',nearHint:'ВЫРАВНИВАНИЕ ЧАСТОТЫ // ОЧЕНЬ БЛИЗКО',
     stabilizing:'СТАБИЛИЗАЦИЯ',hold:'УДЕРЖИВАЙ ЧАСТОТУ // НЕ ДВИГАЙ',
     decryptComplete:'РАСШИФРОВКА ЗАВЕРШЕНА // ØN-003',
-    lost:'ПЕРЕДАЧА ПОТЕРЯНА',reconnect:'ПЕРЕПОДКЛЮЧИТЬСЯ',speed:'СКОРОСТЬ',soundOff:'Выключить музыку игры',soundOn:'Включить музыку игры',calmSpace:'СПОКОЙНЫЙ КОСМОС',signalDrift:'ДРЕЙФ СИГНАЛА',distortionField:'ПОЛЕ ИСКАЖЕНИЙ',leaderboard:'ТАБЛИЦА ЛИДЕРОВ',player:'ИГРОК',saveScore:'СОХРАНИТЬ РЕЗУЛЬТАТ',namePlaceholder:'Введи имя',loadingBoard:'Загрузка рейтинга…',emptyBoard:'Пока нет результатов',saveOk:'РЕЗУЛЬТАТ СОХРАНЁН',saveError:'Не удалось сохранить результат',nameError:'Введи имя от 1 до 20 символов',store:'МАГАЗИН',storeClose:'ЗАКРЫТЬ МАГАЗИН',storeTitle:'ØN // МАГАЗИН',avatars:'ПЛАНЕТЫ',backgrounds:'ФОНЫ',obstacles:'ПРЕПЯТСТВИЯ',buy:'КУПИТЬ',equip:'ВЫБРАТЬ',equipped:'ИСПОЛЬЗУЕТСЯ',owned:'КУПЛЕНО',notEnough:'НЕ ХВАТАЕТ Ø-CREDITS',storeError:'Ошибка магазина',connecting:'ПОДКЛЮЧЕНИЕ…',earned:'ЗАРАБОТАНО',position:'ПОЗИЦИЯ'
+    lost:'ПЕРЕДАЧА ПОТЕРЯНА',reconnect:'ПЕРЕПОДКЛЮЧИТЬСЯ',speed:'СКОРОСТЬ',soundOff:'Выключить музыку игры',soundOn:'Включить музыку игры',calmSpace:'СПОКОЙНЫЙ КОСМОС',signalDrift:'ДРЕЙФ СИГНАЛА',distortionField:'ПОЛЕ ИСКАЖЕНИЙ',leaderboard:'ТАБЛИЦА ЛИДЕРОВ',player:'ИГРОК',saveScore:'СОХРАНИТЬ РЕЗУЛЬТАТ',namePlaceholder:'Введи имя',loadingBoard:'Загрузка рейтинга…',emptyBoard:'Пока нет результатов',saveOk:'РЕЗУЛЬТАТ СОХРАНЁН',saveError:'Не удалось сохранить результат',nameError:'Введи имя от 1 до 20 символов',store:'МАГАЗИН',storeClose:'ЗАКРЫТЬ МАГАЗИН',storeTitle:'ØN // МАГАЗИН',avatars:'ПЛАНЕТЫ',backgrounds:'ФОНЫ',obstacles:'ПРЕПЯТСТВИЯ',buy:'КУПИТЬ',equip:'ВЫБРАТЬ',equipped:'ИСПОЛЬЗУЕТСЯ',owned:'КУПЛЕНО',notEnough:'НЕ ХВАТАЕТ Ø-CREDITS',storeError:'Ошибка магазина',connecting:'ПОДКЛЮЧЕНИЕ…',earned:'ЗАРАБОТАНО',position:'ПОЗИЦИЯ',storeSubtitle:'Косметика для сигнала: меняй планету, пространство и препятствия.',free:'БЕСПЛАТНО',rarityCommon:'COMMON',rarityRare:'RARE',rarityVoid:'VOID'
   },
   en:{
     intercept:'ØN // INTERCEPT 003',previous:'PREVIOUS LOCK // VERIFIED',
@@ -1293,7 +1337,7 @@ const gameI18n={
     nearLock:'NEAR LOCK',nearHint:'FREQUENCY ALIGNMENT // VERY CLOSE',
     stabilizing:'STABILIZING',hold:'HOLD FREQUENCY // DO NOT MOVE',
     decryptComplete:'DECRYPTION COMPLETE // ØN-003',
-    lost:'TRANSMISSION LOST',reconnect:'RECONNECT',speed:'SPEED',soundOff:'Turn game music off',soundOn:'Turn game music on',calmSpace:'CALM SPACE',signalDrift:'SIGNAL DRIFT',distortionField:'DISTORTION FIELD',leaderboard:'LEADERBOARD',player:'PLAYER',saveScore:'SAVE RESULT',namePlaceholder:'Enter name',loadingBoard:'Loading leaderboard…',emptyBoard:'No scores yet',saveOk:'RESULT SAVED',saveError:'Could not save result',nameError:'Enter a name from 1 to 20 characters',store:'STORE',storeClose:'CLOSE STORE',storeTitle:'ØN // STORE',avatars:'PLANETS',backgrounds:'BACKGROUNDS',obstacles:'OBSTACLES',buy:'BUY',equip:'EQUIP',equipped:'EQUIPPED',owned:'OWNED',notEnough:'NOT ENOUGH Ø-CREDITS',storeError:'Store error',connecting:'CONNECTING…',earned:'EARNED',position:'POSITION'
+    lost:'TRANSMISSION LOST',reconnect:'RECONNECT',speed:'SPEED',soundOff:'Turn game music off',soundOn:'Turn game music on',calmSpace:'CALM SPACE',signalDrift:'SIGNAL DRIFT',distortionField:'DISTORTION FIELD',leaderboard:'LEADERBOARD',player:'PLAYER',saveScore:'SAVE RESULT',namePlaceholder:'Enter name',loadingBoard:'Loading leaderboard…',emptyBoard:'No scores yet',saveOk:'RESULT SAVED',saveError:'Could not save result',nameError:'Enter a name from 1 to 20 characters',store:'STORE',storeClose:'CLOSE STORE',storeTitle:'ØN // STORE',avatars:'PLANETS',backgrounds:'BACKGROUNDS',obstacles:'OBSTACLES',buy:'BUY',equip:'EQUIP',equipped:'EQUIPPED',owned:'OWNED',notEnough:'NOT ENOUGH Ø-CREDITS',storeError:'Store error',connecting:'CONNECTING…',earned:'EARNED',position:'POSITION',storeSubtitle:'Signal cosmetics: change your planet, space and obstacles.',free:'FREE',rarityCommon:'COMMON',rarityRare:'RARE',rarityVoid:'VOID'
   }
 };
 function gameText(key){
@@ -1317,6 +1361,7 @@ function applyGameLanguage(lang){
   const storeButton=document.getElementById('runnerStoreToggle');
   if(storeButton)storeButton.textContent=document.getElementById('runnerStorePanel')?.classList.contains('open')?g.storeClose:g.store;
   const storeTitle=document.getElementById('runnerStoreTitle');if(storeTitle)storeTitle.textContent=g.storeTitle;
+  const storeSubtitle=document.getElementById('runnerStoreSubtitle');if(storeSubtitle)storeSubtitle.textContent=g.storeSubtitle;
   set('#signalZoneBadge','unknownTransmission');
   set('.runner-overlay small','runProtocol');
   set('.runner-controls > span','controls');
@@ -1628,6 +1673,11 @@ let runnerStoreState={
   selected_background:'deep_space',
   selected_obstacle:'signal_spires'
 };
+const RUNNER_ITEM_RARITY={
+  orbit_o:'common',frost_moon:'rare',void_core:'void',
+  deep_space:'common',violet_nebula:'rare',black_sun:'void',
+  signal_spires:'common',crystal_shards:'rare',orbital_debris:'void'
+};
 const RUNNER_ITEM_META={
   orbit_o:{ru:['ORBIT Ø','Базовая планета ØRNIVAISE'],en:['ORBIT Ø','Default ØRNIVAISE planet']},
   frost_moon:{ru:['FROST MOON','Холодная ледяная сфера'],en:['FROST MOON','Cold ice sphere']},
@@ -1688,27 +1738,50 @@ function runnerCategorySelection(category){
   if(category==='background')return runnerStoreState.selected_background;
   return runnerStoreState.selected_obstacle;
 }
+function runnerPreviewMarkup(itemId,category){
+  const sceneClass=category==='background'?(' '+itemId):'';
+  if(category==='avatar'){
+    return '<div class="runner-preview-scene"><div class="runner-preview-ground"></div><div class="runner-preview-planet '+itemId+'"></div></div>';
+  }
+  if(category==='background'){
+    return '<div class="runner-preview-scene'+sceneClass+'"><div class="runner-preview-background-planet"></div><div class="runner-preview-mini-planet"></div><div class="runner-preview-ground"></div></div>';
+  }
+  return '<div class="runner-preview-scene"><div class="runner-preview-mini-planet"></div><div class="runner-preview-obstacles '+itemId+'"><i></i><i></i><i></i></div><div class="runner-preview-ground"></div></div>';
+}
 function renderRunnerStore(){
   if(!runnerStoreContent)return;
   const lang=document.documentElement.lang==='en'?'en':'ru';
   const groups=[['avatar','avatars'],['background','backgrounds'],['obstacle','obstacles']];
   const frag=document.createDocumentFragment();
   groups.forEach(([category,labelKey])=>{
+    const items=runnerStoreState.items.filter(i=>i.category===category).sort((a,b)=>a.sort_order-b.sort_order);
     const section=document.createElement('section');section.className='runner-store-category';
-    const h=document.createElement('h4');h.textContent=gameText(labelKey);section.appendChild(h);
+    const header=document.createElement('div');header.className='runner-store-category-title';
+    const h=document.createElement('h4');h.textContent=gameText(labelKey);
+    const count=document.createElement('span');count.className='runner-store-category-count';count.textContent=String(items.length).padStart(2,'0')+' ITEMS';
+    header.append(h,count);section.appendChild(header);
     const grid=document.createElement('div');grid.className='runner-store-grid';
-    runnerStoreState.items.filter(i=>i.category===category).sort((a,b)=>a.sort_order-b.sort_order).forEach(item=>{
+    items.forEach(item=>{
       const meta=RUNNER_ITEM_META[item.item_id]?.[lang]||[item.item_id,''];
+      const rarity=RUNNER_ITEM_RARITY[item.item_id]||'common';
       const owned=item.price===0||runnerStoreState.inventory.includes(item.item_id);
       const equipped=runnerCategorySelection(category)===item.item_id;
       const card=document.createElement('article');card.className='runner-shop-card'+(equipped?' equipped':'');
-      const preview=document.createElement('div');preview.className='runner-shop-preview '+category+' '+item.item_id;
+      const preview=document.createElement('div');preview.className='runner-shop-preview';preview.setAttribute('aria-hidden','true');preview.innerHTML=runnerPreviewMarkup(item.item_id,category);
+      const body=document.createElement('div');body.className='runner-shop-body';
+      const top=document.createElement('div');top.className='runner-shop-topline';
       const title=document.createElement('strong');title.textContent=meta[0];
+      const badge=document.createElement('span');badge.className='runner-rarity '+rarity;badge.textContent=gameText(rarity==='void'?'rarityVoid':rarity==='rare'?'rarityRare':'rarityCommon');
+      top.append(title,badge);
       const desc=document.createElement('small');desc.textContent=meta[1];
+      const price=document.createElement('div');price.className='runner-shop-price';
+      const ownership=document.createElement('span');ownership.textContent=equipped?gameText('equipped'):(owned?gameText('owned'):'');
+      const amount=document.createElement('b');amount.textContent=item.price===0?gameText('free'):(item.price+' Ø');
+      price.append(ownership,amount);
       const btn=document.createElement('button');btn.type='button';btn.dataset.item=item.item_id;btn.dataset.owned=owned?'1':'0';
       btn.textContent=equipped?gameText('equipped'):(owned?gameText('equip'):(gameText('buy')+' · '+item.price+' Ø'));
       btn.disabled=equipped;
-      card.append(preview,title,desc,btn);grid.appendChild(card);
+      body.append(top,desc,price,btn);card.append(preview,body);grid.appendChild(card);
     });
     section.appendChild(grid);frag.appendChild(section);
   });
