@@ -845,6 +845,48 @@ html{scroll-padding-top:80px}
   .signal-replay,.signal-game .easter-close{width:100%}
 }
 @media(prefers-reduced-motion:reduce){.signal-unlocked.open{animation:none}}
+
+.signal-runner{display:none;margin-top:18px}
+.signal-runner.open{display:block}
+.signal-game.runner-mode{width:min(980px,100%)}
+.signal-game.runner-mode .signal-game-intro,
+.signal-game.runner-mode .signal-receiver{display:none}
+.runner-shell{border:1px solid rgba(226,233,242,.16);border-radius:16px;overflow:hidden;background:#07090d;box-shadow:0 24px 70px rgba(0,0,0,.35)}
+.runner-hud{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;border-bottom:1px solid rgba(226,233,242,.1);background:rgba(255,255,255,.025)}
+.runner-stat{padding:12px 14px;min-width:0}
+.runner-stat small{display:block;margin-bottom:5px;font-size:7px;letter-spacing:.18em;color:#69737f}
+.runner-stat strong{display:block;font-size:13px;letter-spacing:.12em;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.runner-canvas-wrap{position:relative;aspect-ratio:8/3;min-height:230px;touch-action:manipulation;overflow:hidden}
+#signalRunnerCanvas{display:block;width:100%;height:100%;background:#05070a;outline:none}
+.runner-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:20px;background:rgba(3,4,7,.42);backdrop-filter:blur(2px);opacity:0;pointer-events:none;transition:opacity .18s ease}
+.runner-overlay.visible{opacity:1;pointer-events:auto}
+.runner-overlay small{font-size:8px;letter-spacing:.2em;color:#8b96a3}
+.runner-overlay strong{margin:10px 0 8px;font-size:clamp(24px,5vw,42px);letter-spacing:.1em}
+.runner-overlay p{margin:0 0 16px;color:#8c96a2;font-size:9px;letter-spacing:.12em}
+.runner-overlay button,.runner-primary,.runner-secondary{
+  min-height:42px;border:1px solid rgba(228,235,244,.2);border-radius:999px;background:rgba(255,255,255,.025);
+  color:#d9e0e8;padding:0 16px;font:inherit;font-size:9px;letter-spacing:.14em;cursor:pointer
+}
+.runner-overlay button:hover,.runner-primary:hover,.runner-secondary:hover{border-color:rgba(238,243,249,.48);color:#fff}
+.runner-controls{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;border-top:1px solid rgba(226,233,242,.09)}
+.runner-controls span{font-size:8px;line-height:1.5;letter-spacing:.14em;color:#6f7985}
+.runner-control-buttons{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.runner-start{display:none;margin-top:15px}
+.signal-unlocked.open .runner-start{display:inline-flex;align-items:center;justify-content:center}
+.signal-game.runner-mode .signal-actions{margin-top:14px}
+.signal-game.runner-mode #signalReplay{display:none}
+.signal-zone-badge{display:none;position:absolute;top:14px;left:50%;transform:translateX(-50%);z-index:2;padding:7px 10px;border:1px solid rgba(231,238,247,.16);border-radius:999px;background:rgba(5,7,10,.72);font-size:7px;letter-spacing:.2em;color:#cbd3dc;pointer-events:none}
+.signal-zone-badge.visible{display:block}
+@media(max-width:700px){
+  .runner-canvas-wrap{aspect-ratio:4/3;min-height:260px}
+  .runner-hud{grid-template-columns:1fr 1fr 1fr}
+  .runner-stat{padding:10px}
+  .runner-stat strong{font-size:11px}
+  .runner-controls{align-items:stretch;flex-direction:column}
+  .runner-control-buttons{justify-content:stretch}
+  .runner-primary,.runner-secondary{flex:1}
+}
+
 </style>
 </head>
 <body data-track-theme="signal001">
@@ -1025,6 +1067,35 @@ html{scroll-padding-top:80px}
         <small>SIGNAL LOCKED // ACCESS GRANTED</small>
         <strong>TRANSMISSION 003</strong>
         <p>SOURCE UNKNOWN // CHANNEL OPEN</p>
+        <button class="runner-primary runner-start" id="signalRunnerStart" type="button">START SIGNAL RUNNER</button>
+      </div>
+    </div>
+
+
+    <div class="signal-runner" id="signalRunner" aria-hidden="true">
+      <div class="runner-shell">
+        <div class="runner-hud">
+          <div class="runner-stat"><small>DISTANCE</small><strong id="runnerDistance">00000</strong></div>
+          <div class="runner-stat"><small>SIGNALS</small><strong id="runnerSignals">00</strong></div>
+          <div class="runner-stat"><small>BEST</small><strong id="runnerBest">00000</strong></div>
+        </div>
+        <div class="runner-canvas-wrap" id="runnerCanvasWrap">
+          <canvas id="signalRunnerCanvas" width="960" height="360" tabindex="0" aria-label="SIGNAL RUNNER. Нажмите пробел или коснитесь экрана для прыжка."></canvas>
+          <div class="signal-zone-badge" id="signalZoneBadge">UNKNOWN TRANSMISSION</div>
+          <div class="runner-overlay visible" id="runnerOverlay">
+            <small>ØN // RUN PROTOCOL</small>
+            <strong id="runnerOverlayTitle">SIGNAL RUNNER</strong>
+            <p id="runnerOverlayText">SPACE / TAP — JUMP</p>
+            <button id="runnerOverlayButton" type="button">START RUN</button>
+          </div>
+        </div>
+        <div class="runner-controls">
+          <span>SPACE / TAP — JUMP · ESC — EXIT</span>
+          <div class="runner-control-buttons">
+            <button class="runner-primary" id="runnerJump" type="button">JUMP</button>
+            <button class="runner-secondary" id="runnerBack" type="button">BACK TO TUNER</button>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -1247,6 +1318,19 @@ const signalSpectrum=document.getElementById('signalSpectrum');
 const signalUnlocked=document.getElementById('signalUnlocked');
 const signalReplay=document.getElementById('signalReplay');
 const signalCompleteMark=document.getElementById('signalCompleteMark');
+const signalRunnerStart=document.getElementById('signalRunnerStart');
+const signalRunner=document.getElementById('signalRunner');
+const runnerCanvas=document.getElementById('signalRunnerCanvas');
+const runnerOverlay=document.getElementById('runnerOverlay');
+const runnerOverlayTitle=document.getElementById('runnerOverlayTitle');
+const runnerOverlayText=document.getElementById('runnerOverlayText');
+const runnerOverlayButton=document.getElementById('runnerOverlayButton');
+const runnerDistance=document.getElementById('runnerDistance');
+const runnerSignals=document.getElementById('runnerSignals');
+const runnerBest=document.getElementById('runnerBest');
+const runnerJump=document.getElementById('runnerJump');
+const runnerBack=document.getElementById('runnerBack');
+const signalZoneBadge=document.getElementById('signalZoneBadge');
 
 const SIGNAL_TARGET=101.7;
 const SIGNAL_TOLERANCE=.25;
@@ -1335,10 +1419,280 @@ function updateSignalGame(){
     signalGame?.classList.remove('locking');
   }
 }
+
+/* SIGNAL RUNNER — lightweight canvas endless runner */
+const runnerCtx=runnerCanvas?.getContext('2d');
+const RUNNER_W=960,RUNNER_H=360,RUNNER_GROUND=292;
+let runnerRaf=0,runnerRunning=false,runnerGameOver=false,runnerLast=0;
+let runnerDistanceValue=0,runnerSignalCount=0,runnerSpeed=330,runnerSpawn=0,runnerOrbSpawn=0;
+let runnerObstacles=[],runnerOrbs=[],runnerDust=[],runnerStars=[],runnerSecret=false;
+const runnerPlayer={x:104,y:RUNNER_GROUND-44,w:34,h:44,vy:0,onGround:true};
+
+function getRunnerBest(){
+  try{return Number(localStorage.getItem('ornivaise-runner-best')||0)||0}catch(e){return 0}
+}
+function setRunnerBest(v){
+  try{localStorage.setItem('ornivaise-runner-best',String(Math.floor(v)))}catch(e){}
+}
+function padRunner(v,len=5){return String(Math.max(0,Math.floor(v))).padStart(len,'0')}
+function seedRunnerStars(){
+  runnerStars=Array.from({length:54},(_,i)=>({
+    x:(i*173)%RUNNER_W,
+    y:28+((i*97)%205),
+    r:i%7===0?1.4:.7,
+    a:.12+((i*13)%18)/100
+  }));
+}
+seedRunnerStars();
+
+function showRunnerOverlay(title,textValue,buttonText){
+  if(!runnerOverlay)return;
+  runnerOverlayTitle.textContent=title;
+  runnerOverlayText.textContent=textValue;
+  runnerOverlayButton.textContent=buttonText;
+  runnerOverlay.classList.add('visible');
+}
+function hideRunnerOverlay(){runnerOverlay?.classList.remove('visible')}
+function updateRunnerHud(){
+  if(runnerDistance)runnerDistance.textContent=padRunner(runnerDistanceValue);
+  if(runnerSignals)runnerSignals.textContent=padRunner(runnerSignalCount,2);
+  if(runnerBest)runnerBest.textContent=padRunner(Math.max(getRunnerBest(),runnerDistanceValue));
+}
+function resetRunner(){
+  cancelAnimationFrame(runnerRaf);runnerRaf=0;
+  runnerRunning=false;runnerGameOver=false;runnerLast=0;
+  runnerDistanceValue=0;runnerSignalCount=0;runnerSpeed=330;
+  runnerSpawn=.85;runnerOrbSpawn=1.9;
+  runnerObstacles=[];runnerOrbs=[];runnerDust=[];
+  runnerSecret=false;
+  signalZoneBadge?.classList.remove('visible');
+  Object.assign(runnerPlayer,{x:104,y:RUNNER_GROUND-44,vy:0,onGround:true});
+  updateRunnerHud();
+  drawRunner();
+}
+function openRunner(){
+  if(!signalRunner||!signalGame)return;
+  signalGame.classList.add('runner-mode');
+  signalRunner.classList.add('open');
+  signalRunner.setAttribute('aria-hidden','false');
+  document.getElementById('easterTitle').textContent='SIGNAL RUNNER';
+  resetRunner();
+  showRunnerOverlay('SIGNAL RUNNER','SPACE / TAP — JUMP','START RUN');
+  setTimeout(()=>runnerCanvas?.focus(),0);
+}
+function closeRunner(){
+  cancelAnimationFrame(runnerRaf);runnerRaf=0;runnerRunning=false;
+  signalRunner?.classList.remove('open');
+  signalRunner?.setAttribute('aria-hidden','true');
+  signalGame?.classList.remove('runner-mode');
+  document.getElementById('easterTitle').textContent='SIGNAL DECRYPTION';
+  signalZoneBadge?.classList.remove('visible');
+}
+function runnerJumpAction(){
+  if(!signalRunner?.classList.contains('open'))return;
+  if(!runnerRunning){
+    if(runnerGameOver)startRunner();
+    return;
+  }
+  if(runnerPlayer.onGround){
+    runnerPlayer.vy=-640;
+    runnerPlayer.onGround=false;
+    for(let i=0;i<7;i++)runnerDust.push({x:runnerPlayer.x+8,y:RUNNER_GROUND-3,vx:-60-Math.random()*90,vy:-20-Math.random()*55,life:.4+Math.random()*.25});
+  }
+}
+function startRunner(){
+  resetRunner();
+  runnerRunning=true;
+  hideRunnerOverlay();
+  runnerLast=performance.now();
+  runnerRaf=requestAnimationFrame(runnerLoop);
+  runnerCanvas?.focus();
+}
+function spawnRunnerObstacle(){
+  const roll=Math.random();
+  if(roll<.72){
+    const h=34+Math.random()*45,w=20+Math.random()*18;
+    runnerObstacles.push({x:RUNNER_W+24,y:RUNNER_GROUND-h,w,h,type:'spire'});
+  }else{
+    const h=28+Math.random()*16,w=42+Math.random()*26;
+    runnerObstacles.push({x:RUNNER_W+24,y:RUNNER_GROUND-h,w,h,type:'block'});
+  }
+}
+function spawnRunnerOrb(){
+  const high=Math.random()<.35;
+  runnerOrbs.push({x:RUNNER_W+24,y:high?RUNNER_GROUND-118:RUNNER_GROUND-76,r:11,pulse:Math.random()*Math.PI*2});
+}
+function rectHit(a,b,pad=4){
+  return a.x+pad<b.x+b.w-pad&&a.x+a.w-pad>b.x+pad&&a.y+pad<b.y+b.h-pad&&a.y+a.h-pad>b.y+pad;
+}
+function gameOverRunner(){
+  runnerRunning=false;runnerGameOver=true;
+  cancelAnimationFrame(runnerRaf);runnerRaf=0;
+  const best=Math.max(getRunnerBest(),runnerDistanceValue);
+  setRunnerBest(best);updateRunnerHud();
+  showRunnerOverlay('TRANSMISSION LOST',`DISTANCE // ${padRunner(runnerDistanceValue)} · SIGNALS // ${padRunner(runnerSignalCount,2)}`,'RECONNECT');
+}
+function runnerLoop(ts){
+  if(!runnerRunning)return;
+  const dt=Math.min(.032,(ts-runnerLast)/1000||.016);runnerLast=ts;
+  updateRunner(dt);
+  drawRunner();
+  runnerRaf=requestAnimationFrame(runnerLoop);
+}
+function updateRunner(dt){
+  runnerDistanceValue+=runnerSpeed*dt*.18;
+  runnerSpeed=Math.min(590,330+runnerDistanceValue*.055);
+  if(!runnerSecret&&runnerDistanceValue>=3000){
+    runnerSecret=true;
+    signalZoneBadge?.classList.add('visible');
+  }
+
+  runnerPlayer.vy+=1780*dt;
+  runnerPlayer.y+=runnerPlayer.vy*dt;
+  if(runnerPlayer.y>=RUNNER_GROUND-runnerPlayer.h){
+    runnerPlayer.y=RUNNER_GROUND-runnerPlayer.h;runnerPlayer.vy=0;runnerPlayer.onGround=true;
+  }
+
+  runnerSpawn-=dt;
+  if(runnerSpawn<=0){
+    spawnRunnerObstacle();
+    runnerSpawn=Math.max(.72,1.42-runnerSpeed*.0009)+Math.random()*.58;
+  }
+  runnerOrbSpawn-=dt;
+  if(runnerOrbSpawn<=0){
+    if(Math.random()<.72)spawnRunnerOrb();
+    runnerOrbSpawn=1.25+Math.random()*2.1;
+  }
+
+  runnerObstacles.forEach(o=>o.x-=runnerSpeed*dt);
+  runnerOrbs.forEach(o=>{o.x-=runnerSpeed*dt;o.pulse+=dt*5});
+  runnerDust.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=280*dt;p.life-=dt});
+  runnerObstacles=runnerObstacles.filter(o=>o.x+o.w>-30);
+  runnerDust=runnerDust.filter(p=>p.life>0);
+
+  const p={x:runnerPlayer.x,y:runnerPlayer.y,w:runnerPlayer.w,h:runnerPlayer.h};
+  for(const o of runnerObstacles){if(rectHit(p,o,5)){gameOverRunner();return}}
+
+  runnerOrbs=runnerOrbs.filter(o=>{
+    const cx=Math.max(p.x,Math.min(o.x,p.x+p.w));
+    const cy=Math.max(p.y,Math.min(o.y,p.y+p.h));
+    const dx=o.x-cx,dy=o.y-cy;
+    if(dx*dx+dy*dy<o.r*o.r){
+      runnerSignalCount++;
+      for(let i=0;i<9;i++)runnerDust.push({x:o.x,y:o.y,vx:-80+Math.random()*160,vy:-80+Math.random()*160,life:.35+Math.random()*.35});
+      return false;
+    }
+    return o.x+o.r>-30;
+  });
+  updateRunnerHud();
+}
+function drawRunner(){
+  if(!runnerCtx||!runnerCanvas)return;
+  const ctx=runnerCtx;
+  ctx.clearRect(0,0,RUNNER_W,RUNNER_H);
+
+  const bg=ctx.createLinearGradient(0,0,0,RUNNER_H);
+  if(runnerSecret){
+    bg.addColorStop(0,'#090710');bg.addColorStop(.7,'#05070a');bg.addColorStop(1,'#030406');
+  }else{
+    bg.addColorStop(0,'#080b10');bg.addColorStop(.7,'#05070a');bg.addColorStop(1,'#030406');
+  }
+  ctx.fillStyle=bg;ctx.fillRect(0,0,RUNNER_W,RUNNER_H);
+
+  ctx.save();
+  runnerStars.forEach(s=>{
+    let x=(s.x-runnerDistanceValue*(s.r*.19))%RUNNER_W;if(x<0)x+=RUNNER_W;
+    ctx.globalAlpha=s.a+(runnerSecret?.09:0);
+    ctx.fillStyle='#eef3f8';ctx.fillRect(x,s.y,s.r,s.r);
+  });
+  ctx.restore();
+
+  if(runnerSecret){
+    ctx.save();
+    const glow=ctx.createRadialGradient(RUNNER_W*.7,RUNNER_H*.38,10,RUNNER_W*.7,RUNNER_H*.38,260);
+    glow.addColorStop(0,'rgba(138,104,188,.14)');glow.addColorStop(1,'rgba(20,12,32,0)');
+    ctx.fillStyle=glow;ctx.fillRect(0,0,RUNNER_W,RUNNER_H);
+    ctx.restore();
+  }
+
+  ctx.strokeStyle='rgba(220,229,239,.16)';ctx.lineWidth=1;
+  ctx.beginPath();ctx.moveTo(0,RUNNER_GROUND+.5);ctx.lineTo(RUNNER_W,RUNNER_GROUND+.5);ctx.stroke();
+
+  const dashOffset=(runnerDistanceValue*5)%48;
+  ctx.strokeStyle='rgba(220,229,239,.07)';
+  for(let x=-dashOffset;x<RUNNER_W;x+=48){
+    ctx.beginPath();ctx.moveTo(x,RUNNER_GROUND+16);ctx.lineTo(x+22,RUNNER_GROUND+16);ctx.stroke();
+  }
+
+  runnerObstacles.forEach(o=>{
+    ctx.save();
+    ctx.fillStyle=runnerSecret?'rgba(190,168,220,.25)':'rgba(205,215,226,.18)';
+    ctx.strokeStyle=runnerSecret?'rgba(219,202,240,.58)':'rgba(222,230,239,.48)';
+    ctx.lineWidth=1;
+    if(o.type==='spire'){
+      ctx.beginPath();ctx.moveTo(o.x,o.y+o.h);ctx.lineTo(o.x+o.w*.5,o.y);ctx.lineTo(o.x+o.w,o.y+o.h);ctx.closePath();ctx.fill();ctx.stroke();
+    }else{
+      ctx.fillRect(o.x,o.y,o.w,o.h);ctx.strokeRect(o.x+.5,o.y+.5,o.w-1,o.h-1);
+      ctx.strokeStyle='rgba(230,236,244,.16)';
+      ctx.beginPath();ctx.moveTo(o.x+7,o.y+5);ctx.lineTo(o.x+o.w-6,o.y+o.h-6);ctx.stroke();
+    }
+    ctx.restore();
+  });
+
+  runnerOrbs.forEach(o=>{
+    ctx.save();
+    const pr=o.r+Math.sin(o.pulse)*2;
+    ctx.strokeStyle='rgba(235,240,247,.72)';ctx.fillStyle='rgba(235,240,247,.055)';
+    ctx.shadowBlur=12;ctx.shadowColor='rgba(220,228,241,.3)';
+    ctx.beginPath();ctx.arc(o.x,o.y,pr,0,Math.PI*2);ctx.fill();ctx.stroke();
+    ctx.shadowBlur=0;ctx.fillStyle='#e8edf3';ctx.font='bold 12px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('Ø',o.x,o.y+.5);
+    ctx.restore();
+  });
+
+  runnerDust.forEach(p=>{
+    ctx.save();ctx.globalAlpha=Math.max(0,p.life*1.8);ctx.fillStyle='#dbe3ec';ctx.fillRect(p.x,p.y,2,2);ctx.restore();
+  });
+
+  ctx.save();
+  const px=runnerPlayer.x,py=runnerPlayer.y;
+  ctx.translate(px,py);
+  ctx.fillStyle='#e7edf4';ctx.strokeStyle='rgba(255,255,255,.72)';
+  ctx.shadowBlur=runnerSecret?18:9;ctx.shadowColor=runnerSecret?'rgba(187,153,225,.42)':'rgba(218,229,242,.25)';
+  ctx.fillRect(5,4,24,32);
+  ctx.shadowBlur=0;
+  ctx.fillStyle='#05070a';ctx.font='bold 17px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('Ø',17,20);
+  ctx.strokeStyle='rgba(230,237,246,.75)';ctx.lineWidth=2;
+  const leg=Math.sin(runnerDistanceValue*.35)*4;
+  ctx.beginPath();ctx.moveTo(10,36);ctx.lineTo(8+leg,44);ctx.moveTo(24,36);ctx.lineTo(26-leg,44);ctx.stroke();
+  ctx.restore();
+
+  ctx.save();
+  ctx.fillStyle='rgba(210,219,229,.45)';ctx.font='9px Arial';ctx.textAlign='right';
+  ctx.fillText('ØN // '+Math.round(runnerSpeed)+' PX/S',RUNNER_W-18,24);
+  ctx.restore();
+}
+runnerOverlayButton?.addEventListener('click',startRunner);
+signalRunnerStart?.addEventListener('click',openRunner);
+runnerBack?.addEventListener('click',()=>{closeRunner();signalTuner?.focus()});
+runnerJump?.addEventListener('click',runnerJumpAction);
+runnerCanvas?.addEventListener('pointerdown',e=>{e.preventDefault();runnerJumpAction()});
+runnerCanvas?.addEventListener('keydown',e=>{
+  if(e.code==='Space'||e.code==='ArrowUp'){e.preventDefault();runnerJumpAction()}
+});
+document.addEventListener('keydown',e=>{
+  if(!signalRunner?.classList.contains('open'))return;
+  if(e.code==='Space'||e.code==='ArrowUp'){e.preventDefault();runnerJumpAction()}
+  if(e.key==='Escape'){e.preventDefault();closeRunner();signalTuner?.focus()}
+});
+updateRunnerHud();
+drawRunner();
+
 function openEaster(){
   if(!easterOverlay)return;
   resetSignalGame();
-  signalCompleteMark?.classList.toggle('visible',signalWasSolved());
+  const solvedBefore=signalWasSolved();
+  signalCompleteMark?.classList.toggle('visible',solvedBefore);
+  if(solvedBefore)unlockSignal();
   easterOverlay.classList.add('open');
   easterOverlay.setAttribute('aria-hidden','false');
   document.body.classList.add('easter-open');
@@ -1347,6 +1701,7 @@ function openEaster(){
 function closeEaster(){
   if(!easterOverlay)return;
   clearTimeout(signalLockTimer);signalLockTimer=0;
+  closeRunner();
   easterOverlay.classList.remove('open');
   easterOverlay.setAttribute('aria-hidden','true');
   document.body.classList.remove('easter-open');
