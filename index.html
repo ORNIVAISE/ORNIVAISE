@@ -1036,15 +1036,15 @@ html{scroll-padding-top:80px}
   <div class="easter-grid" aria-hidden="true"></div>
   <div class="easter-panel signal-game" id="signalGame" role="dialog" aria-modal="true" aria-labelledby="easterTitle">
     <div class="easter-code">
-      <span>ØN // INTERCEPT 003</span>
-      <span class="signal-complete-mark" id="signalCompleteMark">PREVIOUS LOCK // VERIFIED</span>
+      <span>ØN // ПЕРЕХВАТ 003</span>
+      <span class="signal-complete-mark" id="signalCompleteMark">ПРЕДЫДУЩИЙ ЗАХВАТ // ПОДТВЕРЖДЁН</span>
     </div>
-    <h2 id="easterTitle">SIGNAL DECRYPTION</h2>
-    <p class="signal-game-intro">UNKNOWN SOURCE DETECTED. Найди устойчивую частоту и удержи сигнал до полной синхронизации.</p>
+    <h2 id="easterTitle">РАСШИФРОВКА СИГНАЛА</h2>
+    <p class="signal-game-intro">ОБНАРУЖЕН НЕИЗВЕСТНЫЙ ИСТОЧНИК. Найди устойчивую частоту и удержи сигнал до полной синхронизации.</p>
 
     <div class="signal-receiver">
       <div class="signal-frequency">
-        <span>FREQUENCY</span>
+        <span>ЧАСТОТА</span>
         <output id="signalFrequency" for="signalTuner">93.4 MHz</output>
       </div>
 
@@ -1058,16 +1058,16 @@ html{scroll-padding-top:80px}
 
       <div class="signal-meter" aria-hidden="true"><span id="signalMeter"></span></div>
       <div class="signal-readout" aria-live="polite">
-        <strong id="signalState">NOISE</strong>
+        <strong id="signalState">ШУМ</strong>
         <span id="signalStrength">0%</span>
       </div>
-      <p class="signal-hint" id="signalHint">MOVE THROUGH THE BAND // FIND THE SOURCE</p>
+      <p class="signal-hint" id="signalHint">ДВИГАЙСЯ ПО ДИАПАЗОНУ // НАЙДИ ИСТОЧНИК</p>
 
       <div class="signal-unlocked" id="signalUnlocked">
-        <small>SIGNAL LOCKED // ACCESS GRANTED</small>
-        <strong>TRANSMISSION 003</strong>
-        <p>SOURCE UNKNOWN // CHANNEL OPEN</p>
-        <button class="runner-primary runner-start" id="signalRunnerStart" type="button">START SIGNAL RUNNER</button>
+        <small>СИГНАЛ ЗАХВАЧЕН // ДОСТУП РАЗРЕШЁН</small>
+        <strong>ПЕРЕДАЧА 003</strong>
+        <p>ИСТОЧНИК НЕИЗВЕСТЕН // КАНАЛ ОТКРЫТ</p>
+        <button class="runner-primary runner-start" id="signalRunnerStart" type="button">ЗАПУСТИТЬ SIGNAL RUNNER</button>
       </div>
     </div>
 
@@ -1075,32 +1075,32 @@ html{scroll-padding-top:80px}
     <div class="signal-runner" id="signalRunner" aria-hidden="true">
       <div class="runner-shell">
         <div class="runner-hud">
-          <div class="runner-stat"><small>DISTANCE</small><strong id="runnerDistance">00000</strong></div>
-          <div class="runner-stat"><small>SIGNALS</small><strong id="runnerSignals">00</strong></div>
-          <div class="runner-stat"><small>BEST</small><strong id="runnerBest">00000</strong></div>
+          <div class="runner-stat"><small>ДИСТАНЦИЯ</small><strong id="runnerDistance">00000</strong></div>
+          <div class="runner-stat"><small>СИГНАЛЫ</small><strong id="runnerSignals">00</strong></div>
+          <div class="runner-stat"><small>РЕКОРД</small><strong id="runnerBest">00000</strong></div>
         </div>
         <div class="runner-canvas-wrap" id="runnerCanvasWrap">
-          <canvas id="signalRunnerCanvas" width="960" height="360" tabindex="0" aria-label="SIGNAL RUNNER. Нажмите пробел или коснитесь экрана для прыжка."></canvas>
-          <div class="signal-zone-badge" id="signalZoneBadge">UNKNOWN TRANSMISSION</div>
+          <canvas id="signalRunnerCanvas" width="960" height="360" tabindex="0" aria-label="SIGNAL RUNNER. Нажми пробел или коснись экрана, чтобы прыгнуть."></canvas>
+          <div class="signal-zone-badge" id="signalZoneBadge">НЕИЗВЕСТНАЯ ПЕРЕДАЧА</div>
           <div class="runner-overlay visible" id="runnerOverlay">
-            <small>ØN // RUN PROTOCOL</small>
+            <small>ØN // ПРОТОКОЛ ЗАПУСКА</small>
             <strong id="runnerOverlayTitle">SIGNAL RUNNER</strong>
-            <p id="runnerOverlayText">SPACE / TAP — JUMP</p>
-            <button id="runnerOverlayButton" type="button">START RUN</button>
+            <p id="runnerOverlayText">ПРОБЕЛ / ТАП — ПРЫЖОК</p>
+            <button id="runnerOverlayButton" type="button">НАЧАТЬ ЗАБЕГ</button>
           </div>
         </div>
         <div class="runner-controls">
-          <span>SPACE / TAP — JUMP · ESC — EXIT</span>
+          <span>ПРОБЕЛ / ТАП — ПРЫЖОК · ESC — ВЫХОД</span>
           <div class="runner-control-buttons">
-            <button class="runner-primary" id="runnerJump" type="button">JUMP</button>
-            <button class="runner-secondary" id="runnerBack" type="button">BACK TO TUNER</button>
+            <button class="runner-primary" id="runnerJump" type="button">ПРЫЖОК</button>
+            <button class="runner-secondary" id="runnerBack" type="button">НАЗАД К ПРИЁМНИКУ</button>
           </div>
         </div>
       </div>
     </div>
 
     <div class="signal-actions">
-      <button class="signal-replay" id="signalReplay" type="button">TUNE AGAIN</button>
+      <button class="signal-replay" id="signalReplay" type="button">НАСТРОИТЬ СНОВА</button>
       <button class="easter-close" id="easterClose" type="button">ЗАКРЫТЬ</button>
     </div>
   </div>
@@ -1154,7 +1154,77 @@ html{scroll-padding-top:80px}
 </footer>
 <script id="language-switcher">
 const i18n={ru:{nav:['ГЛАВНАЯ','МУЗЫКА','РЕЛИЗЫ','ИСТОРИЯ'],popular:'ПОПУЛЯРНЫЙ ТРЕК',catalog:'КАТАЛОГ',releases:'РЕЛИЗЫ',lead:'Каждый трек — отдельная работа со своим характером и звучанием.',storyLabel:'ИСТОРИЯ ØRNIVAISE',storyTitle:'БЕЗ ПРИВЯЗКИ<br>К ОДНОМУ ЗВУЧАНИЮ',story:['ØRNIVAISE появился из желания создавать музыку без привязки к одному жанру или определённому звучанию.','Проект начался с экспериментов с тёмной электронной музыкой, фонком и атмосферным звучанием. Постепенно появилась идея не повторять одну удачную формулу, а делать каждый новый трек самостоятельным — со своим характером, настроением и звучанием.','Здесь могут соседствовать тяжёлый бас, спокойные атмосферные композиции, меланхоличные мелодии, агрессивные ударные и совершенно неожиданные эксперименты.'],quote:'ØRNIVAISE — это музыка, которая меняется вместе с проектом.',newsLabel:'СВЕЖИЕ НОВОСТИ',newsTitle:'СЛЕДИ ЗА ØRNIVAISE',newsLead:'Новые релизы и важные обновления проекта публикуются во VK.',vk:'ПЕРЕЙТИ В VK ↗',now:'СЕЙЧАС ИГРАЕТ',foot:['ПОЛИТИКА КОНФИДЕНЦИАЛЬНОСТИ','УСЛОВИЯ ИСПОЛЬЗОВАНИЯ','ПРАВООБЛАДАТЕЛЯМ']},en:{nav:['HOME','MUSIC','RELEASES','STORY'],popular:'POPULAR TRACK',catalog:'CATALOG',releases:'RELEASES',lead:'Each track is a standalone work with its own character and sound.',storyLabel:'THE STORY OF ØRNIVAISE',storyTitle:'NOT BOUND<br>TO ONE SOUND',story:['ØRNIVAISE began with a desire to create music without being tied to one genre or a single sound.','The project started with experiments in dark electronic music, phonk and atmospheric sound. Gradually, the idea became not to repeat one successful formula, but to make every new track independent — with its own character, mood and sound.','Heavy bass, calm atmospheric compositions, melancholic melodies, aggressive drums and completely unexpected experiments can coexist here.'],quote:'ØRNIVAISE is music that changes together with the project.',newsLabel:'LATEST NEWS',newsTitle:'FOLLOW ØRNIVAISE',newsLead:'New releases and important project updates are published on VK.',vk:'OPEN VK ↗',now:'NOW PLAYING',foot:['PRIVACY POLICY','TERMS OF USE','RIGHTSHOLDERS']}};
-function applyLanguage(lang){const t=i18n[lang]||i18n.ru;document.documentElement.lang=lang;document.querySelectorAll('.lang-switch button').forEach(b=>{const on=b.dataset.lang===lang;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on))});[...document.querySelectorAll('#mainNav a')].forEach((a,i)=>a.textContent=t.nav[i]||a.textContent);const pc=document.querySelector('.popular-info .section-label');if(pc)pc.textContent=t.popular;const sh=document.querySelector('.releases-section .section-head');if(sh){sh.querySelector('.section-label').textContent=t.catalog;sh.querySelector('h2').textContent=t.releases;sh.querySelector('p').textContent=t.lead}const st=document.querySelector('.story-copy');if(st){st.querySelector('.section-label').textContent=t.storyLabel;st.querySelector('h2').innerHTML=t.storyTitle;st.querySelectorAll(':scope > p').forEach((p,i)=>{if(t.story[i])p.textContent=t.story[i]});st.querySelector('blockquote').textContent=t.quote}const n=document.querySelector('.news-section');if(n){n.querySelector('.section-label').textContent=t.newsLabel;n.querySelector('h2').textContent=t.newsTitle;n.querySelector('.news-lead').textContent=t.newsLead;n.querySelector('.vk-button').textContent=t.vk}const now=document.querySelector('.gp-meta small');if(now)now.textContent=t.now;const links=[...document.querySelectorAll('.footer-links a')];t.foot.forEach((x,i)=>{if(links[i+1])links[i+1].textContent=x});try{localStorage.setItem('ornivaise-language',lang)}catch(e){}}
+
+const gameI18n={
+  ru:{
+    intercept:'ØN // ПЕРЕХВАТ 003',previous:'ПРЕДЫДУЩИЙ ЗАХВАТ // ПОДТВЕРЖДЁН',
+    decryptTitle:'РАСШИФРОВКА СИГНАЛА',intro:'ОБНАРУЖЕН НЕИЗВЕСТНЫЙ ИСТОЧНИК. Найди устойчивую частоту и удержи сигнал до полной синхронизации.',
+    frequency:'ЧАСТОТА',noise:'ШУМ',moveBand:'ДВИГАЙСЯ ПО ДИАПАЗОНУ // НАЙДИ ИСТОЧНИК',
+    locked:'СИГНАЛ ЗАХВАЧЕН // ДОСТУП РАЗРЕШЁН',transmission:'ПЕРЕДАЧА 003',source:'ИСТОЧНИК НЕИЗВЕСТЕН // КАНАЛ ОТКРЫТ',
+    startRunner:'ЗАПУСТИТЬ SIGNAL RUNNER',distance:'ДИСТАНЦИЯ',signals:'СИГНАЛЫ',best:'РЕКОРД',
+    runnerAria:'SIGNAL RUNNER. Нажми пробел или коснись экрана, чтобы прыгнуть.',
+    unknownTransmission:'НЕИЗВЕСТНАЯ ПЕРЕДАЧА',runProtocol:'ØN // ПРОТОКОЛ ЗАПУСКА',
+    runnerTitle:'SIGNAL RUNNER',jumpHint:'ПРОБЕЛ / ТАП — ПРЫЖОК',startRun:'НАЧАТЬ ЗАБЕГ',
+    controls:'ПРОБЕЛ / ТАП — ПРЫЖОК · ESC — ВЫХОД',jump:'ПРЫЖОК',backTuner:'НАЗАД К ПРИЁМНИКУ',
+    tuneAgain:'НАСТРОИТЬ СНОВА',close:'ЗАКРЫТЬ',tunerAria:'Настройка частоты сигнала',hotspotAria:'Скрытый сигнал ØN / 2026',
+    weak:'СЛАБЫЙ СИГНАЛ',weakHint:'ИСТОЧНИК ОБНАРУЖЕН // ПРОДОЛЖАЙ НАСТРОЙКУ',
+    detected:'СИГНАЛ ОБНАРУЖЕН',detectedHint:'НЕСУЩАЯ НАЙДЕНА // СУЗЬ ДИАПАЗОН',
+    nearLock:'ПОЧТИ ЗАХВАЧЕН',nearHint:'ВЫРАВНИВАНИЕ ЧАСТОТЫ // ОЧЕНЬ БЛИЗКО',
+    stabilizing:'СТАБИЛИЗАЦИЯ',hold:'УДЕРЖИВАЙ ЧАСТОТУ // НЕ ДВИГАЙ',
+    decryptComplete:'РАСШИФРОВКА ЗАВЕРШЕНА // ØN-003',
+    lost:'ПЕРЕДАЧА ПОТЕРЯНА',reconnect:'ПЕРЕПОДКЛЮЧИТЬСЯ',speed:'СКОРОСТЬ'
+  },
+  en:{
+    intercept:'ØN // INTERCEPT 003',previous:'PREVIOUS LOCK // VERIFIED',
+    decryptTitle:'SIGNAL DECRYPTION',intro:'UNKNOWN SOURCE DETECTED. Find a stable frequency and hold the signal until synchronization is complete.',
+    frequency:'FREQUENCY',noise:'NOISE',moveBand:'MOVE THROUGH THE BAND // FIND THE SOURCE',
+    locked:'SIGNAL LOCKED // ACCESS GRANTED',transmission:'TRANSMISSION 003',source:'SOURCE UNKNOWN // CHANNEL OPEN',
+    startRunner:'START SIGNAL RUNNER',distance:'DISTANCE',signals:'SIGNALS',best:'BEST',
+    runnerAria:'SIGNAL RUNNER. Press Space or tap the screen to jump.',
+    unknownTransmission:'UNKNOWN TRANSMISSION',runProtocol:'ØN // RUN PROTOCOL',
+    runnerTitle:'SIGNAL RUNNER',jumpHint:'SPACE / TAP — JUMP',startRun:'START RUN',
+    controls:'SPACE / TAP — JUMP · ESC — EXIT',jump:'JUMP',backTuner:'BACK TO TUNER',
+    tuneAgain:'TUNE AGAIN',close:'CLOSE',tunerAria:'Signal frequency tuning',hotspotAria:'Hidden signal ØN / 2026',
+    weak:'WEAK SIGNAL',weakHint:'SOURCE DETECTED // KEEP TUNING',
+    detected:'SIGNAL DETECTED',detectedHint:'CARRIER PRESENT // NARROW THE BAND',
+    nearLock:'NEAR LOCK',nearHint:'FREQUENCY ALIGNMENT // VERY CLOSE',
+    stabilizing:'STABILIZING',hold:'HOLD FREQUENCY // DO NOT MOVE',
+    decryptComplete:'DECRYPTION COMPLETE // ØN-003',
+    lost:'TRANSMISSION LOST',reconnect:'RECONNECT',speed:'SPEED'
+  }
+};
+function gameText(key){
+  const lang=document.documentElement.lang==='en'?'en':'ru';
+  return gameI18n[lang]?.[key]||gameI18n.ru[key]||key;
+}
+function applyGameLanguage(lang){
+  const g=gameI18n[lang]||gameI18n.ru;
+  const set=(sel,key)=>{const el=document.querySelector(sel);if(el)el.textContent=g[key]};
+  set('.signal-game .easter-code span:first-child','intercept');
+  set('#signalCompleteMark','previous');
+  set('.signal-game-intro','intro');
+  set('.signal-frequency span','frequency');
+  set('.signal-unlocked small','locked');
+  set('.signal-unlocked strong','transmission');
+  set('.signal-unlocked p','source');
+  set('#signalRunnerStart','startRunner');
+  set('.runner-stat:nth-child(1) small','distance');
+  set('.runner-stat:nth-child(2) small','signals');
+  set('.runner-stat:nth-child(3) small','best');
+  set('#signalZoneBadge','unknownTransmission');
+  set('.runner-overlay small','runProtocol');
+  set('.runner-controls > span','controls');
+  set('#runnerJump','jump');
+  set('#runnerBack','backTuner');
+  set('#signalReplay','tuneAgain');
+  set('#easterClose','close');
+  const tuner=document.getElementById('signalTuner');if(tuner)tuner.setAttribute('aria-label',g.tunerAria);
+  const canvas=document.getElementById('signalRunnerCanvas');if(canvas)canvas.setAttribute('aria-label',g.runnerAria);
+  const hotspot=document.getElementById('easterHotspot');if(hotspot)hotspot.setAttribute('aria-label',g.hotspotAria);
+  if(window.refreshGameLanguage)window.refreshGameLanguage();
+}
+
+function applyLanguage(lang){const t=i18n[lang]||i18n.ru;document.documentElement.lang=lang;document.querySelectorAll('.lang-switch button').forEach(b=>{const on=b.dataset.lang===lang;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on))});[...document.querySelectorAll('#mainNav a')].forEach((a,i)=>a.textContent=t.nav[i]||a.textContent);const pc=document.querySelector('.popular-info .section-label');if(pc)pc.textContent=t.popular;const sh=document.querySelector('.releases-section .section-head');if(sh){sh.querySelector('.section-label').textContent=t.catalog;sh.querySelector('h2').textContent=t.releases;sh.querySelector('p').textContent=t.lead}const st=document.querySelector('.story-copy');if(st){st.querySelector('.section-label').textContent=t.storyLabel;st.querySelector('h2').innerHTML=t.storyTitle;st.querySelectorAll(':scope > p').forEach((p,i)=>{if(t.story[i])p.textContent=t.story[i]});st.querySelector('blockquote').textContent=t.quote}const n=document.querySelector('.news-section');if(n){n.querySelector('.section-label').textContent=t.newsLabel;n.querySelector('h2').textContent=t.newsTitle;n.querySelector('.news-lead').textContent=t.newsLead;n.querySelector('.vk-button').textContent=t.vk}const now=document.querySelector('.gp-meta small');if(now)now.textContent=t.now;const links=[...document.querySelectorAll('.footer-links a')];t.foot.forEach((x,i)=>{if(links[i+1])links[i+1].textContent=x});applyGameLanguage(lang);try{localStorage.setItem('ornivaise-language',lang)}catch(e){}}
 document.querySelectorAll('.lang-switch button').forEach(b=>b.addEventListener('click',()=>applyLanguage(b.dataset.lang)));let saved='ru';try{saved=localStorage.getItem('ornivaise-language')||'ru'}catch(e){}applyLanguage(saved==='en'?'en':'ru');
 </script>
 <script>
@@ -1303,7 +1373,7 @@ Object.values(tracks).forEach(t=>{
 });
 syncHeroWave();
 
-// v12 — hidden SIGNAL DECRYPTION game: double-tap “ØN / 2026”
+// v12 — hidden РАСШИФРОВКА СИГНАЛА game: double-tap “ØN / 2026”
 const easterHotspot=document.getElementById('easterHotspot');
 const easterOverlay=document.getElementById('easterOverlay');
 const easterClose=document.getElementById('easterClose');
@@ -1368,10 +1438,10 @@ function unlockSignal(){
   signalGame?.classList.remove('locking');
   signalGame?.classList.add('unlocked');
   signalUnlocked?.classList.add('open');
-  if(signalState)signalState.textContent='SIGNAL LOCKED';
+  if(signalState)signalState.textContent=gameText('locked');
   if(signalStrength)signalStrength.textContent='100%';
   if(signalMeter)signalMeter.style.width='100%';
-  if(signalHint)signalHint.textContent='DECRYPTION COMPLETE // ØN-003';
+  if(signalHint)signalHint.textContent=gameText('decryptComplete');
   markSignalSolved();
 }
 function updateSignalGame(){
@@ -1397,11 +1467,11 @@ function updateSignalGame(){
 
   if(signalUnlockedNow)return;
 
-  let state='NOISE',hint='MOVE THROUGH THE BAND // FIND THE SOURCE';
-  if(strength>=35){state='WEAK SIGNAL';hint='SOURCE DETECTED // KEEP TUNING'}
-  if(strength>=65){state='SIGNAL DETECTED';hint='CARRIER PRESENT // NARROW THE BAND'}
-  if(strength>=86){state='NEAR LOCK';hint='FREQUENCY ALIGNMENT // VERY CLOSE'}
-  if(near){state='STABILIZING';hint='HOLD FREQUENCY // DO NOT MOVE'}
+  let state=gameText('noise'),hint=gameText('moveBand');
+  if(strength>=35){state=gameText('weak');hint=gameText('weakHint')}
+  if(strength>=65){state=gameText('detected');hint=gameText('detectedHint')}
+  if(strength>=86){state=gameText('nearLock');hint=gameText('nearHint')}
+  if(near){state=gameText('stabilizing');hint=gameText('hold')}
 
   if(signalState)signalState.textContent=state;
   if(signalHint)signalHint.textContent=hint;
@@ -1475,9 +1545,9 @@ function openRunner(){
   signalGame.classList.add('runner-mode');
   signalRunner.classList.add('open');
   signalRunner.setAttribute('aria-hidden','false');
-  document.getElementById('easterTitle').textContent='SIGNAL RUNNER';
+  document.getElementById('easterTitle').textContent=gameText('runnerTitle');
   resetRunner();
-  showRunnerOverlay('SIGNAL RUNNER','SPACE / TAP — JUMP','START RUN');
+  showRunnerOverlay(gameText('runnerTitle'),gameText('jumpHint'),gameText('startRun'));
   setTimeout(()=>runnerCanvas?.focus(),0);
 }
 function closeRunner(){
@@ -1485,7 +1555,7 @@ function closeRunner(){
   signalRunner?.classList.remove('open');
   signalRunner?.setAttribute('aria-hidden','true');
   signalGame?.classList.remove('runner-mode');
-  document.getElementById('easterTitle').textContent='SIGNAL DECRYPTION';
+  document.getElementById('easterTitle').textContent=gameText('decryptTitle');
   signalZoneBadge?.classList.remove('visible');
 }
 function runnerJumpAction(){
@@ -1530,7 +1600,7 @@ function gameOverRunner(){
   cancelAnimationFrame(runnerRaf);runnerRaf=0;
   const best=Math.max(getRunnerBest(),runnerDistanceValue);
   setRunnerBest(best);updateRunnerHud();
-  showRunnerOverlay('TRANSMISSION LOST',`DISTANCE // ${padRunner(runnerDistanceValue)} · SIGNALS // ${padRunner(runnerSignalCount,2)}`,'RECONNECT');
+  showRunnerOverlay(gameText('lost'),`${gameText('distance')} // ${padRunner(runnerDistanceValue)} · ${gameText('signals')} // ${padRunner(runnerSignalCount,2)}`,gameText('reconnect'));
 }
 function runnerLoop(ts){
   if(!runnerRunning)return;
@@ -1668,7 +1738,7 @@ function drawRunner(){
 
   ctx.save();
   ctx.fillStyle='rgba(210,219,229,.45)';ctx.font='9px Arial';ctx.textAlign='right';
-  ctx.fillText('ØN // '+Math.round(runnerSpeed)+' PX/S',RUNNER_W-18,24);
+  ctx.fillText('ØN // '+gameText('speed')+' '+Math.round(runnerSpeed),RUNNER_W-18,24);
   ctx.restore();
 }
 runnerOverlayButton?.addEventListener('click',startRunner);
@@ -1708,7 +1778,7 @@ function closeEaster(){
   easterHotspot?.focus();
 }
 if(easterHotspot){
-  easterHotspot.setAttribute('aria-label','Скрытый сигнал ØN / 2026');
+  easterHotspot.setAttribute('aria-label',gameText('hotspotAria'));
   easterHotspot.addEventListener('click',()=>{
     clearTimeout(easterTimer);
     easterCount++;
@@ -1723,6 +1793,30 @@ easterClose?.addEventListener('click',closeEaster);
 easterOverlay?.addEventListener('click',e=>{if(e.target===easterOverlay)closeEaster()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&easterOverlay?.classList.contains('open'))closeEaster()});
 updateSignalGame();
+
+window.refreshGameLanguage=()=>{
+  const title=document.getElementById('easterTitle');
+  if(signalRunner?.classList.contains('open')){
+    if(title)title.textContent=gameText('runnerTitle');
+    if(runnerOverlay?.classList.contains('visible')){
+      if(runnerGameOver){
+        showRunnerOverlay(gameText('lost'),`${gameText('distance')} // ${padRunner(runnerDistanceValue)} · ${gameText('signals')} // ${padRunner(runnerSignalCount,2)}`,gameText('reconnect'));
+      }else{
+        showRunnerOverlay(gameText('runnerTitle'),gameText('jumpHint'),gameText('startRun'));
+      }
+    }
+    drawRunner();
+  }else{
+    if(title)title.textContent=gameText('decryptTitle');
+    if(signalUnlockedNow){
+      if(signalState)signalState.textContent=gameText('locked');
+      if(signalHint)signalHint.textContent=gameText('decryptComplete');
+    }else{
+      updateSignalGame();
+    }
+  }
+};
+applyGameLanguage(document.documentElement.lang==='en'?'en':'ru');
 
 /* =========================================================
    ØRNIVAISE v11.11 EXPERIMENTAL — audio-reactive layer
