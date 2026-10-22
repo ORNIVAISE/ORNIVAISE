@@ -2481,6 +2481,7 @@ async function handleRunnerStoreItem(itemId,owned){
     if(!owned){
       const bought=await runnerApi('buy',{item_id:itemId});
       applyRunnerStoreState(bought);
+      runnerSfx((RUNNER_ITEM_RARITY[itemId]||'common')==='legendary'?'legendary':'purchase');
       if((RUNNER_ITEM_RARITY[itemId]||'common')==='legendary')showLegendaryAcquire(itemId);
     }
     const equipped=await runnerApi('equip',{item_id:itemId});
@@ -2652,11 +2653,18 @@ function runnerSfx(kind){
       g.gain.setValueAtTime(.0001,now+delay);g.gain.exponentialRampToValueAtTime(gain,now+delay+.012);g.gain.exponentialRampToValueAtTime(.0001,now+delay+dur);
       o.connect(g);g.connect(master);o.start(now+delay);o.stop(now+delay+dur+.02);
     };
-    if(kind==='jump'){tone(240,390,.11,'triangle',.035)}
-    else if(kind==='rare'){tone(520,860,.16,'sine',.045);tone(780,1180,.13,'sine',.025,.06)}
-    else if(kind==='portal'){tone(160,520,.28,'sine',.035);tone(440,110,.34,'triangle',.018,.05)}
-    else if(kind==='record'){tone(440,660,.15,'triangle',.04);tone(660,990,.18,'sine',.04,.12);tone(990,1320,.21,'sine',.032,.25)}
-    else if(kind==='lose'){tone(190,72,.34,'sawtooth',.025);tone(130,55,.38,'triangle',.018,.1)}
+    if(kind==='jump'){tone(185,340,.13,'triangle',.025);tone(95,160,.17,'sine',.012,.025)}
+    else if(kind==='collect'){tone(440,630,.105,'sine',.019);tone(660,760,.085,'sine',.011,.055)}
+    else if(kind==='violet'){tone(420,700,.2,'sine',.028);tone(610,960,.22,'triangle',.014,.055)}
+    else if(kind==='gold'){tone(560,930,.21,'sine',.035);tone(840,1420,.22,'sine',.023,.075);tone(1120,1600,.24,'triangle',.013,.13)}
+    else if(kind==='rare'){tone(520,860,.16,'sine',.035);tone(780,1180,.13,'sine',.02,.06)}
+    else if(kind==='portal'){tone(130,480,.32,'sine',.032);tone(390,105,.4,'triangle',.015,.055)}
+    else if(kind==='record'){tone(330,660,.19,'triangle',.028);tone(550,990,.24,'sine',.03,.11);tone(880,1320,.26,'sine',.025,.22)}
+    else if(kind==='lose'){tone(170,65,.35,'triangle',.027);tone(105,48,.43,'sine',.015,.085)}
+    else if(kind==='achievement'){tone(392,588,.17,'sine',.023);tone(587,880,.2,'triangle',.023,.09)}
+    else if(kind==='purchase'){tone(260,410,.12,'triangle',.02);tone(440,620,.18,'sine',.025,.08)}
+    else if(kind==='legendary'){tone(165,330,.35,'sine',.034);tone(330,660,.32,'triangle',.027,.12);tone(660,1100,.3,'sine',.022,.25)}
+    else if(kind==='boss'){tone(110,62,.48,'triangle',.025);tone(220,120,.42,'sine',.02,.12)}
     master.gain.exponentialRampToValueAtTime(.7,now+.01);master.gain.exponentialRampToValueAtTime(.0001,now+.7);
   }catch(e){}
 }
@@ -3032,8 +3040,9 @@ function updateRunner(dt){
       runnerSignalCount+=o.value||1;
       const burst=o.kind==='gold'?14:o.kind==='violet'?11:9;
       for(let i=0;i<burst;i++)runnerDust.push({x:o.x,y:o.y,vx:-80+Math.random()*160,vy:(runnerGravity===1?-1:1)*(30+Math.random()*130),gravity:runnerGravity,kind:o.kind||'normal',life:.35+Math.random()*.35});
-      if(o.kind==='gold'){announceRunnerEvent(gameText('rareGold'),1.15);runnerSfx('rare')}
-      else if(o.kind==='violet'){announceRunnerEvent(gameText('rareViolet'),.9);runnerSfx('rare')}
+      if(o.kind==='gold'){announceRunnerEvent(gameText('rareGold'),1.15);runnerSfx('gold')}
+      else if(o.kind==='violet'){announceRunnerEvent(gameText('rareViolet'),.9);runnerSfx('violet')}
+      if(o.kind!=='gold'&&o.kind!=='violet')runnerSfx('collect');
       return false;
     }
     return o.x+o.r>-30;
