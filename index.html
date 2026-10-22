@@ -785,6 +785,29 @@ body.audio-is-playing .player-54 .gp-meta small::before{
 .runner-preview-scene.violet_nebula,.runner-preview-scene.deep_space,.runner-preview-scene.frozen_horizon,.runner-preview-scene.black_sun,.runner-preview-scene.signal_storm,.runner-preview-scene.crimson_rift{background-image:radial-gradient(1px 1px at 12% 20%,rgba(255,255,255,.5) 98%,transparent),radial-gradient(1px 1px at 63% 45%,rgba(255,255,255,.5) 98%,transparent),radial-gradient(2px 2px at 85% 14%,rgba(255,255,255,.3) 98%,transparent)}
 @media(prefers-reduced-motion:reduce){.runner-preview-planet.solar_flare:after,.runner-preview-planet.toxic_bloom:after,.runner-preview-planet.frost_moon:after{animation:none}}
 
+
+/* V2 mobile playfield: presentation-only, canvas internal coordinates unchanged */
+@media(max-width:760px){
+  .signal-game.runner-mode .runner-canvas-wrap{height:clamp(285px,48svh,470px)!important;min-height:285px!important}
+  .signal-game.runner-mode #signalRunnerCanvas{height:100%!important;width:auto!important;max-width:none!important;left:50%!important;transform:translateX(-50%)!important;transform-origin:center center!important}
+  .signal-game.runner-mode .runner-hud{gap:6px!important;padding:8px!important}
+  .signal-game.runner-mode .runner-stat small{font-size:10px!important;letter-spacing:.05em!important}
+  .signal-game.runner-mode .runner-stat strong{font-size:clamp(14px,3.6vw,18px)!important}
+  .signal-game.runner-mode #runnerJump{min-height:58px!important;font-size:14px!important;touch-action:manipulation}
+  .signal-game.runner-mode .runner-overlay strong{font-size:clamp(22px,6vw,30px)!important}
+  .signal-game.runner-mode .runner-overlay p{font-size:12px!important}
+}
+@media(max-width:760px) and (orientation:landscape){
+  .signal-game.runner-mode .runner-canvas-wrap{height:clamp(205px,62svh,390px)!important;min-height:205px!important}
+  .signal-game.runner-mode .runner-controls{padding:5px!important}
+  .signal-game.runner-mode #runnerJump{min-height:48px!important}
+}
+@media(min-width:761px) and (max-width:1100px){
+  .signal-game.runner-mode .runner-canvas-wrap{height:clamp(320px,47svh,450px)!important}
+  .signal-game.runner-mode #signalRunnerCanvas{transform:translateX(-50%) scale(1.02)!important}
+  .signal-game.runner-mode #runnerJump{min-height:50px!important;font-size:13px!important}
+}
+
 </style>
 
 <style id="scroll-experiment-v12">
