@@ -774,6 +774,17 @@ body.audio-is-playing .player-54 .gp-meta small::before{
 @media(prefers-reduced-motion:reduce){.runner-preview-obstacles.orbital_debris i:after{animation:none}}
 @media(max-width:760px){.runner-shop-card{min-width:0}.runner-shop-card button{min-height:46px!important}.runner-profile-bg-choice{padding:8px 12px!important}}
 
+
+/* V2 animated item signatures in shop — decorative, no purchase logic changes */
+.runner-shop-preview .runner-preview-scene{isolation:isolate;overflow:hidden}
+.runner-preview-planet.solar_flare:after,.runner-preview-planet.toxic_bloom:after,.runner-preview-planet.frost_moon:after{content:"";position:absolute;inset:-18px;border-radius:50%;pointer-events:none;animation:runnerPreviewAtmosphere 3.5s ease-in-out infinite alternate}
+.runner-preview-planet.solar_flare:after{background:repeating-conic-gradient(from 15deg,transparent 0deg 27deg,rgba(255,174,58,.27) 31deg 34deg,transparent 38deg 70deg);filter:blur(4px);animation-duration:2.5s}
+.runner-preview-planet.toxic_bloom:after{background:radial-gradient(circle at 17% 31%,rgba(184,255,84,.65) 0 2px,transparent 4px),radial-gradient(circle at 82% 62%,rgba(168,91,232,.6) 0 3px,transparent 6px),radial-gradient(circle at 41% 94%,rgba(85,243,139,.65) 0 2px,transparent 5px);filter:blur(1px)}
+.runner-preview-planet.frost_moon:after{background:radial-gradient(circle at 12% 22%,rgba(206,250,255,.85) 0 1px,transparent 3px),radial-gradient(circle at 87% 31%,rgba(206,250,255,.8) 0 2px,transparent 4px),radial-gradient(circle at 70% 91%,rgba(206,250,255,.7) 0 1px,transparent 3px);filter:drop-shadow(0 0 4px #a8e9fa)}
+@keyframes runnerPreviewAtmosphere{from{opacity:.48;transform:rotate(-12deg) scale(.92)}to{opacity:.92;transform:rotate(25deg) scale(1.1)}}
+.runner-preview-scene.violet_nebula,.runner-preview-scene.deep_space,.runner-preview-scene.frozen_horizon,.runner-preview-scene.black_sun,.runner-preview-scene.signal_storm,.runner-preview-scene.crimson_rift{background-image:radial-gradient(1px 1px at 12% 20%,rgba(255,255,255,.5) 98%,transparent),radial-gradient(1px 1px at 63% 45%,rgba(255,255,255,.5) 98%,transparent),radial-gradient(2px 2px at 85% 14%,rgba(255,255,255,.3) 98%,transparent)}
+@media(prefers-reduced-motion:reduce){.runner-preview-planet.solar_flare:after,.runner-preview-planet.toxic_bloom:after,.runner-preview-planet.frost_moon:after{animation:none}}
+
 </style>
 
 <style id="scroll-experiment-v12">
