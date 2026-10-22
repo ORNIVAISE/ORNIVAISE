@@ -907,20 +907,26 @@ html{scroll-padding-top:80px}
 .runner-score-submit button{min-height:42px;border:1px solid rgba(228,235,244,.2);border-radius:10px;background:rgba(255,255,255,.035);color:#d9e0e8;padding:0 14px;font:inherit;font-size:9px;letter-spacing:.12em;cursor:pointer}
 .runner-score-submit button:disabled{opacity:.45;cursor:not-allowed}
 .runner-score-status{grid-column:1/-1;min-height:16px;margin:0;font-size:9px;letter-spacing:.08em;color:#8e99a6}
-.runner-lb-table{width:100%;border-collapse:collapse;table-layout:fixed}
-.runner-lb-table th,.runner-lb-table td{padding:8px 6px;border-top:1px solid rgba(226,233,242,.07);font-size:9px;letter-spacing:.08em;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.runner-lb-table th{color:#69737f;font-weight:400;font-size:7px}
-.runner-lb-table th:nth-child(1),.runner-lb-table td:nth-child(1){width:38px;text-align:center}
-.runner-lb-table th:nth-child(3),.runner-lb-table td:nth-child(3){width:82px;text-align:right}
-.runner-lb-table th:nth-child(4),.runner-lb-table td:nth-child(4){width:58px;text-align:right}
-.runner-lb-table tr.current td{color:#fff;background:rgba(255,255,255,.025)}
+.runner-lb-list{display:grid;gap:7px}
+.runner-lb-labels,.runner-lb-row{display:grid;grid-template-columns:42px minmax(0,1fr) 88px 56px;align-items:center;gap:8px}
+.runner-lb-labels{padding:0 10px 4px;color:#65717d;font-size:7px;letter-spacing:.13em}
+.runner-lb-labels span:nth-child(3),.runner-lb-labels span:nth-child(4){text-align:right}
+.runner-lb-row{min-height:46px;padding:7px 10px;border:1px solid rgba(226,233,242,.08);border-radius:11px;background:rgba(255,255,255,.015)}
+.runner-lb-row.current{border-color:rgba(231,238,246,.28);background:rgba(255,255,255,.035)}
+.runner-lb-rank{width:30px;height:30px;display:grid;place-items:center;border:1px solid rgba(226,233,242,.11);border-radius:50%;color:#7c8793;font-size:8px;letter-spacing:.06em}
+.runner-lb-row:nth-child(2) .runner-lb-rank,.runner-lb-row:nth-child(3) .runner-lb-rank,.runner-lb-row:nth-child(4) .runner-lb-rank{color:#eef3f7;border-color:rgba(231,238,246,.22)}
+.runner-lb-name{min-width:0;color:#cbd3dc;font-size:10px;letter-spacing:.08em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.runner-lb-row.current .runner-lb-name{color:#fff}
+.runner-lb-distance,.runner-lb-signals{text-align:right;color:#aeb8c3;font-size:9px;font-variant-numeric:tabular-nums;letter-spacing:.08em}
+.runner-lb-signals{color:#7f8b97}
 .runner-lb-empty{padding:14px 6px;color:#6f7985;font-size:9px;letter-spacing:.08em}
 @media(max-width:560px){
   .runner-score-submit{grid-template-columns:1fr}
   .runner-score-submit button{width:100%}
-  .runner-lb-table th,.runner-lb-table td{font-size:8px;padding:7px 4px}
-  .runner-lb-table th:nth-child(3),.runner-lb-table td:nth-child(3){width:68px}
-  .runner-lb-table th:nth-child(4),.runner-lb-table td:nth-child(4){width:46px}
+  .runner-lb-labels,.runner-lb-row{grid-template-columns:34px minmax(0,1fr) 66px 38px;gap:6px;padding-left:7px;padding-right:7px}
+  .runner-lb-rank{width:26px;height:26px;font-size:7px}
+  .runner-lb-name{font-size:9px}
+  .runner-lb-distance,.runner-lb-signals{font-size:8px}
 }
 
 .runner-store-toggle{min-height:42px;border:1px solid rgba(228,235,244,.2);border-radius:999px;background:rgba(255,255,255,.025);color:#d9e0e8;padding:0 15px;font:inherit;font-size:9px;letter-spacing:.12em;cursor:pointer}
@@ -1827,37 +1833,44 @@ function newRunnerRunId(){
 }
 function renderRunnerLeaderboard(rows=runnerLeaderboardRows){
   if(!runnerLeaderboardBody)return;
-  runnerLeaderboardRows=Array.isArray(rows)?rows:[];
+  const source=Array.isArray(rows)?rows:[];
+  const seen=new Set();
+  runnerLeaderboardRows=[];
+  source.forEach(row=>{
+    const key=String(row.player_name||'').trim().toLocaleLowerCase();
+    if(!key||seen.has(key)||runnerLeaderboardRows.length>=20)return;
+    seen.add(key);
+    runnerLeaderboardRows.push(row);
+  });
   if(!runnerLeaderboardRows.length){
     runnerLeaderboardBody.className='runner-lb-empty';
     runnerLeaderboardBody.textContent=gameText('emptyBoard');
     return;
   }
-  runnerLeaderboardBody.className='';
-  const table=document.createElement('table');
-  table.className='runner-lb-table';
-  const thead=document.createElement('thead');
-  thead.innerHTML='<tr><th>#</th><th></th><th></th><th>Ø</th></tr>';
-  thead.children[0].children[1].textContent=gameText('player');
-  thead.children[0].children[2].textContent=gameText('distance');
-  table.appendChild(thead);
-  const tbody=document.createElement('tbody');
+  runnerLeaderboardBody.className='runner-lb-list';
+  const labels=document.createElement('div');
+  labels.className='runner-lb-labels';
+  ['',gameText('player'),gameText('distance'),'Ø'].forEach(v=>{const s=document.createElement('span');s.textContent=v;labels.appendChild(s)});
+  const frag=document.createDocumentFragment();
+  frag.appendChild(labels);
   runnerLeaderboardRows.forEach((row,i)=>{
-    const tr=document.createElement('tr');
-    if(row.run_id&&row.run_id===runnerLastSavedRunId)tr.classList.add('current');
-    const values=[String(i+1).padStart(2,'0'),String(row.player_name||''),padRunner(row.distance||0),padRunner(row.signals||0,2)];
-    values.forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.appendChild(td)});
-    tbody.appendChild(tr);
+    const line=document.createElement('div');
+    line.className='runner-lb-row';
+    if(row.run_id&&row.run_id===runnerLastSavedRunId)line.classList.add('current');
+    const rank=document.createElement('span');rank.className='runner-lb-rank';rank.textContent=String(i+1).padStart(2,'0');
+    const name=document.createElement('span');name.className='runner-lb-name';name.textContent=String(row.player_name||'');
+    const distance=document.createElement('span');distance.className='runner-lb-distance';distance.textContent=padRunner(row.distance||0);
+    const signals=document.createElement('span');signals.className='runner-lb-signals';signals.textContent=padRunner(row.signals||0,2);
+    line.append(rank,name,distance,signals);frag.appendChild(line);
   });
-  table.appendChild(tbody);
-  runnerLeaderboardBody.replaceChildren(table);
+  runnerLeaderboardBody.replaceChildren(frag);
 }
 async function loadRunnerLeaderboard(){
   if(!runnerLeaderboardBody)return;
   runnerLeaderboardBody.className='runner-lb-empty';
   runnerLeaderboardBody.textContent=gameText('loadingBoard');
   try{
-    const endpoint=RUNNER_SUPABASE_URL+'/rest/v1/runner_scores?select=player_name,distance,signals,run_id,created_at&order=distance.desc,signals.desc,created_at.asc&limit=20';
+    const endpoint=RUNNER_SUPABASE_URL+'/rest/v1/runner_scores?select=player_name,distance,signals,run_id,created_at&order=distance.desc,signals.desc,created_at.asc&limit=60';
     const res=await fetch(endpoint,{headers:{apikey:RUNNER_SUPABASE_KEY}});
     if(!res.ok)throw new Error('leaderboard '+res.status);
     const data=await res.json();
