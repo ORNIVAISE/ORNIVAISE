@@ -1,0 +1,13 @@
+name: Signal Runner V2 checks
+on:
+  push:
+    branches: [feature/signal-runner-v2]
+  pull_request:
+    branches: [main]
+jobs:
+  cosmetics:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check visuals and catalog contracts
+        run: node tests/runner-v2-cosmetics.test.mjs

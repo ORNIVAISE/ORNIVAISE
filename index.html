@@ -1450,6 +1450,91 @@ html{scroll-padding-top:80px}
   .runner-shop-preview{height:118px}
 }
 
+
+/* V2 COSMETIC WORLDS / SHOP / PROFILE — decorative, no changes to physics */
+.runner-store-filters{display:flex;flex-wrap:wrap;gap:8px;margin:15px 0 18px}
+.runner-store-filter{min-height:38px;padding:8px 13px;border:1px solid rgba(190,202,219,.2);border-radius:9px;background:rgba(255,255,255,.025);color:#b5c0ca;font-size:12px;cursor:pointer}
+.runner-store-filter.active{color:white;background:rgba(128,99,172,.2);border-color:rgba(190,153,240,.54)}
+.runner-shop-card{position:relative;overflow:hidden;isolation:isolate;border-radius:14px;content-visibility:auto;contain-intrinsic-size:auto 365px}
+.runner-shop-card.rarity-legendary{border-color:rgba(237,185,107,.38)!important;background:linear-gradient(155deg,rgba(88,43,23,.2),rgba(9,10,17,.96) 54%)}
+.runner-shop-card.rarity-epic{border-color:rgba(151,110,217,.37)!important}
+.runner-shop-card.rarity-legendary:before{content:"";position:absolute;z-index:0;inset:0;pointer-events:none;box-shadow:inset 0 0 30px rgba(254,141,66,.13);animation:runnerLegendaryCardPulse 3.8s ease-in-out infinite}
+@keyframes runnerLegendaryCardPulse{0%,100%{opacity:.26}50%{opacity:1}}
+.runner-shop-preview{height:clamp(175px,20vw,225px)!important;overflow:hidden!important}
+.runner-shop-card .runner-shop-body{position:relative;z-index:1;padding:15px!important}
+.runner-shop-card strong{font-size:clamp(13px,1.5vw,16px)!important;white-space:normal!important;overflow:visible!important;line-height:1.35}
+.runner-shop-card small{min-height:0!important}
+.runner-shop-card button{font-size:clamp(12px,1.4vw,14px)!important}
+.runner-shop-profile-hint{display:block;min-height:0!important;margin-top:10px;color:#a8b2bd;font-size:11px!important}
+.runner-shop-profile-action{margin-top:8px!important;min-height:40px!important;width:100%;background:rgba(136,105,209,.13)!important;color:#dcd5f9!important;border-color:rgba(166,146,225,.42)!important}
+.runner-shop-card.preview-only{opacity:.8}
+.runner-preview-scene{isolation:isolate;overflow:hidden;position:relative}
+.runner-preview-vfx{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:1}
+.runner-preview-ground{z-index:3}.runner-preview-planet,.runner-preview-obstacles{z-index:4}
+.scene-avatar .runner-preview-planet{width:56px;height:56px}.scene-avatar .runner-preview-planet:after{font-size:21px}
+.scene-background .runner-preview-background-planet{width:43px;height:43px;right:18%;top:18%;box-shadow:0 0 25px rgba(180,200,255,.12)}
+.scene-background .runner-preview-mini-planet{left:19%;bottom:31px}
+.scene-obstacle .runner-preview-obstacles{transform:scale(1.5);transform-origin:bottom right;right:19%;bottom:28px}
+.runner-preview-spark{position:absolute;left:calc(15% + var(--x,30%));bottom:-10px;width:3px;height:3px;border-radius:50%;background:var(--particle,#ffd895);box-shadow:0 0 9px var(--particle,#ffd895);opacity:0;animation:runnerSpark calc(1.5s + var(--d,1s)) linear infinite;animation-delay:var(--delay,-1s)}
+.spark-0{--x:7%;--d:.2s;--delay:-.4s}.spark-1{--x:18%;--d:.8s;--delay:-1s}.spark-2{--x:29%;--d:.5s;--delay:-1.8s}.spark-3{--x:39%;--d:1s;--delay:-.7s}.spark-4{--x:48%;--d:.6s;--delay:-2s}.spark-5{--x:57%;--d:.9s;--delay:-.2s}.spark-6{--x:67%;--d:.3s;--delay:-1.3s}.spark-7{--x:75%;--d:.7s;--delay:-.8s}.spark-8{--x:83%;--d:.4s;--delay:-1.7s}.spark-9{--x:91%;--d:.8s;--delay:-.5s}
+@keyframes runnerSpark{0%{transform:translate(0,0) scale(.5);opacity:0}22%{opacity:.8}75%{opacity:.6}100%{transform:translate(-28px,-175px) scale(1.3);opacity:0}}
+.runner-vfx-mountain,.runner-vfx-magma,.runner-vfx-beam,.runner-vfx-ring{position:absolute;display:none}
+.scene-volcanic_cataclysm,.scene-magma_sovereign,.scene-ash_titan,.scene-inferno_obelisks{--particle:#ffad5d;background:radial-gradient(circle at 66% 53%,rgba(236,79,27,.38),transparent 34%),linear-gradient(#240a12,#170609 58%,#090406)!important}
+.scene-volcanic_cataclysm .runner-vfx-mountain,.scene-magma_sovereign .runner-vfx-mountain,.scene-ash_titan .runner-vfx-mountain{display:block;left:21%;bottom:14%;width:65%;height:69%;clip-path:polygon(0 100%,24% 70%,39% 53%,45% 28%,55% 28%,63% 56%,87% 73%,100% 100%);background:repeating-linear-gradient(115deg,transparent 0 31px,rgba(250,87,39,.23) 33px 37px,transparent 38px 85px),linear-gradient(100deg,#09080c 0 35%,#5f1c19 49%,#10080e 73%)}
+.scene-volcanic_cataclysm .runner-vfx-magma,.scene-magma_sovereign .runner-vfx-magma,.scene-ash_titan .runner-vfx-magma{display:block;left:43%;bottom:58%;height:44%;width:25%;border-radius:55% 55% 30% 30%;background:radial-gradient(ellipse at 50% 90%,#ffd875 0 5%,rgba(255,93,33,.7) 10%,transparent 62%);filter:blur(5px);transform-origin:bottom;animation:runnerLavaBurst 3.7s ease-in-out infinite}
+.scene-volcanic_cataclysm .runner-preview-spark,.scene-magma_sovereign .runner-preview-spark{animation-duration:1.35s}
+.scene-volcanic_cataclysm .runner-preview-background-planet{background:radial-gradient(circle at 35% 30%,#ffd180,#ea5730,#22080c);border-color:#ed9e63}
+.scene-aurora_sanctum,.scene-storm_seraph,.scene-thunder_sentinels{--particle:#9af9f0;background:radial-gradient(circle at 64% 18%,rgba(112,225,234,.22),transparent 45%),linear-gradient(145deg,#08131f,#091520 52%,#040810)!important}
+.scene-aurora_sanctum .runner-vfx-beam,.scene-storm_seraph .runner-vfx-beam,.scene-thunder_sentinels .runner-vfx-beam{display:block;left:20%;top:-20%;width:48%;height:150%;transform:skewX(-20deg);background:linear-gradient(90deg,transparent,rgba(125,245,204,.13),rgba(142,124,239,.29),transparent);filter:blur(8px);animation:runnerAuroraDrift 4.9s ease-in-out infinite alternate}
+.scene-celestial_temple,.scene-astral_leviathan,.scene-rift_serpents{--particle:#c3a9ff;background:radial-gradient(circle at 66% 24%,rgba(150,96,238,.3),transparent 44%),linear-gradient(145deg,#0c0a22,#17102b 55%,#060512)!important}
+.scene-celestial_temple .runner-vfx-beam,.scene-astral_leviathan .runner-vfx-beam,.scene-rift_serpents .runner-vfx-beam{display:block;left:43%;top:-15%;width:17%;height:130%;background:linear-gradient(90deg,transparent,rgba(197,171,255,.52),transparent);filter:blur(8px);animation:runnerAuroraDrift 5s ease-in-out infinite alternate}
+.scene-celestial_temple .runner-vfx-ring,.scene-astral_leviathan .runner-vfx-ring,.scene-rift_serpents .runner-vfx-ring{display:block;left:35%;top:10%;width:85px;height:85px;border:2px solid rgba(195,173,255,.46);border-radius:50%;box-shadow:0 0 19px rgba(168,122,255,.28),inset 0 0 19px rgba(147,111,235,.19);animation:runnerCelestialOrbit 5.5s linear infinite}
+.scene-abyssal_ocean,.scene-toxic_bloom{--particle:#84f9da;background:radial-gradient(ellipse at 62% 100%,rgba(39,157,145,.28),transparent 52%),linear-gradient(#051921,#05131c 52%,#02090f)!important}
+.scene-abyssal_ocean .runner-vfx-beam{display:block;left:10%;top:0;width:65%;height:100%;background:repeating-linear-gradient(105deg,transparent 0 27px,rgba(94,227,216,.09) 29px 45px,transparent 60px);animation:runnerAuroraDrift 5s ease-in-out infinite alternate}
+.scene-neon_reef{--particle:#8cfaf1}.scene-solar_flare{--particle:#ffa95d}.scene-moon_familiars{--particle:#cda0ff}.scene-crimson_rift{--particle:#ff7d75}
+.scene-crimson_rift .runner-vfx-beam,.scene-solar_flare .runner-vfx-beam{display:block;left:63%;top:-30%;width:18%;height:160%;background:linear-gradient(90deg,transparent,rgba(255,121,86,.28),transparent);filter:blur(8px);transform:skewX(13deg);animation:runnerLavaBurst 4s ease-in-out infinite}
+.runner-preview-planet.glacier_revenant{background:radial-gradient(circle at 30% 28%,#fff,#c9f6ff 24%,#588ab4 56%,#101e35 86%);border-color:#dbf8ff;box-shadow:0 0 24px rgba(148,230,255,.53)}
+.runner-preview-planet.storm_seraph{background:radial-gradient(circle at 34% 30%,#d4fff8,#49c7ef 24%,#3a3699 62%,#0d102c 90%);border-color:#9ef2fa;box-shadow:0 0 24px rgba(74,220,242,.56)}
+.runner-preview-planet.magma_sovereign{background:repeating-conic-gradient(from 15deg,transparent 0deg 42deg,rgba(255,196,88,.83) 45deg 51deg,transparent 54deg 100deg),radial-gradient(circle at 33% 26%,#f5ac63,#74271d 53%,#14080b);border-color:#ffac60;box-shadow:0 0 30px rgba(255,95,31,.72),0 0 60px rgba(255,126,51,.3)}
+.runner-preview-planet.astral_leviathan{background:radial-gradient(circle at 37% 29%,#e3d6ff,#9879fa 25%,#37276b 59%,#090b25 86%);border-color:#c3aeff;box-shadow:0 0 26px rgba(166,115,250,.62)}
+.runner-preview-obstacles.frost_spines i,.runner-preview-obstacles.inferno_obelisks i{position:absolute;bottom:0;width:23px;height:46px;clip-path:polygon(50% 0,87% 32%,100% 100%,0 100%,14% 30%);background:linear-gradient(105deg,#dffcff,#618ca5 56%,#12273b)}
+.runner-preview-obstacles.inferno_obelisks i{background:repeating-linear-gradient(170deg,transparent 0 12px,rgba(255,127,42,.62) 13px 16px,transparent 17px 31px),linear-gradient(100deg,#4e2725,#150e16 68%);filter:drop-shadow(0 0 6px #cc4a28)}
+.runner-preview-obstacles.frost_spines i:nth-child(1),.runner-preview-obstacles.inferno_obelisks i:nth-child(1){left:0;transform:scale(.7);transform-origin:bottom}.runner-preview-obstacles.frost_spines i:nth-child(2),.runner-preview-obstacles.inferno_obelisks i:nth-child(2){left:25px}.runner-preview-obstacles.frost_spines i:nth-child(3),.runner-preview-obstacles.inferno_obelisks i:nth-child(3){left:51px;transform:scale(.76);transform-origin:bottom}
+.runner-preview-obstacles.thunder_sentinels i,.runner-preview-obstacles.rift_serpents i{position:absolute;bottom:5px;width:24px;height:30px;border-radius:43% 57% 31% 69%;border:1px solid #91f8f6;background:radial-gradient(circle,#d4fffd,#3668a0 44%,#0b1534 80%);box-shadow:0 0 14px rgba(99,222,236,.43);animation:previewDroneHover 2.1s ease-in-out infinite}
+.runner-preview-obstacles.rift_serpents i{height:44px;border-color:#d1adff;background:radial-gradient(circle at 30% 25%,#dcb0ff,#7842ad 43%,#140b35 88%);clip-path:polygon(20% 0,64% 8%,100% 39%,65% 63%,90% 100%,37% 82%,0 52%,29% 30%);filter:drop-shadow(0 0 8px #9562f5)}
+.runner-preview-obstacles.thunder_sentinels i:nth-child(1),.runner-preview-obstacles.rift_serpents i:nth-child(1){left:0}.runner-preview-obstacles.thunder_sentinels i:nth-child(2),.runner-preview-obstacles.rift_serpents i:nth-child(2){left:25px;animation-delay:-.8s}.runner-preview-obstacles.thunder_sentinels i:nth-child(3),.runner-preview-obstacles.rift_serpents i:nth-child(3){left:50px;animation-delay:-1.3s}
+@keyframes runnerLavaBurst{0%,100%{transform:scale(.7);opacity:.44}50%{transform:scale(1.2);opacity:.95}}
+@keyframes runnerAuroraDrift{from{transform:translateX(-10%) skewX(-20deg);opacity:.65}to{transform:translateX(14%) skewX(-8deg);opacity:1}}
+@keyframes runnerCelestialOrbit{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.runner-profile-theme{padding:15px!important}
+.runner-profile-scene{height:150px;overflow:hidden;border:1px solid rgba(215,227,241,.17);border-radius:11px;margin:12px 0 14px}
+.runner-profile-scene .runner-preview-scene{width:100%;height:100%}
+.runner-profile-scene .runner-preview-background-planet{right:24%!important;width:58px!important;height:58px!important}
+.runner-profile-bg-choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px}
+.runner-profile-bg-choice{display:flex;align-items:center;gap:9px;padding:8px 12px!important;min-width:0;border-radius:9px!important;min-height:46px!important;text-align:left}
+.runner-bg-swatch{flex:0 0 29px;width:29px;height:29px;border-radius:8px;border:1px solid rgba(219,232,248,.28);background:linear-gradient(145deg,#35506a,#060910)}
+.swatch-violet_nebula{background:linear-gradient(145deg,#965cc2,#110d32)}.swatch-frozen_horizon{background:linear-gradient(145deg,#96ebf5,#092c47)}.swatch-black_sun{background:radial-gradient(circle,#07060a 30%,#bfa174 36%,#10090d 54%)}.swatch-signal_storm{background:linear-gradient(145deg,#61d9dd,#15102e)}.swatch-crimson_rift{background:linear-gradient(145deg,#ed614b,#260911)}.swatch-abyssal_ocean{background:linear-gradient(145deg,#56c6ba,#051728)}.swatch-aurora_sanctum{background:linear-gradient(145deg,#a9edb5,#453f91,#0a1525)}.swatch-volcanic_cataclysm{background:radial-gradient(circle,#ffce69,#b83c28,#18070d)}.swatch-celestial_temple{background:radial-gradient(circle,#d3b5ff,#5c439f,#0b0a24)}
+.runner-profile-shop-shortcut{width:100%;margin-top:12px;border-radius:9px;min-height:43px;padding:10px;border:1px solid rgba(181,155,240,.45);background:rgba(129,92,193,.14);color:#e4d5ff;font-size:12px;font-weight:700;cursor:pointer}
+.runner-profile-panel.profile-theme-volcanic_cataclysm:before{background:radial-gradient(circle at 77% 17%,rgba(255,142,43,.46),transparent 37%),linear-gradient(135deg,rgba(130,36,29,.25),rgba(4,3,10,.66));opacity:.75}
+.runner-profile-panel.profile-theme-celestial_temple:before{background:radial-gradient(circle at 77% 15%,rgba(188,150,255,.35),transparent 38%),linear-gradient(150deg,rgba(50,38,113,.3),rgba(3,5,15,.5));opacity:.7}
+.runner-profile-panel.profile-theme-aurora_sanctum:before{background:radial-gradient(circle at 24% 12%,rgba(97,239,203,.32),transparent 40%),linear-gradient(120deg,rgba(81,80,177,.26),rgba(3,14,24,.5))}
+.runner-profile-panel.profile-theme-abyssal_ocean:before{background:radial-gradient(ellipse at 55% 50%,rgba(33,189,174,.25),transparent 55%),linear-gradient(#051824,#030914)}
+@media(max-width:600px){.runner-shop-preview{height:190px!important}.runner-store-filters{gap:6px}.runner-store-filter{padding:8px 10px}.runner-profile-bg-choices{grid-template-columns:repeat(auto-fit,minmax(132px,1fr))}}
+@media(prefers-reduced-motion:reduce){.runner-shop-card.rarity-legendary:before,.runner-preview-spark,.runner-vfx-magma,.runner-vfx-beam,.runner-vfx-ring,.runner-preview-obstacles.thunder_sentinels i,.runner-preview-obstacles.rift_serpents i{animation:none!important}}
+
+
+/* Premium signatures for ORIGINAL legendary items (not just newly added items). */
+.scene-neon_reef{--particle:#80fff7;background:radial-gradient(circle at 34% 30%,rgba(97,238,239,.31),transparent 34%),radial-gradient(circle at 71% 47%,rgba(166,102,255,.33),transparent 38%),linear-gradient(#0b142b,#100922 65%,#050712)!important}
+.scene-neon_reef .runner-vfx-ring,.scene-solar_flare .runner-vfx-ring,.scene-moon_familiars .runner-vfx-ring{display:block;left:35%;top:19%;width:90px;height:52px;border:2px solid rgba(147,240,244,.57);border-radius:50%;box-shadow:0 0 20px rgba(84,222,234,.28);animation:runnerCelestialOrbit 5s linear infinite}
+.scene-solar_flare{--particle:#ffbc73;background:radial-gradient(circle at 57% 42%,rgba(255,171,72,.36),transparent 42%),linear-gradient(#260c13,#1b080c 65%,#060408)!important}
+.scene-solar_flare .runner-vfx-ring{border-color:rgba(255,190,105,.65);box-shadow:0 0 18px rgba(255,102,53,.4);animation-duration:3.4s}
+.scene-toxic_bloom{--particle:#adff72;background:radial-gradient(circle at 67% 40%,rgba(124,232,98,.28),transparent 35%),radial-gradient(circle at 15% 75%,rgba(142,73,224,.22),transparent 42%),linear-gradient(#0b1c16,#071710 65%,#040b09)!important}
+.scene-toxic_bloom .runner-vfx-ring{display:block;left:26%;top:16%;width:78px;height:78px;border:2px dashed rgba(162,254,126,.42);border-radius:50%;filter:blur(1px);animation:runnerCelestialOrbit 4s linear infinite}
+.scene-moon_familiars{--particle:#d0aaff;background:radial-gradient(circle at 69% 35%,rgba(177,134,224,.28),transparent 36%),linear-gradient(#100d25,#0e0c19 60%,#05060f)!important}
+.scene-moon_familiars .runner-vfx-ring{border-color:rgba(218,178,253,.55);box-shadow:0 0 21px rgba(176,124,245,.29)}
+.scene-crimson_rift .runner-vfx-ring{display:block;left:58%;top:10%;width:42px;height:110px;border:2px solid rgba(255,125,107,.47);border-radius:48%;filter:drop-shadow(0 0 12px rgba(255,88,70,.38));animation:runnerCelestialOrbit 6s linear infinite}
+.scene-ash_titan .runner-vfx-magma{opacity:.58}
+
 </style>
 </head>
 <body data-track-theme="signal001">
@@ -1686,6 +1771,7 @@ html{scroll-padding-top:80px}
             </div>
           </div>
           <p class="runner-store-status" id="runnerStoreStatus" role="status"></p>
+          <div id="runnerStoreFilters" class="runner-store-filters" role="group" aria-label="Редкость предметов"></div>
           <div id="runnerStoreContent"></div>
         </div>
 
@@ -1701,7 +1787,9 @@ html{scroll-padding-top:80px}
           </div>
           <div class="runner-profile-theme">
             <div class="runner-profile-theme-head"><strong id="runnerProfileBgTitle">ФОН ПРОФИЛЯ</strong><span id="runnerProfileBgHint">Выбери из купленных фонов</span></div>
+            <div class="runner-profile-scene" id="runnerProfileScene" aria-hidden="true"></div>
             <div class="runner-profile-bg-choices" id="runnerProfileBgChoices"></div>
+            <button id="runnerProfileShopShortcut" class="runner-profile-shop-shortcut" type="button">МАГАЗИН ФОНОВ</button>
           </div>
           <h4 class="runner-ach-title" id="runnerAchTitle">ДОСТИЖЕНИЯ</h4>
           <div class="runner-achievements" id="runnerAchievements"></div>
@@ -1815,7 +1903,7 @@ const gameI18n={
     nearLock:'ПОЧТИ ЗАХВАЧЕН',nearHint:'ВЫРАВНИВАНИЕ ЧАСТОТЫ // ОЧЕНЬ БЛИЗКО',
     stabilizing:'СТАБИЛИЗАЦИЯ',hold:'УДЕРЖИВАЙ ЧАСТОТУ // НЕ ДВИГАЙ',
     decryptComplete:'РАСШИФРОВКА ЗАВЕРШЕНА // ØN-003',
-    lost:'ПЕРЕДАЧА ПОТЕРЯНА',reconnect:'ПЕРЕПОДКЛЮЧИТЬСЯ',speed:'СКОРОСТЬ',soundOff:'Выключить музыку игры',soundOn:'Включить музыку игры',calmSpace:'СПОКОЙНЫЙ КОСМОС',signalDrift:'ДРЕЙФ СИГНАЛА',distortionField:'ПОЛЕ ИСКАЖЕНИЙ',leaderboard:'ТАБЛИЦА ЛИДЕРОВ',player:'ИГРОК',saveScore:'СОХРАНИТЬ РЕЗУЛЬТАТ',namePlaceholder:'Введи имя',loadingBoard:'Загрузка рейтинга…',emptyBoard:'Пока нет результатов',saveOk:'РЕЗУЛЬТАТ СОХРАНЁН',saveError:'Не удалось сохранить результат',nameError:'Введи имя от 1 до 20 символов',store:'МАГАЗИН',storeClose:'ЗАКРЫТЬ МАГАЗИН',storeTitle:'ØN // МАГАЗИН',avatars:'ПЛАНЕТЫ',backgrounds:'ФОНЫ',obstacles:'ПРЕПЯТСТВИЯ',buy:'КУПИТЬ',equip:'ВЫБРАТЬ',equipped:'ИСПОЛЬЗУЕТСЯ',owned:'КУПЛЕНО',notEnough:'НЕ ХВАТАЕТ Ø-КРЕДИТОВ',storeError:'Ошибка магазина',connecting:'ПОДКЛЮЧЕНИЕ…',earned:'ЗАРАБОТАНО',position:'ПОЗИЦИЯ',storeSubtitle:'Косметика для сигнала: меняй планету, пространство и препятствия.',free:'БЕСПЛАТНО',creditsLabel:'Ø-КРЕДИТЫ',itemsCount:'ПРЕДМЕТОВ',rarityCommon:'ОБЫЧНЫЙ',rarityRare:'РЕДКИЙ',rarityEpic:'ЭПИЧЕСКИЙ',rarityLegendary:'ЛЕГЕНДАРНЫЙ',rarityVoid:'БЕЗДНА',gravityShift:'ИНВЕРСИЯ ГРАВИТАЦИИ',gravityReturn:'ВОЗВРАТ ГРАВИТАЦИИ',bossDetected:'СЕКРЕТНЫЙ ОБЪЕКТ ОБНАРУЖЕН',modifierSignal:'МОДИФИКАТОР // СИГНАЛЬНЫЙ ПОТОК',modifierLowGravity:'МОДИФИКАТОР // ЛЁГКАЯ ГРАВИТАЦИЯ',rareGold:'ЗОЛОТОЙ СИГНАЛ +7 Ø',rareViolet:'ФИОЛЕТОВЫЙ СИГНАЛ +3 Ø',profile:'ПРОФИЛЬ',profileClose:'ЗАКРЫТЬ ПРОФИЛЬ',profileKicker:'ØN // ПРОФИЛЬ ИГРОКА',unknownPlayer:'НЕИЗВЕСТНЫЙ СИГНАЛ',runs:'ЗАБЕГИ',totalSignals:'СОБРАНО Ø',totalDistance:'ОБЩАЯ ДИСТАНЦИЯ',achievements:'ДОСТИЖЕНИЯ',itemAcquired:'ПРЕДМЕТ ПОЛУЧЕН',achievementUnlocked:'ДОСТИЖЕНИЕ ОТКРЫТО',devices:'УСТРОЙСТВА',devicesConnected:'ПОДКЛЮЧЕНО',deviceHint:'Один профиль на телефоне и ПК. Получи код на основном устройстве и введи его на втором.',createLink:'ПОЛУЧИТЬ КОД',connectDevice:'ПОДКЛЮЧИТЬ',linkPlaceholder:'КОД ПРИВЯЗКИ',linkCodeLabel:'КОД ДЕЙСТВУЕТ 10 МИНУТ',linkReady:'ВВЕДИ ЭТОТ КОД НА ДРУГОМ УСТРОЙСТВЕ',linkSuccess:'УСТРОЙСТВО ПОДКЛЮЧЕНО К ОБЩЕМУ ПРОФИЛЮ',linkInvalid:'КОД НЕВЕРНЫЙ ИЛИ ИСТЁК',linkHasProgress:'НА ЭТОМ УСТРОЙСТВЕ УЖЕ ЕСТЬ ОТДЕЛЬНЫЙ ПРОФИЛЬ',linkRateLimited:'СЛИШКОМ МНОГО ПОПЫТОК. ПОПРОБУЙ ПОЗЖЕ',linkError:'НЕ УДАЛОСЬ ПОДКЛЮЧИТЬ УСТРОЙСТВО',itemNotOwned:'ПРЕДМЕТ ЕЩЁ НЕ КУПЛЕН',profileBg:'ФОН ПРОФИЛЯ',profileBgHint:'Выбери из купленных фонов',profileBgSaved:'ФОН ПРОФИЛЯ СОХРАНЁН',lockedRu:'ЗАБЛОКИРОВАНО',gameName:'СИГНАЛЬНЫЙ ЗАБЕГ',legendarySignal:'ØN // ЛЕГЕНДАРНЫЙ СИГНАЛ'
+    lost:'ПЕРЕДАЧА ПОТЕРЯНА',reconnect:'ПЕРЕПОДКЛЮЧИТЬСЯ',speed:'СКОРОСТЬ',soundOff:'Выключить музыку игры',soundOn:'Включить музыку игры',calmSpace:'СПОКОЙНЫЙ КОСМОС',signalDrift:'ДРЕЙФ СИГНАЛА',distortionField:'ПОЛЕ ИСКАЖЕНИЙ',leaderboard:'ТАБЛИЦА ЛИДЕРОВ',player:'ИГРОК',saveScore:'СОХРАНИТЬ РЕЗУЛЬТАТ',namePlaceholder:'Введи имя',loadingBoard:'Загрузка рейтинга…',emptyBoard:'Пока нет результатов',saveOk:'РЕЗУЛЬТАТ СОХРАНЁН',saveError:'Не удалось сохранить результат',nameError:'Введи имя от 1 до 20 символов',store:'МАГАЗИН',storeClose:'ЗАКРЫТЬ МАГАЗИН',storeTitle:'ØN // МАГАЗИН',avatars:'ПЛАНЕТЫ',backgrounds:'ФОНЫ',obstacles:'ПРЕПЯТСТВИЯ',buy:'КУПИТЬ',equip:'ВЫБРАТЬ',equipped:'ИСПОЛЬЗУЕТСЯ',owned:'КУПЛЕНО',notEnough:'НЕ ХВАТАЕТ Ø-КРЕДИТОВ',storeError:'Ошибка магазина',connecting:'ПОДКЛЮЧЕНИЕ…',earned:'ЗАРАБОТАНО',position:'ПОЗИЦИЯ',storeSubtitle:'Косметика для сигнала: меняй планету, пространство и препятствия.',free:'БЕСПЛАТНО',creditsLabel:'Ø-КРЕДИТЫ',itemsCount:'ПРЕДМЕТОВ',rarityCommon:'ОБЫЧНЫЙ',rarityRare:'РЕДКИЙ',rarityEpic:'ЭПИЧЕСКИЙ',rarityLegendary:'ЛЕГЕНДАРНЫЙ',rarityVoid:'БЕЗДНА',gravityShift:'ИНВЕРСИЯ ГРАВИТАЦИИ',gravityReturn:'ВОЗВРАТ ГРАВИТАЦИИ',bossDetected:'СЕКРЕТНЫЙ ОБЪЕКТ ОБНАРУЖЕН',modifierSignal:'МОДИФИКАТОР // СИГНАЛЬНЫЙ ПОТОК',modifierLowGravity:'МОДИФИКАТОР // ЛЁГКАЯ ГРАВИТАЦИЯ',rareGold:'ЗОЛОТОЙ СИГНАЛ +7 Ø',rareViolet:'ФИОЛЕТОВЫЙ СИГНАЛ +3 Ø',profile:'ПРОФИЛЬ',profileClose:'ЗАКРЫТЬ ПРОФИЛЬ',profileKicker:'ØN // ПРОФИЛЬ ИГРОКА',unknownPlayer:'НЕИЗВЕСТНЫЙ СИГНАЛ',runs:'ЗАБЕГИ',totalSignals:'СОБРАНО Ø',totalDistance:'ОБЩАЯ ДИСТАНЦИЯ',achievements:'ДОСТИЖЕНИЯ',itemAcquired:'ПРЕДМЕТ ПОЛУЧЕН',achievementUnlocked:'ДОСТИЖЕНИЕ ОТКРЫТО',devices:'УСТРОЙСТВА',devicesConnected:'ПОДКЛЮЧЕНО',deviceHint:'Один профиль на телефоне и ПК. Получи код на основном устройстве и введи его на втором.',createLink:'ПОЛУЧИТЬ КОД',connectDevice:'ПОДКЛЮЧИТЬ',linkPlaceholder:'КОД ПРИВЯЗКИ',linkCodeLabel:'КОД ДЕЙСТВУЕТ 10 МИНУТ',linkReady:'ВВЕДИ ЭТОТ КОД НА ДРУГОМ УСТРОЙСТВЕ',linkSuccess:'УСТРОЙСТВО ПОДКЛЮЧЕНО К ОБЩЕМУ ПРОФИЛЮ',linkInvalid:'КОД НЕВЕРНЫЙ ИЛИ ИСТЁК',linkHasProgress:'НА ЭТОМ УСТРОЙСТВЕ УЖЕ ЕСТЬ ОТДЕЛЬНЫЙ ПРОФИЛЬ',linkRateLimited:'СЛИШКОМ МНОГО ПОПЫТОК. ПОПРОБУЙ ПОЗЖЕ',linkError:'НЕ УДАЛОСЬ ПОДКЛЮЧИТЬ УСТРОЙСТВО',itemNotOwned:'ПРЕДМЕТ ЕЩЁ НЕ КУПЛЕН',profileBg:'ФОН ПРОФИЛЯ',profileBgHint:'Выбери из купленных фонов',profileBgSaved:'ФОН ПРОФИЛЯ СОХРАНЁН',profileUse:'УСТАНОВИТЬ В ПРОФИЛЬ',profileUsing:'В ПРОФИЛЕ',profileBuyHint:'КУПИ ФОН ДЛЯ ИГРЫ И ПРОФИЛЯ',profileShop:'МАГАЗИН ФОНОВ',storeAll:'ВСЁ',storePreview:'СКОРО',shopBackgroundHint:'ДОСТУПЕН ТАКЖЕ ДЛЯ ПРОФИЛЯ',storeFilterAria:'ФИЛЬТР ПО РЕДКОСТИ',lockedRu:'ЗАБЛОКИРОВАНО',gameName:'СИГНАЛЬНЫЙ ЗАБЕГ',legendarySignal:'ØN // ЛЕГЕНДАРНЫЙ СИГНАЛ'
   },
   en:{
     intercept:'ØN // INTERCEPT 003',previous:'PREVIOUS LOCK // VERIFIED',
@@ -1833,7 +1921,7 @@ const gameI18n={
     nearLock:'NEAR LOCK',nearHint:'FREQUENCY ALIGNMENT // VERY CLOSE',
     stabilizing:'STABILIZING',hold:'HOLD FREQUENCY // DO NOT MOVE',
     decryptComplete:'DECRYPTION COMPLETE // ØN-003',
-    lost:'TRANSMISSION LOST',reconnect:'RECONNECT',speed:'SPEED',soundOff:'Turn game music off',soundOn:'Turn game music on',calmSpace:'CALM SPACE',signalDrift:'SIGNAL DRIFT',distortionField:'DISTORTION FIELD',leaderboard:'LEADERBOARD',player:'PLAYER',saveScore:'SAVE RESULT',namePlaceholder:'Enter name',loadingBoard:'Loading leaderboard…',emptyBoard:'No scores yet',saveOk:'RESULT SAVED',saveError:'Could not save result',nameError:'Enter a name from 1 to 20 characters',store:'STORE',storeClose:'CLOSE STORE',storeTitle:'ØN // STORE',avatars:'PLANETS',backgrounds:'BACKGROUNDS',obstacles:'OBSTACLES',buy:'BUY',equip:'EQUIP',equipped:'EQUIPPED',owned:'OWNED',notEnough:'NOT ENOUGH Ø-CREDITS',storeError:'Store error',connecting:'CONNECTING…',earned:'EARNED',position:'POSITION',storeSubtitle:'Signal cosmetics: change your planet, space and obstacles.',free:'FREE',creditsLabel:'Ø-CREDITS',itemsCount:'ITEMS',rarityCommon:'COMMON',rarityRare:'RARE',rarityEpic:'EPIC',rarityLegendary:'LEGENDARY',rarityVoid:'VOID',gravityShift:'GRAVITY INVERSION',gravityReturn:'GRAVITY RESTORED',bossDetected:'SECRET ENTITY DETECTED',modifierSignal:'MODIFIER // SIGNAL SURGE',modifierLowGravity:'MODIFIER // LOW GRAVITY',rareGold:'GOLD SIGNAL +7 Ø',rareViolet:'VIOLET SIGNAL +3 Ø',profile:'PROFILE',profileClose:'CLOSE PROFILE',profileKicker:'ØN // PLAYER PROFILE',unknownPlayer:'UNKNOWN SIGNAL',runs:'RUNS',totalSignals:'COLLECTED Ø',totalDistance:'TOTAL DISTANCE',achievements:'ACHIEVEMENTS',itemAcquired:'ITEM ACQUIRED',achievementUnlocked:'ACHIEVEMENT UNLOCKED',devices:'DEVICES',devicesConnected:'CONNECTED',deviceHint:'Use one profile on phone and PC. Create a code on the main device and enter it on the second.',createLink:'GET CODE',connectDevice:'CONNECT',linkPlaceholder:'LINK CODE',linkCodeLabel:'CODE EXPIRES IN 10 MINUTES',linkReady:'ENTER THIS CODE ON THE OTHER DEVICE',linkSuccess:'DEVICE CONNECTED TO SHARED PROFILE',linkInvalid:'CODE IS INVALID OR EXPIRED',linkHasProgress:'THIS DEVICE ALREADY HAS A SEPARATE PROFILE',linkRateLimited:'TOO MANY ATTEMPTS. TRY AGAIN LATER',linkError:'COULD NOT CONNECT DEVICE',itemNotOwned:'ITEM NOT PURCHASED YET',profileBg:'PROFILE BACKGROUND',profileBgHint:'Choose from owned backgrounds',profileBgSaved:'PROFILE BACKGROUND SAVED',lockedRu:'LOCKED',gameName:'SIGNAL RUNNER',legendarySignal:'ØN // LEGENDARY SIGNAL'
+    lost:'TRANSMISSION LOST',reconnect:'RECONNECT',speed:'SPEED',soundOff:'Turn game music off',soundOn:'Turn game music on',calmSpace:'CALM SPACE',signalDrift:'SIGNAL DRIFT',distortionField:'DISTORTION FIELD',leaderboard:'LEADERBOARD',player:'PLAYER',saveScore:'SAVE RESULT',namePlaceholder:'Enter name',loadingBoard:'Loading leaderboard…',emptyBoard:'No scores yet',saveOk:'RESULT SAVED',saveError:'Could not save result',nameError:'Enter a name from 1 to 20 characters',store:'STORE',storeClose:'CLOSE STORE',storeTitle:'ØN // STORE',avatars:'PLANETS',backgrounds:'BACKGROUNDS',obstacles:'OBSTACLES',buy:'BUY',equip:'EQUIP',equipped:'EQUIPPED',owned:'OWNED',notEnough:'NOT ENOUGH Ø-CREDITS',storeError:'Store error',connecting:'CONNECTING…',earned:'EARNED',position:'POSITION',storeSubtitle:'Signal cosmetics: change your planet, space and obstacles.',free:'FREE',creditsLabel:'Ø-CREDITS',itemsCount:'ITEMS',rarityCommon:'COMMON',rarityRare:'RARE',rarityEpic:'EPIC',rarityLegendary:'LEGENDARY',rarityVoid:'VOID',gravityShift:'GRAVITY INVERSION',gravityReturn:'GRAVITY RESTORED',bossDetected:'SECRET ENTITY DETECTED',modifierSignal:'MODIFIER // SIGNAL SURGE',modifierLowGravity:'MODIFIER // LOW GRAVITY',rareGold:'GOLD SIGNAL +7 Ø',rareViolet:'VIOLET SIGNAL +3 Ø',profile:'PROFILE',profileClose:'CLOSE PROFILE',profileKicker:'ØN // PLAYER PROFILE',unknownPlayer:'UNKNOWN SIGNAL',runs:'RUNS',totalSignals:'COLLECTED Ø',totalDistance:'TOTAL DISTANCE',achievements:'ACHIEVEMENTS',itemAcquired:'ITEM ACQUIRED',achievementUnlocked:'ACHIEVEMENT UNLOCKED',devices:'DEVICES',devicesConnected:'CONNECTED',deviceHint:'Use one profile on phone and PC. Create a code on the main device and enter it on the second.',createLink:'GET CODE',connectDevice:'CONNECT',linkPlaceholder:'LINK CODE',linkCodeLabel:'CODE EXPIRES IN 10 MINUTES',linkReady:'ENTER THIS CODE ON THE OTHER DEVICE',linkSuccess:'DEVICE CONNECTED TO SHARED PROFILE',linkInvalid:'CODE IS INVALID OR EXPIRED',linkHasProgress:'THIS DEVICE ALREADY HAS A SEPARATE PROFILE',linkRateLimited:'TOO MANY ATTEMPTS. TRY AGAIN LATER',linkError:'COULD NOT CONNECT DEVICE',itemNotOwned:'ITEM NOT PURCHASED YET',profileBg:'PROFILE BACKGROUND',profileBgHint:'Choose from owned backgrounds',profileBgSaved:'PROFILE BACKGROUND SAVED',profileUse:'USE IN PROFILE',profileUsing:'IN PROFILE',profileBuyHint:'BUY FOR GAME AND PROFILE',profileShop:'BACKGROUND SHOP',storeAll:'ALL',storePreview:'COMING SOON',shopBackgroundHint:'ALSO AVAILABLE FOR PROFILE',storeFilterAria:'FILTER BY RARITY',lockedRu:'LOCKED',gameName:'SIGNAL RUNNER',legendarySignal:'ØN // LEGENDARY SIGNAL'
   }
 };
 function gameText(key){
@@ -2226,7 +2314,8 @@ const RUNNER_ITEM_RARITY={
   orbit_o:'common',frost_moon:'rare',void_core:'void',
   signal_bloom:'rare',crimson_pulse:'epic',eclipse_halo:'epic',solar_flare:'legendary',toxic_bloom:'legendary',neon_reef:'legendary',ash_titan:'legendary',
   deep_space:'common',violet_nebula:'rare',frozen_horizon:'rare',black_sun:'void',signal_storm:'epic',crimson_rift:'legendary',
-  signal_spires:'common',crystal_shards:'rare',orbital_debris:'void',spirit_masks:'rare',glitch_slimes:'epic',mecha_drones:'epic',moon_familiars:'legendary'
+  signal_spires:'common',crystal_shards:'rare',orbital_debris:'void',spirit_masks:'rare',glitch_slimes:'epic',mecha_drones:'epic',moon_familiars:'legendary',
+  glacier_revenant:'rare',storm_seraph:'epic',magma_sovereign:'legendary',astral_leviathan:'legendary',abyssal_ocean:'rare',aurora_sanctum:'epic',volcanic_cataclysm:'legendary',celestial_temple:'legendary',frost_spines:'rare',inferno_obelisks:'epic',thunder_sentinels:'epic',rift_serpents:'legendary'
 };
 const RUNNER_ITEM_META={
   orbit_o:{ru:['ОРБИТА Ø','Базовая планета ØRNIVAISE'],en:['ORBIT Ø','Default ØRNIVAISE planet']},
@@ -2251,7 +2340,19 @@ const RUNNER_ITEM_META={
   spirit_masks:{ru:['ДУХИ-МАСКИ','Оригинальные аниме-вдохновлённые духи в масках'],en:['SPIRIT MASKS','Original anime-inspired masked spirits']},
   glitch_slimes:{ru:['ГЛИТЧ-СЛАЙМЫ','Мультяшные цифровые существа с живой анимацией'],en:['GLITCH SLIMES','Cartoon digital creatures with lively motion']},
   mecha_drones:{ru:['МЕХА-ДРОНЫ','Боевые дроны с крыльями, визором и импульсными двигателями'],en:['MECHA DRONES','Combat drones with wings, visor and pulse thrusters']},
-  moon_familiars:{ru:['ЛУННЫЕ ФАМИЛЬЯРЫ','Редкие лунные существа с мягкой аурой'],en:['MOON FAMILIARS','Rare lunar creatures with a soft aura']}
+  moon_familiars:{ru:['ЛУННЫЕ ФАМИЛЬЯРЫ','Редкие лунные существа с мягкой аурой'],en:['MOON FAMILIARS','Rare lunar creatures with a soft aura']},
+  glacier_revenant:{ru:['ЛЕДЯНОЙ ПРИЗРАК','Иней, снежные осколки и ледяное дыхание'],en:['GLACIER REVENANT','Frost shards, snow and an icy wake']},
+  storm_seraph:{ru:['ГРОЗОВОЙ СЕРАФИМ','Электрические дуги и живые молнии'],en:['STORM SERAPH','Electric arcs and living lightning']},
+  magma_sovereign:{ru:['ПОВЕЛИТЕЛЬ МАГМЫ','Вулканическая планета: лава, взрывы и огненный след'],en:['MAGMA SOVEREIGN','Volcanic planet: lava, eruptions and a flaming wake']},
+  astral_leviathan:{ru:['АСТРАЛЬНЫЙ ЛЕВИАФАН','Космическая сущность с живыми звёздными кольцами'],en:['ASTRAL LEVIATHAN','Cosmic entity with living stellar rings']},
+  abyssal_ocean:{ru:['БЕЗДОННЫЙ ОКЕАН','Светящиеся глубины, волны и подводная жизнь'],en:['ABYSSAL OCEAN','Glowing depths, waves and deep-sea life']},
+  aurora_sanctum:{ru:['ХРАМ СЕВЕРНОГО СИЯНИЯ','Ледяные башни и движущиеся ленты сияния'],en:['AURORA SANCTUM','Ice spires and moving aurora curtains']},
+  volcanic_cataclysm:{ru:['ВУЛКАНИЧЕСКИЙ КАТАКЛИЗМ','Извержение вулкана, дождь из лавы и огненные вспышки'],en:['VOLCANIC CATACLYSM','Erupting volcano, lava rain and fiery bursts']},
+  celestial_temple:{ru:['НЕБЕСНОЕ СВЯТИЛИЩЕ','Летающие руины, звёздные кольца и световые столбы'],en:['CELESTIAL SANCTUM','Floating ruins, stellar rings and pillars of light']},
+  frost_spines:{ru:['ЛЕДЯНЫЕ ШИПЫ','Кристальные ледяные скалы'],en:['FROST SPINES','Crystalline ice cliffs']},
+  inferno_obelisks:{ru:['ИНФЕРНАЛЬНЫЕ ОБЕЛИСКИ','Обсидиановые колонны с раскалённой лавой'],en:['INFERNO OBELISKS','Obsidian columns with glowing lava fissures']},
+  thunder_sentinels:{ru:['ГРОЗОВЫЕ СТРАЖИ','Механизмы с электрическими разрядами'],en:['THUNDER SENTINELS','Machines with electrical discharges']},
+  rift_serpents:{ru:['ЗМЕИ РАЗЛОМА','Легендарные змеи из пространства между мирами'],en:['RIFT SERPENTS','Legendary serpents from between worlds']}
 };
 function runnerPlayerToken(){
   try{
@@ -2318,22 +2419,43 @@ function runnerCategorySelection(category){
   return runnerStoreState.selected_obstacle;
 }
 function runnerPreviewMarkup(itemId,category){
-  const sceneClass=category==='background'?(' '+itemId):'';
-  if(category==='avatar'){
-    return '<div class="runner-preview-scene"><div class="runner-preview-ground"></div><div class="runner-preview-planet '+itemId+'"></div></div>';
-  }
-  if(category==='background'){
-    return '<div class="runner-preview-scene'+sceneClass+'"><div class="runner-preview-background-planet"></div><div class="runner-preview-mini-planet"></div><div class="runner-preview-ground"></div></div>';
-  }
-  return '<div class="runner-preview-scene"><div class="runner-preview-mini-planet"></div><div class="runner-preview-obstacles '+itemId+'"><i></i><i></i><i></i></div><div class="runner-preview-ground"></div></div>';
+  const safeId=/^[a-z0-9_]+$/.test(itemId)?itemId:'deep_space';
+  const rarity=RUNNER_ITEM_RARITY[safeId]||'common';
+  const enhanced=['epic','legendary','void'].includes(rarity);
+  const particles=enhanced?Array.from({length:rarity==='legendary'?10:6},(_,i)=>'<span class="runner-preview-spark spark-'+i+'"></span>').join(''):'';
+  const fx='<div class="runner-preview-vfx"><i class="runner-vfx-mountain"></i><i class="runner-vfx-magma"></i><i class="runner-vfx-beam"></i><i class="runner-vfx-ring"></i>'+particles+'</div>';
+  const scene=' scene-'+safeId+' scene-'+category+' rarity-'+rarity+(category==='background'?' '+safeId:'');
+  if(category==='avatar')return '<div class="runner-preview-scene'+scene+'">'+fx+'<div class="runner-preview-ground"></div><div class="runner-preview-planet '+safeId+'"></div></div>';
+  if(category==='background')return '<div class="runner-preview-scene'+scene+'">'+fx+'<div class="runner-preview-background-planet"></div><div class="runner-preview-mini-planet"></div><div class="runner-preview-ground"></div></div>';
+  return '<div class="runner-preview-scene'+scene+'">'+fx+'<div class="runner-preview-mini-planet"></div><div class="runner-preview-obstacles '+safeId+'"><i></i><i></i><i></i></div><div class="runner-preview-ground"></div></div>';
 }
+const RUNNER_V2_UPCOMING_ITEMS=[{"item_id":"glacier_revenant","category":"avatar","price":220,"sort_order":90,"previewOnly":true},{"item_id":"storm_seraph","category":"avatar","price":520,"sort_order":100,"previewOnly":true},{"item_id":"magma_sovereign","category":"avatar","price":1150,"sort_order":110,"previewOnly":true},{"item_id":"astral_leviathan","category":"avatar","price":1350,"sort_order":120,"previewOnly":true},{"item_id":"abyssal_ocean","category":"background","price":240,"sort_order":70,"previewOnly":true},{"item_id":"aurora_sanctum","category":"background","price":620,"sort_order":80,"previewOnly":true},{"item_id":"volcanic_cataclysm","category":"background","price":1250,"sort_order":90,"previewOnly":true},{"item_id":"celestial_temple","category":"background","price":1450,"sort_order":100,"previewOnly":true},{"item_id":"frost_spines","category":"obstacle","price":190,"sort_order":80,"previewOnly":true},{"item_id":"inferno_obelisks","category":"obstacle","price":480,"sort_order":90,"previewOnly":true},{"item_id":"thunder_sentinels","category":"obstacle","price":590,"sort_order":100,"previewOnly":true},{"item_id":"rift_serpents","category":"obstacle","price":1180,"sort_order":110,"previewOnly":true}];
+const RUNNER_V2_PREVIEW_MODE=new URLSearchParams(location.search).get('v2preview')==='1';
+let runnerStoreRarityFilter='all';
+
 function renderRunnerStore(){
   if(!runnerStoreContent)return;
   const lang=document.documentElement.lang==='en'?'en':'ru';
   const groups=[['avatar','avatars'],['background','backgrounds'],['obstacle','obstacles']];
+  const knownIds=new Set(runnerStoreState.items.map(i=>i.item_id));
+  const upcoming=RUNNER_V2_PREVIEW_MODE?RUNNER_V2_UPCOMING_ITEMS.filter(i=>!knownIds.has(i.item_id)):[];
+  const visibleItems=[...runnerStoreState.items,...upcoming];
+  const filters=document.getElementById('runnerStoreFilters');
+  if(filters){
+    filters.setAttribute('aria-label',gameText('storeFilterAria'));
+    const choices=document.createDocumentFragment();
+    for(const [id,label] of [['all','storeAll'],['rare','rarityRare'],['epic','rarityEpic'],['legendary','rarityLegendary'],['void','rarityVoid']]){
+      const b=document.createElement('button');b.type='button';b.dataset.storeFilter=id;
+      b.className='runner-store-filter'+(runnerStoreRarityFilter===id?' active':'');
+      b.setAttribute('aria-pressed',String(runnerStoreRarityFilter===id));
+      b.textContent=gameText(label);choices.appendChild(b);
+    }
+    filters.replaceChildren(choices);
+  }
   const frag=document.createDocumentFragment();
   groups.forEach(([category,labelKey])=>{
-    const items=runnerStoreState.items.filter(i=>i.category===category).sort((a,b)=>a.sort_order-b.sort_order);
+    const items=visibleItems.filter(i=>i.category===category&&(runnerStoreRarityFilter==='all'||RUNNER_ITEM_RARITY[i.item_id]===runnerStoreRarityFilter)).sort((a,b)=>a.sort_order-b.sort_order);
+    if(!items.length)return;
     const section=document.createElement('section');section.className='runner-store-category';
     const header=document.createElement('div');header.className='runner-store-category-title';
     const h=document.createElement('h4');h.textContent=gameText(labelKey);
@@ -2343,9 +2465,9 @@ function renderRunnerStore(){
     items.forEach(item=>{
       const meta=RUNNER_ITEM_META[item.item_id]?.[lang]||[item.item_id,''];
       const rarity=RUNNER_ITEM_RARITY[item.item_id]||'common';
-      const owned=item.price===0||runnerStoreState.inventory.includes(item.item_id);
+      const owned=Number(item.price)===0||runnerStoreState.inventory.includes(item.item_id);
       const equipped=runnerCategorySelection(category)===item.item_id;
-      const card=document.createElement('article');card.className='runner-shop-card rarity-'+rarity+(equipped?' equipped':'');
+      const card=document.createElement('article');card.className='runner-shop-card rarity-'+rarity+(equipped?' equipped':'')+(item.previewOnly?' preview-only':'');
       const preview=document.createElement('div');preview.className='runner-shop-preview';preview.setAttribute('aria-hidden','true');preview.innerHTML=runnerPreviewMarkup(item.item_id,category);
       const body=document.createElement('div');body.className='runner-shop-body';
       const top=document.createElement('div');top.className='runner-shop-topline';
@@ -2358,9 +2480,20 @@ function renderRunnerStore(){
       const amount=document.createElement('b');amount.textContent=item.price===0?gameText('free'):(item.price+' Ø');
       price.append(ownership,amount);
       const btn=document.createElement('button');btn.type='button';btn.dataset.item=item.item_id;btn.dataset.owned=owned?'1':'0';
-      btn.textContent=equipped?gameText('equipped'):(owned?gameText('equip'):(gameText('buy')+' · '+item.price+' Ø'));
-      btn.disabled=runnerStoreTransactionPending?true:equipped;
-      body.append(top,desc,price,btn);card.append(preview,body);grid.appendChild(card);
+      btn.textContent=item.previewOnly?gameText('storePreview'):(equipped?gameText('equipped'):(owned?gameText('equip'):(gameText('buy')+' · '+item.price+' Ø')));
+      btn.disabled=!!item.previewOnly||runnerStoreTransactionPending||equipped;
+      body.append(top,desc,price,btn);
+      if(category==='background'){
+        const info=document.createElement('small');info.className='runner-shop-profile-hint';
+        info.textContent=gameText(item.previewOnly?'storePreview':owned?'shopBackgroundHint':'profileBuyHint');body.appendChild(info);
+        if(owned){
+          const b=document.createElement('button');b.type='button';b.className='runner-shop-profile-action';b.dataset.profileBg=item.item_id;
+          const selected=runnerStoreState.selected_profile_background===item.item_id;
+          b.textContent=gameText(selected?'profileUsing':'profileUse');
+          b.disabled=selected||runnerProfileBgPending||runnerStoreTransactionPending;body.appendChild(b);
+        }
+      }
+      card.append(preview,body);grid.appendChild(card);
     });
     section.appendChild(grid);frag.appendChild(section);
   });
@@ -2381,6 +2514,10 @@ function renderRunnerProfile(){
     [...runnerProfilePanel.classList].filter(c=>c.startsWith('profile-theme-')).forEach(c=>runnerProfilePanel.classList.remove(c));
     runnerProfilePanel.classList.add('profile-theme-'+(runnerStoreState.selected_profile_background||'deep_space'));
   }
+  const profileScene=document.getElementById('runnerProfileScene');
+  if(profileScene)profileScene.innerHTML=runnerPreviewMarkup(runnerStoreState.selected_profile_background||'deep_space','background');
+  const shortcut=document.getElementById('runnerProfileShopShortcut');
+  if(shortcut)shortcut.textContent=gameText('profileShop');
   if(runnerProfileBgChoices){
     const ownedBackgrounds=runnerStoreState.items
       .filter(i=>i.category==='background'&&(Number(i.price)===0||runnerStoreState.inventory.includes(i.item_id)))
@@ -2390,7 +2527,10 @@ function renderRunnerProfile(){
       const meta=RUNNER_ITEM_META[item.item_id]?.[lang]||[item.item_id,''];
       const b=document.createElement('button');
       b.type='button';b.className='runner-profile-bg-choice'+(runnerStoreState.selected_profile_background===item.item_id?' active':'');
-      b.dataset.profileBg=item.item_id;b.textContent=meta[0];
+      b.dataset.profileBg=item.item_id;
+      b.disabled=runnerProfileBgPending||runnerStoreState.selected_profile_background===item.item_id;
+      const swatch=document.createElement('span');swatch.className='runner-bg-swatch swatch-'+item.item_id;swatch.setAttribute('aria-hidden','true');
+      const label=document.createElement('span');label.textContent=meta[0];b.append(swatch,label);
       bgFrag.appendChild(b);
     });
     runnerProfileBgChoices.replaceChildren(bgFrag);
@@ -2454,11 +2594,14 @@ async function setRunnerProfileBackground(itemId){
   try{
     const data=await runnerApi('profile_background',{item_id:itemId});
     applyRunnerStoreState(data);
-    if(runnerLinkStatus)runnerLinkStatus.textContent=gameText('profileBgSaved');
+    const target=runnerStorePanel?.classList.contains('open')?runnerStoreStatus:runnerLinkStatus;
+    if(target)target.textContent=gameText('profileBgSaved');
   }catch(e){
-    if(runnerLinkStatus)runnerLinkStatus.textContent=runnerServerError(e);
+    const target=runnerStorePanel?.classList.contains('open')?runnerStoreStatus:runnerLinkStatus;
+    if(target)target.textContent=runnerServerError(e);
   }finally{
     runnerProfileBgPending=false;
+    renderRunnerStore();
     renderRunnerProfile();
   }
 }
@@ -3080,6 +3223,162 @@ function updateRunner(dt){
   if(!runnerPortalTransition.active&&runnerGhostCurrent.length<=ghostIndex)runnerGhostCurrent.push({y:Math.round(runnerPlayer.y),g:runnerGravity});
   updateRunnerHud();
 }
+
+/* Cinematic V2 backgrounds. Purely presentational: collision and timing unchanged. */
+function drawRunnerSpectacle(ctx,world,dist,stage){
+  const t=dist*.014,boost=.65+Math.min(1,dist/7000)*.35;
+  const W=RUNNER_W,G=RUNNER_GROUND;
+  const volcano=world==='volcanic_cataclysm'||world==='crimson_rift';
+  ctx.save();
+  if(volcano){
+    const crestX=W*.7+Math.sin(t*.14)*16,crestY=world==='crimson_rift'?135:89;
+    const hot=world==='crimson_rift'?.62:1;
+    const pulse=(.68+.32*Math.sin(t*2.4))*hot;
+    const glow=ctx.createRadialGradient(crestX,crestY,9,crestX,crestY,230);
+    glow.addColorStop(0,'rgba(255,190,94,'+(.27*pulse)+')');
+    glow.addColorStop(.35,'rgba(240,66,30,'+(.19*pulse)+')');
+    glow.addColorStop(1,'rgba(120,18,20,0)');
+    ctx.fillStyle=glow;ctx.fillRect(crestX-250,crestY-230,500,460);
+    // Distant landscape, non-interactive.
+    for(let layer=0;layer<2;layer++){
+      const base=G-6+layer*6;
+      ctx.fillStyle=layer===0?'#1a0b13':'#110810';
+      ctx.beginPath();ctx.moveTo(0,base);
+      for(let x=0;x<=W+65;x+=65){
+        const height=25+layer*16+24*Math.abs(Math.sin(x*.013+layer*2));
+        ctx.lineTo(x,base-height);
+      }
+      ctx.lineTo(W,base);ctx.closePath();ctx.fill();
+    }
+    ctx.fillStyle='#17090e';
+    ctx.beginPath();ctx.moveTo(crestX-205,G);ctx.lineTo(crestX-62,crestY+46);
+    ctx.lineTo(crestX-26,crestY+10);ctx.lineTo(crestX+28,crestY+10);
+    ctx.lineTo(crestX+68,crestY+54);ctx.lineTo(crestX+212,G);
+    ctx.closePath();ctx.fill();
+    // Red river running down the crater flank, interrupted by rock shelves.
+    ctx.lineCap='round';ctx.lineJoin='round';ctx.shadowColor='rgba(255,108,36,.67)';
+    ctx.shadowBlur=17*hot;ctx.strokeStyle='rgba(255,126,52,'+(.78*hot)+')';ctx.lineWidth=7;
+    ctx.beginPath();ctx.moveTo(crestX+6,crestY+10);ctx.bezierCurveTo(crestX-10,crestY+72,crestX+57,crestY+116,crestX+37,G);ctx.stroke();
+    ctx.strokeStyle='rgba(255,229,126,'+(.75*hot)+')';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(crestX+6,crestY+10);ctx.bezierCurveTo(crestX-10,crestY+72,crestX+57,crestY+116,crestX+37,G);ctx.stroke();
+    ctx.shadowBlur=0;
+    // Eruption plume and ballistic magma fragments: deterministic positions.
+    const burst=(Math.sin(t*.7)+1)*.5;
+    const fountain=ctx.createRadialGradient(crestX,crestY-19,3,crestX,crestY-19,52+burst*17);
+    fountain.addColorStop(0,'rgba(255,216,142,'+(.26*hot)+')');
+    fountain.addColorStop(.45,'rgba(255,93,41,'+(.21*hot)+')');
+    fountain.addColorStop(1,'rgba(255,93,41,0)');
+    ctx.fillStyle=fountain;ctx.fillRect(crestX-95,crestY-130,190,150);
+    for(let i=0;i<27;i++){
+      const a=t*.44+i*2.399;
+      const distance=20+(i*31%94)+burst*19;
+      const x=crestX+Math.cos(a)*distance;
+      const y=crestY-14-Math.abs(Math.sin(a*.7+i))*(32+i%5*12)+((t*12+i*11)%41);
+      const size=1.2+(i%4)*.58;
+      ctx.globalAlpha=(.26+(i%4)*.14)*hot*boost;
+      ctx.fillStyle=i%4===0?'#ffe49a':i%3===0?'#ffae55':'#ff643b';
+      ctx.beginPath();ctx.arc(x,y,size,0,Math.PI*2);ctx.fill();
+    }
+    // Ash stays translucent so obstacles and player remain obvious.
+    for(let i=0;i<9;i++){
+      const x=crestX+(i-4)*31+Math.sin(t*.6+i)*22;
+      const y=crestY-72-(i%3)*22+Math.cos(t*.8+i)*14;
+      const ash=ctx.createRadialGradient(x,y,1,x,y,32+(i%3)*9);
+      ash.addColorStop(0,'rgba(126,91,89,.08)');ash.addColorStop(1,'rgba(52,33,38,0)');
+      ctx.fillStyle=ash;ctx.fillRect(x-52,y-52,104,104);
+    }
+    ctx.globalAlpha=1;
+  }else if(world==='aurora_sanctum'){
+    const moonX=W*.77,moonY=75;
+    ctx.fillStyle='rgba(209,248,249,.16)';ctx.beginPath();ctx.arc(moonX,moonY,37,0,Math.PI*2);ctx.fill();
+    for(let i=0;i<6;i++){
+      const x=(i-.5)*W/5+Math.sin(t*.28+i)*36;
+      const grad=ctx.createLinearGradient(x-30,14,x+80,G);
+      grad.addColorStop(0,'rgba(85,243,201,0)');
+      grad.addColorStop(.33,i%2?'rgba(165,125,242,.12)':'rgba(86,232,198,.20)');
+      grad.addColorStop(1,'rgba(53,157,174,0)');
+      ctx.fillStyle=grad;ctx.beginPath();ctx.moveTo(x-30,5);
+      ctx.bezierCurveTo(x+20,60,x-36,137,x+40,G-18);
+      ctx.lineTo(x+96,G-18);ctx.bezierCurveTo(x+45,130,x+95,64,x+24,5);
+      ctx.closePath();ctx.fill();
+    }
+    ctx.fillStyle='rgba(11,46,65,.72)';
+    ctx.beginPath();ctx.moveTo(0,G);for(let x=0;x<=W;x+=56){ctx.lineTo(x,G-(22+((x*13)%53)))}ctx.lineTo(W,G);ctx.fill();
+    ctx.lineWidth=1;ctx.strokeStyle='rgba(167,248,248,.38)';
+    for(let i=0;i<9;i++){const x=i*111-(dist*.045)%111;ctx.beginPath();ctx.moveTo(x,G);ctx.lineTo(x+17,G-31-(i%3)*7);ctx.lineTo(x+31,G);ctx.stroke();}
+  }else if(world==='celestial_temple'){
+    const ox=W*.72,oy=105;
+    const aura=ctx.createRadialGradient(ox,oy,4,ox,oy,160);
+    aura.addColorStop(0,'rgba(197,172,255,.24)');aura.addColorStop(1,'rgba(115,72,214,0)');
+    ctx.fillStyle=aura;ctx.fillRect(ox-180,oy-180,360,360);
+    ctx.save();ctx.translate(ox,oy);ctx.rotate(t*.055);
+    ctx.strokeStyle='rgba(220,197,255,.55)';ctx.lineWidth=1.7;
+    for(let r=38;r<=88;r+=24){ctx.beginPath();ctx.arc(0,0,r,0,Math.PI*2);ctx.stroke();}
+    for(let i=0;i<12;i++){const a=i*Math.PI/6;ctx.fillStyle='rgba(210,182,255,.5)';
+      ctx.beginPath();ctx.arc(Math.cos(a)*74,Math.sin(a)*74,2,0,Math.PI*2);ctx.fill();}
+    ctx.restore();
+    for(let i=0;i<7;i++){
+      const x=(i*145+93-dist*.024)%(W+140);
+      const xx=(x+W+140)%(W+140)-70;
+      const y=G-27-((i*43)%81)+Math.sin(t*.25+i)*5;
+      const h=27+(i%4)*12;
+      ctx.fillStyle='rgba(91,74,139,.37)';ctx.strokeStyle='rgba(193,164,250,.36)';
+      ctx.beginPath();ctx.moveTo(xx-15,y+h/2);ctx.lineTo(xx-11,y-h);
+      ctx.lineTo(xx+11,y-h);ctx.lineTo(xx+15,y+h/2);ctx.closePath();ctx.fill();ctx.stroke();
+    }
+    const beam=ctx.createLinearGradient(ox-27,0,ox+32,0);
+    beam.addColorStop(0,'rgba(181,142,248,0)');beam.addColorStop(.5,'rgba(208,181,255,.17)');beam.addColorStop(1,'rgba(181,142,248,0)');
+    ctx.fillStyle=beam;ctx.fillRect(ox-29,0,60,G-12);
+  }else if(world==='abyssal_ocean'){
+    for(let i=0;i<4;i++){
+      const y=155+i*48;
+      ctx.strokeStyle=i%2?'rgba(45,169,176,.17)':'rgba(100,219,204,.1)';
+      ctx.lineWidth=3+i;ctx.beginPath();ctx.moveTo(-30,y);
+      for(let x=0;x<=W+40;x+=55)ctx.lineTo(x,y+Math.sin(x*.014+t*.37+i)*13);
+      ctx.stroke();
+    }
+    for(let i=0;i<18;i++){
+      const x=((i*173+dist*.032*(i%2?1:-1))%(W+80)+W+80)%(W+80)-40;
+      const y=((i*47+t*3)%(G-36)+G-36)%(G-36)+12;
+      ctx.strokeStyle='rgba(130,243,235,'+(.11+(i%4)*.05)+')';
+      ctx.lineWidth=1;ctx.beginPath();ctx.arc(x,y,2+(i%4)*1.3,0,Math.PI*2);ctx.stroke();
+    }
+    for(let i=0;i<4;i++){
+      const x=W*.4+i*119+Math.sin(t*.19+i)*17;
+      const y=90+(i%2)*56+Math.sin(t*.41+i)*16;
+      ctx.fillStyle='rgba(130,247,224,.19)';ctx.beginPath();ctx.ellipse(x,y,12,5,0,0,Math.PI*2);ctx.fill();
+      ctx.strokeStyle='rgba(123,220,221,.2)';for(let q=0;q<3;q++){ctx.beginPath();ctx.moveTo(x-7+q*7,y+2);ctx.lineTo(x-6+q*7,y+20+Math.sin(t+q+i)*5);ctx.stroke();}
+    }
+  }
+  ctx.restore();
+}
+function drawRunnerAvatarCinematic(ctx,avatar,cx,cy,dist){
+  const hot=['solar_flare','ash_titan','magma_sovereign'].includes(avatar);
+  const stars=['astral_leviathan','neon_reef','eclipse_halo'].includes(avatar);
+  const shock=['storm_seraph','toxic_bloom'].includes(avatar);
+  if(!hot&&!stars&&!shock&&avatar!=='glacier_revenant')return;
+  const t=dist*.055;
+  const colors=hot?['#ffce7d','#ff6f31']:stars?['#d3b5ff','#93b8ff']:shock?['#9cf4f0','#87e568']:['#ebffff','#9bdcff'];
+  ctx.save();
+  const glow=ctx.createRadialGradient(cx,cy,16,cx,cy,hot?68:57);
+  glow.addColorStop(0,hot?'rgba(255,164,63,.12)':stars?'rgba(191,149,254,.13)':'rgba(136,240,228,.1)');
+  glow.addColorStop(1,'rgba(0,0,0,0)');ctx.fillStyle=glow;ctx.fillRect(cx-72,cy-72,144,144);
+  for(let i=0;i<(hot||stars?17:10);i++){
+    const a=t*(hot?.65:stars?.32:.46)+i*2.399;
+    const ring=26+i%5*6;
+    const x=cx+Math.cos(a)*ring-i%3*2;
+    const y=cy+Math.sin(a)*ring*.67;
+    ctx.globalAlpha=.16+(i%5)*.13;ctx.fillStyle=colors[i%2];
+    ctx.beginPath();ctx.arc(x,y,hot?1.1+i%3*.55:1+i%2*.4,0,Math.PI*2);ctx.fill();
+  }
+  if(hot){ctx.strokeStyle='rgba(255,145,70,.3)';ctx.lineWidth=1.5;
+    for(let i=0;i<3;i++){const p=t*.7+i*2.1;ctx.beginPath();ctx.arc(cx,cy,40+i*5,p,p+.7);ctx.stroke();}
+  }
+  if(stars){ctx.strokeStyle='rgba(215,183,252,.25)';ctx.lineWidth=1.1;
+    ctx.beginPath();ctx.ellipse(cx,cy,42,14,-.3+t*.009,0,Math.PI*2);ctx.stroke();}
+  ctx.restore();
+}
+
 function drawRunner(){
   if(!runnerCtx||!runnerCanvas)return;
   const ctx=runnerCtx;
@@ -3108,6 +3407,14 @@ function drawRunner(){
   }else if(runnerStoreState.selected_background==='crimson_rift'){
     const crimson=[['#16080b','#090407','#020203'],['#19090c','#0b0408','#020203'],['#1c0a0e','#0c0408','#020203'],['#210b10','#0a0306','#010102']];
     p=crimson[stage];
+  }else if(runnerStoreState.selected_background==='volcanic_cataclysm'){
+    p=[['#260912','#16070d','#080307'],['#2a0b15','#19070f','#080307'],['#2c0d14','#190609','#080307'],['#320d16','#1b070b','#060306']][stage];
+  }else if(runnerStoreState.selected_background==='aurora_sanctum'){
+    p=[['#061a29','#081b27','#040d17'],['#081d2d','#071d28','#040b16'],['#0b2130','#071b28','#030912'],['#0e2530','#0b1627','#030811']][stage];
+  }else if(runnerStoreState.selected_background==='celestial_temple'){
+    p=[['#100c2a','#0b0a1c','#04040d'],['#140f31','#0e0b21','#05040e'],['#18113a','#100b26','#050410'],['#1b1040','#100a23','#05030c']][stage];
+  }else if(runnerStoreState.selected_background==='abyssal_ocean'){
+    p=[['#061a23','#071923','#030a10'],['#081c29','#071b23','#030910'],['#081e2b','#061924','#020912'],['#092031','#061723','#02070e']][stage];
   }
   const bg=ctx.createLinearGradient(0,0,0,RUNNER_H);
   bg.addColorStop(0,p[0]);bg.addColorStop(.68,p[1]);bg.addColorStop(1,p[2]);
@@ -3133,7 +3440,9 @@ function drawRunner(){
   const worldTint={
     deep_space:'105,151,209',violet_nebula:'164,99,229',
     frozen_horizon:'132,225,243',black_sun:'238,168,105',
-    signal_storm:'83,214,225',crimson_rift:'239,81,106'
+    signal_storm:'83,214,225',crimson_rift:'239,81,106',
+    volcanic_cataclysm:'255,122,71',aurora_sanctum:'115,237,213',
+    celestial_temple:'191,151,251',abyssal_ocean:'82,192,191'
   }[worldId]||'105,151,209';
   const worldProgress=Math.min(1,runnerDistanceValue/9000);
   ctx.save();
@@ -3249,6 +3558,8 @@ function drawRunner(){
     for(let i=0;i<6;i++){const px=rx-45+i*19,py=90+((i*41+runnerDistanceValue*.4)%175);ctx.globalAlpha=.13;ctx.fillStyle=i%2?'#ff8b66':'#d73d4f';ctx.beginPath();ctx.arc(px,py,1.4,0,Math.PI*2);ctx.fill()}
     ctx.restore();
   }
+
+  drawRunnerSpectacle(ctx,runnerStoreState.selected_background,runnerDistanceValue,stage);
 
   // Secret boss-events stay in the background and never change collision.
   if(runnerBossActive){
@@ -3413,7 +3724,51 @@ function drawRunner(){
       ctx.scale(1,-1);
     }
 
-    if(skin==='crystal_shards'){
+
+    if(skin==='frost_spines'){
+      const icy=ctx.createLinearGradient(o.x,o.y,o.x+o.w,o.y+o.h);
+      icy.addColorStop(0,'rgba(225,251,255,.9)');icy.addColorStop(.52,'rgba(89,176,205,.5)');icy.addColorStop(1,'rgba(22,69,112,.55)');
+      ctx.fillStyle=icy;ctx.strokeStyle='rgba(211,248,255,.82)';ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(o.x,o.y+o.h);ctx.lineTo(o.x+o.w*.14,o.y+o.h*.36);
+      ctx.lineTo(o.x+o.w*.49,o.y);ctx.lineTo(o.x+o.w*.83,o.y+o.h*.39);
+      ctx.lineTo(o.x+o.w,o.y+o.h);ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.strokeStyle='rgba(238,253,255,.47)';ctx.beginPath();ctx.moveTo(o.x+o.w*.49,o.y+3);ctx.lineTo(o.x+o.w*.48,o.y+o.h);ctx.stroke();
+    }else if(skin==='inferno_obelisks'){
+      const fire=.55+.45*Math.sin(phase);
+      ctx.fillStyle='#21101a';ctx.strokeStyle='rgba(244,136,76,.6)';ctx.lineWidth=1.1;
+      ctx.beginPath();ctx.moveTo(o.x+o.w*.12,o.y+o.h);ctx.lineTo(o.x+o.w*.1,o.y+o.h*.28);
+      ctx.lineTo(o.x+o.w*.45,o.y);ctx.lineTo(o.x+o.w*.83,o.y+o.h*.19);
+      ctx.lineTo(o.x+o.w*.88,o.y+o.h);ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.shadowColor='rgba(255,122,53,.82)';ctx.shadowBlur=9*fire;
+      ctx.strokeStyle='rgba(255,162,62,'+(.6+.3*fire)+')';ctx.lineWidth=2;
+      ctx.beginPath();ctx.moveTo(o.x+o.w*.47,o.y+o.h*.06);ctx.lineTo(o.x+o.w*.32,o.y+o.h*.4);
+      ctx.lineTo(o.x+o.w*.63,o.y+o.h*.62);ctx.lineTo(o.x+o.w*.46,o.y+o.h*.94);ctx.stroke();ctx.shadowBlur=0;
+      for(let k=0;k<4;k++){ctx.fillStyle='#ffc66e';ctx.globalAlpha=.2+fire*.45;
+        ctx.beginPath();ctx.arc(o.x+o.w*.28+k*5,o.y-3-Math.sin(phase+k)*7,1.4,0,Math.PI*2);ctx.fill()}
+      ctx.globalAlpha=1;
+    }else if(skin==='thunder_sentinels'){
+      const power=.55+.45*Math.sin(phase*2);
+      const mid=o.x+o.w/2,top=o.y+o.h*.45;
+      ctx.shadowBlur=12*power;ctx.shadowColor='#65f3ff';
+      ctx.fillStyle='rgba(23,41,76,.89)';ctx.strokeStyle='rgba(153,247,253,.76)';ctx.lineWidth=1.5;
+      ctx.beginPath();ctx.moveTo(mid,o.y);ctx.lineTo(o.x+o.w*.93,top);ctx.lineTo(mid,o.y+o.h);ctx.lineTo(o.x+o.w*.07,top);ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.shadowBlur=0;
+      ctx.fillStyle='rgba(133,248,249,.75)';ctx.beginPath();ctx.arc(mid,top,3.2,0,Math.PI*2);ctx.fill();
+      ctx.strokeStyle='rgba(145,244,249,'+(.3+power*.5)+')';ctx.lineWidth=1.3;
+      ctx.beginPath();ctx.moveTo(o.x+4,o.y+o.h*.3);ctx.lineTo(o.x-3,o.y+o.h*.43);
+      ctx.lineTo(o.x+4,o.y+o.h*.64);ctx.moveTo(o.x+o.w-4,o.y+o.h*.3);
+      ctx.lineTo(o.x+o.w+3,o.y+o.h*.44);ctx.lineTo(o.x+o.w-4,o.y+o.h*.66);ctx.stroke();
+    }else if(skin==='rift_serpents'){
+      const wriggle=Math.sin(phase*.75+variant)*o.w*.09;
+      ctx.strokeStyle='rgba(154,106,251,.3)';ctx.shadowColor='rgba(156,102,238,.5)';ctx.shadowBlur=14;
+      ctx.lineCap='round';ctx.lineJoin='round';ctx.lineWidth=o.w*.32;
+      ctx.beginPath();ctx.moveTo(o.x+o.w*.2,o.y+o.h*.8);
+      ctx.bezierCurveTo(o.x+o.w*.8,o.y+o.h*.66,o.x+o.w*.08+wriggle,o.y+o.h*.37,o.x+o.w*.67,o.y+o.h*.23);
+      ctx.stroke();ctx.shadowBlur=0;
+      ctx.strokeStyle='rgba(218,176,255,.76)';ctx.lineWidth=1.5;ctx.stroke();
+      ctx.fillStyle='#bd92f9';ctx.beginPath();ctx.ellipse(o.x+o.w*.67,o.y+o.h*.23,o.w*.27,o.h*.2,-.4,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle='#fff2ff';ctx.beginPath();ctx.arc(o.x+o.w*.76,o.y+o.h*.19,1.4,0,Math.PI*2);ctx.fill();
+    }else if(skin==='crystal_shards'){
       const lean=(variant-1)*o.w*.08;
       ctx.fillStyle=hot?'rgba(172,126,218,.28)':'rgba(155,135,203,.22)';
       ctx.strokeStyle='rgba(220,198,241,.58)';ctx.lineWidth=1;
@@ -3747,10 +4102,11 @@ function drawRunner(){
     ctx.restore();
   }
 
+  drawRunnerAvatarCinematic(ctx,avatar,cx,cy,runnerDistanceValue);
   for(let i=3;i>=1;i--){
     const tx=cx-i*(7+runnerSpeed*.008);
     ctx.globalAlpha=((avatar==='neon_reef'||avatar==='ash_titan')?.02:.035)*i;
-    const trailColors={signal_bloom:'#68ddeb',crimson_pulse:'#df4c51',eclipse_halo:'#d8c39c',solar_flare:'#ff9a52',toxic_bloom:'#78e982',neon_reef:'#56dddd',ash_titan:'#9e745f',frost_moon:'#b8dce8',void_core:'#aa73cf'};
+    const trailColors={signal_bloom:'#68ddeb',crimson_pulse:'#df4c51',eclipse_halo:'#d8c39c',solar_flare:'#ff9a52',toxic_bloom:'#78e982',neon_reef:'#56dddd',ash_titan:'#9e745f',frost_moon:'#b8dce8',void_core:'#aa73cf',magma_sovereign:'#ff9c4b',astral_leviathan:'#b891fc',storm_seraph:'#79e3ed',glacier_revenant:'#bcefff'};
     ctx.fillStyle=trailColors[avatar]||(stage===3?'#bd8ddb':'#c8d7e5');
     ctx.beginPath();ctx.arc(tx,cy+i*.8,10+i*1.5,0,Math.PI*2);ctx.fill();
   }
@@ -3760,7 +4116,46 @@ function drawRunner(){
   const spin=runnerDistanceValue*.035;
   ctx.rotate(Math.sin(spin)*.045);
 
-  if(avatar==='void_core'){
+
+  if(avatar==='magma_sovereign'){
+    const pulse=.6+.4*Math.sin(spin*1.7);
+    const lava=ctx.createRadialGradient(-7,-8,1,0,0,22);
+    lava.addColorStop(0,'#ffd297');lava.addColorStop(.23,'#bc5230');
+    lava.addColorStop(.61,'#482020');lava.addColorStop(1,'#13080d');
+    ctx.shadowBlur=23+10*pulse;ctx.shadowColor='#ff742d';ctx.fillStyle=lava;
+    ctx.beginPath();ctx.arc(0,0,20,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+    ctx.strokeStyle='rgba(255,172,76,.94)';ctx.lineWidth=2.3;
+    ctx.beginPath();ctx.moveTo(-11,-12);ctx.lineTo(-5,-5);ctx.lineTo(-9,2);ctx.lineTo(1,8);
+    ctx.moveTo(9,-11);ctx.lineTo(2,-5);ctx.lineTo(7,1);ctx.lineTo(3,12);ctx.stroke();
+    ctx.strokeStyle='rgba(255,205,119,.66)';ctx.lineWidth=1.5;
+    for(let k=0;k<3;k++){const a=spin*.6+k*2.1;ctx.beginPath();ctx.arc(0,0,26+k*3,a,a+1.3);ctx.stroke();}
+  }else if(avatar==='astral_leviathan'){
+    const galaxy=ctx.createRadialGradient(-5,-7,2,0,0,22);
+    galaxy.addColorStop(0,'#f4e7ff');galaxy.addColorStop(.35,'#9874ed');galaxy.addColorStop(.7,'#34216c');galaxy.addColorStop(1,'#08071a');
+    ctx.fillStyle=galaxy;ctx.shadowBlur=22;ctx.shadowColor='#ba86ff';
+    ctx.beginPath();ctx.arc(0,0,19,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+    ctx.strokeStyle='rgba(223,182,255,.88)';ctx.lineWidth=1.9;
+    ctx.beginPath();ctx.ellipse(0,0,36,11,spin*.03,0,Math.PI*2);ctx.stroke();
+    ctx.strokeStyle='rgba(147,225,251,.62)';ctx.beginPath();ctx.ellipse(0,0,30,8,-spin*.05,0,Math.PI*2);ctx.stroke();
+    for(let k=0;k<4;k++){const a=spin*.13+k*1.57;ctx.fillStyle='#eee2ff';ctx.beginPath();ctx.arc(Math.cos(a)*32,Math.sin(a)*11,1.9,0,Math.PI*2);ctx.fill();}
+  }else if(avatar==='storm_seraph'){
+    const storm=ctx.createRadialGradient(-6,-6,2,0,0,22);
+    storm.addColorStop(0,'#e2ffff');storm.addColorStop(.33,'#74eafa');storm.addColorStop(.65,'#4554b1');storm.addColorStop(1,'#10122d');
+    ctx.fillStyle=storm;ctx.shadowBlur=19;ctx.shadowColor='#80eefa';
+    ctx.beginPath();ctx.arc(0,0,19,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+    ctx.strokeStyle='rgba(141,249,246,.78)';ctx.lineWidth=1.5;
+    const wave=Math.sin(spin*1.6)*5;
+    ctx.beginPath();ctx.moveTo(-33,-16);ctx.lineTo(-22+wave,-6);ctx.lineTo(-29,0);
+    ctx.lineTo(-20,9);ctx.moveTo(28,-17);ctx.lineTo(23,-6);ctx.lineTo(32,2);ctx.lineTo(23,17);ctx.stroke();
+  }else if(avatar==='glacier_revenant'){
+    const ice=ctx.createRadialGradient(-7,-8,2,0,0,22);
+    ice.addColorStop(0,'#ffffff');ice.addColorStop(.35,'#b9f0ff');ice.addColorStop(.65,'#5688b7');ice.addColorStop(1,'#0c1c32');
+    ctx.fillStyle=ice;ctx.shadowBlur=17;ctx.shadowColor='#b0ecfc';
+    ctx.beginPath();ctx.arc(0,0,19,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+    ctx.strokeStyle='rgba(229,250,255,.77)';ctx.lineWidth=1.3;
+    for(let k=0;k<5;k++){const a=spin*.13+k*1.26;const x=Math.cos(a)*26,y=Math.sin(a)*14;
+      ctx.beginPath();ctx.moveTo(x-4,y);ctx.lineTo(x+4,y);ctx.moveTo(x,y-4);ctx.lineTo(x,y+4);ctx.stroke();}
+  }else if(avatar==='void_core'){
     ctx.strokeStyle='rgba(210,166,239,.86)';ctx.lineWidth=2.2;ctx.shadowBlur=18;ctx.shadowColor='rgba(171,97,218,.45)';
     ctx.beginPath();ctx.ellipse(0,1,30,8,-.24,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;
     const core=ctx.createRadialGradient(-5,-6,2,0,0,21);
@@ -3892,6 +4287,15 @@ signalRunnerStart?.addEventListener('click',openRunner);
 runnerBack?.addEventListener('click',()=>{closeRunner();signalTuner?.focus()});
 runnerStoreToggle?.addEventListener('click',toggleRunnerStore);
 runnerProfileToggle?.addEventListener('click',toggleRunnerProfile);
+document.getElementById('runnerProfileShopShortcut')?.addEventListener('click',()=>{
+  runnerStoreRarityFilter='all';
+  runnerProfilePanel?.classList.remove('open');
+  runnerStorePanel?.classList.add('open');
+  if(runnerProfileToggle)runnerProfileToggle.textContent=gameText('profile');
+  if(runnerStoreToggle)runnerStoreToggle.textContent=gameText('storeClose');
+  renderRunnerStore();loadRunnerStoreState();
+  runnerStorePanel?.scrollIntoView({behavior:'smooth',block:'start'});
+});
 runnerProfileBgChoices?.addEventListener('click',e=>{
   const btn=e.target.closest('[data-profile-bg]');
   if(btn)setRunnerProfileBackground(btn.dataset.profileBg);
@@ -3900,8 +4304,14 @@ runnerCreateLink?.addEventListener('click',createRunnerDeviceLink);
 runnerRedeemLink?.addEventListener('click',redeemRunnerDeviceLink);
 runnerLinkInput?.addEventListener('input',()=>{runnerLinkInput.value=runnerLinkInput.value.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,8)});
 runnerLinkInput?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();redeemRunnerDeviceLink()}});
+document.getElementById('runnerStoreFilters')?.addEventListener('click',e=>{
+  const b=e.target.closest('button[data-store-filter]');if(!b)return;
+  runnerStoreRarityFilter=b.dataset.storeFilter;renderRunnerStore();
+});
 runnerStoreContent?.addEventListener('click',e=>{
-  const btn=e.target.closest('button[data-item]');if(!btn)return;
+  const profileButton=e.target.closest('button[data-profile-bg]');
+  if(profileButton){if(!profileButton.disabled)setRunnerProfileBackground(profileButton.dataset.profileBg);return}
+  const btn=e.target.closest('button[data-item]');if(!btn||btn.disabled)return;
   handleRunnerStoreItem(btn.dataset.item,btn.dataset.owned==='1');
 });
 runnerSoundToggle?.addEventListener('click',()=>setRunnerMusicMuted(!getRunnerMusicMuted()));
