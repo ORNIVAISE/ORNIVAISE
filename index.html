@@ -3060,6 +3060,41 @@ function drawRunner(){
   ctx.fillStyle=glow;ctx.fillRect(0,0,RUNNER_W,RUNNER_H);
   ctx.restore();
 
+  // V2 distant world layers: deterministic scenery, independent of hitboxes.
+  const worldId=runnerStoreState.selected_background;
+  const worldTint={
+    deep_space:'105,151,209',violet_nebula:'164,99,229',
+    frozen_horizon:'132,225,243',black_sun:'238,168,105',
+    signal_storm:'83,214,225',crimson_rift:'239,81,106'
+  }[worldId]||'105,151,209';
+  const worldProgress=Math.min(1,runnerDistanceValue/9000);
+  ctx.save();
+  for(let layer=0;layer<3;layer++){
+    const speed=[.012,.029,.055][layer],count=[11,17,23][layer];
+    const alpha=[.09,.13,.17][layer]+worldProgress*.045;
+    for(let j=0;j<count;j++){
+      const seed=j*127.1+layer*311.7;
+      const x=((seed*7.31-runnerDistanceValue*speed)%(RUNNER_W+90)+(RUNNER_W+90))%(RUNNER_W+90)-45;
+      const y=24+((seed*3.71)%(Math.max(60,RUNNER_GROUND-76)));
+      const radius=layer===0?1.4:layer===1?1:.65;
+      ctx.fillStyle='rgba('+worldTint+','+alpha+')';
+      ctx.beginPath();ctx.arc(x,y,radius,0,Math.PI*2);ctx.fill();
+    }
+  }
+  // Distant celestial silhouettes stay above the action lane.
+  if(worldId==='deep_space'||worldId==='violet_nebula'){
+    const px=RUNNER_W*.83-Math.sin(runnerDistanceValue*.0007)*22;
+    const py=72;
+    const aura=ctx.createRadialGradient(px,py,15,px,py,75);
+    aura.addColorStop(0,'rgba('+worldTint+',.11)');
+    aura.addColorStop(1,'rgba('+worldTint+',0)');
+    ctx.fillStyle=aura;ctx.fillRect(px-80,py-80,160,160);
+    ctx.fillStyle=worldId==='deep_space'?'#0d1a2b':'#1c1030';
+    ctx.beginPath();ctx.arc(px,py,27,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='rgba('+worldTint+',.22)';
+    ctx.beginPath();ctx.ellipse(px,py,42,12,-.3,0,Math.PI*2);ctx.stroke();
+  }
+  ctx.restore();
   const worldPhase=runnerDistanceValue*.018;
   if(runnerStoreState.selected_background==='deep_space'){
     ctx.save();
