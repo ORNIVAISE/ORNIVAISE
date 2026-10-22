@@ -951,6 +951,24 @@ html{scroll-padding-top:80px}
 .runner-achievement b{display:block;margin-bottom:5px;font-size:8px;letter-spacing:.09em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .runner-achievement span{display:block;color:#707b87;font-size:7px;line-height:1.45}
 .runner-achievement em{display:inline-block;margin-top:7px;color:#cbb6dc;font-size:7px;font-style:normal;letter-spacing:.08em}
+.runner-device-link{margin-top:16px;padding:13px;border:1px solid rgba(226,233,242,.1);border-radius:12px;background:rgba(255,255,255,.014)}
+.runner-device-link-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:11px}
+.runner-device-link-head strong{font-size:9px;letter-spacing:.15em}
+.runner-device-link-head span{color:#6f7b87;font-size:7px;letter-spacing:.09em}
+.runner-device-link-note{margin:0 0 11px;color:#7e8995;font-size:8px;line-height:1.55;letter-spacing:.05em}
+.runner-device-actions{display:grid;grid-template-columns:auto minmax(120px,1fr) auto;gap:7px}
+.runner-device-actions button,.runner-device-actions input{min-height:38px;border:1px solid rgba(225,232,241,.16);border-radius:9px;background:rgba(255,255,255,.02);color:#dce3ea;font:inherit;font-size:8px;letter-spacing:.1em}
+.runner-device-actions button{padding:0 12px;cursor:pointer}
+.runner-device-actions button:hover{border-color:rgba(235,241,247,.36);color:#fff}
+.runner-device-actions input{min-width:0;padding:0 10px;text-transform:uppercase;letter-spacing:.2em;outline:none}
+.runner-device-actions input:focus{border-color:rgba(210,188,231,.42)}
+.runner-link-code{display:none;margin-top:10px;padding:11px;border:1px solid rgba(203,174,229,.2);border-radius:9px;background:rgba(155,105,195,.045);text-align:center}
+.runner-link-code.visible{display:block}
+.runner-link-code small{display:block;margin-bottom:6px;color:#80708c;font-size:6px;letter-spacing:.14em}
+.runner-link-code strong{font-size:20px;letter-spacing:.24em;color:#eee7f3;font-variant-numeric:tabular-nums}
+.runner-link-status{min-height:15px;margin:8px 0 0;color:#8c97a2;font-size:7px;letter-spacing:.07em}
+@media(max-width:700px){.runner-device-actions{grid-template-columns:1fr 1fr}.runner-device-actions input{grid-column:1}.runner-device-actions #runnerRedeemLink{grid-column:2}.runner-device-actions #runnerCreateLink{grid-column:1/-1}}
+@media(max-width:430px){.runner-device-link{padding:9px}.runner-device-actions{grid-template-columns:1fr}.runner-device-actions input,.runner-device-actions #runnerRedeemLink,.runner-device-actions #runnerCreateLink{grid-column:1}.runner-link-code strong{font-size:17px}}
 .runner-legendary-acquire{position:absolute;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 50%,rgba(113,76,139,.18),rgba(3,4,7,.88) 58%,rgba(3,4,7,.96));transition:opacity .22s ease}
 .runner-legendary-acquire.show{opacity:1}
 .runner-legendary-acquire-inner{text-align:center;padding:24px}
@@ -1525,6 +1543,23 @@ html{scroll-padding-top:80px}
           </div>
           <h4 class="runner-ach-title" id="runnerAchTitle">ДОСТИЖЕНИЯ</h4>
           <div class="runner-achievements" id="runnerAchievements"></div>
+          <div class="runner-device-link">
+            <div class="runner-device-link-head">
+              <strong id="runnerDeviceTitle">УСТРОЙСТВА</strong>
+              <span><span id="runnerDeviceCount">1</span> <span id="runnerDeviceCountLabel">ПОДКЛЮЧЕНО</span></span>
+            </div>
+            <p class="runner-device-link-note" id="runnerDeviceHint">Один профиль на телефоне и ПК. Получи код на основном устройстве и введи его на втором.</p>
+            <div class="runner-device-actions">
+              <button id="runnerCreateLink" type="button">ПОЛУЧИТЬ КОД</button>
+              <input id="runnerLinkInput" type="text" maxlength="9" inputmode="text" autocomplete="off" placeholder="КОД ПРИВЯЗКИ" aria-label="Код привязки устройства">
+              <button id="runnerRedeemLink" type="button">ПОДКЛЮЧИТЬ</button>
+            </div>
+            <div class="runner-link-code" id="runnerLinkCodeBox">
+              <small id="runnerLinkCodeLabel">КОД ДЕЙСТВУЕТ 10 МИНУТ</small>
+              <strong id="runnerLinkCode">—</strong>
+            </div>
+            <p class="runner-link-status" id="runnerLinkStatus" role="status"></p>
+          </div>
         </div>
 
         <div class="runner-leaderboard" id="runnerLeaderboard">
@@ -1618,7 +1653,7 @@ const gameI18n={
     nearLock:'ПОЧТИ ЗАХВАЧЕН',nearHint:'ВЫРАВНИВАНИЕ ЧАСТОТЫ // ОЧЕНЬ БЛИЗКО',
     stabilizing:'СТАБИЛИЗАЦИЯ',hold:'УДЕРЖИВАЙ ЧАСТОТУ // НЕ ДВИГАЙ',
     decryptComplete:'РАСШИФРОВКА ЗАВЕРШЕНА // ØN-003',
-    lost:'ПЕРЕДАЧА ПОТЕРЯНА',reconnect:'ПЕРЕПОДКЛЮЧИТЬСЯ',speed:'СКОРОСТЬ',soundOff:'Выключить музыку игры',soundOn:'Включить музыку игры',calmSpace:'СПОКОЙНЫЙ КОСМОС',signalDrift:'ДРЕЙФ СИГНАЛА',distortionField:'ПОЛЕ ИСКАЖЕНИЙ',leaderboard:'ТАБЛИЦА ЛИДЕРОВ',player:'ИГРОК',saveScore:'СОХРАНИТЬ РЕЗУЛЬТАТ',namePlaceholder:'Введи имя',loadingBoard:'Загрузка рейтинга…',emptyBoard:'Пока нет результатов',saveOk:'РЕЗУЛЬТАТ СОХРАНЁН',saveError:'Не удалось сохранить результат',nameError:'Введи имя от 1 до 20 символов',store:'МАГАЗИН',storeClose:'ЗАКРЫТЬ МАГАЗИН',storeTitle:'ØN // МАГАЗИН',avatars:'ПЛАНЕТЫ',backgrounds:'ФОНЫ',obstacles:'ПРЕПЯТСТВИЯ',buy:'КУПИТЬ',equip:'ВЫБРАТЬ',equipped:'ИСПОЛЬЗУЕТСЯ',owned:'КУПЛЕНО',notEnough:'НЕ ХВАТАЕТ Ø-CREDITS',storeError:'Ошибка магазина',connecting:'ПОДКЛЮЧЕНИЕ…',earned:'ЗАРАБОТАНО',position:'ПОЗИЦИЯ',storeSubtitle:'Косметика для сигнала: меняй планету, пространство и препятствия.',free:'БЕСПЛАТНО',creditsLabel:'Ø-КРЕДИТЫ',itemsCount:'ПРЕДМЕТОВ',rarityCommon:'ОБЫЧНЫЙ',rarityRare:'РЕДКИЙ',rarityEpic:'ЭПИЧЕСКИЙ',rarityLegendary:'ЛЕГЕНДАРНЫЙ',rarityVoid:'БЕЗДНА',gravityShift:'ИНВЕРСИЯ ГРАВИТАЦИИ',gravityReturn:'ВОЗВРАТ ГРАВИТАЦИИ',bossDetected:'СЕКРЕТНЫЙ ОБЪЕКТ ОБНАРУЖЕН',modifierSignal:'МОДИФИКАТОР // СИГНАЛЬНЫЙ ПОТОК',modifierLowGravity:'МОДИФИКАТОР // ЛЁГКАЯ ГРАВИТАЦИЯ',rareGold:'ЗОЛОТОЙ СИГНАЛ +7 Ø',rareViolet:'ФИОЛЕТОВЫЙ СИГНАЛ +3 Ø',profile:'ПРОФИЛЬ',profileClose:'ЗАКРЫТЬ ПРОФИЛЬ',profileKicker:'ØN // ПРОФИЛЬ ИГРОКА',unknownPlayer:'НЕИЗВЕСТНЫЙ СИГНАЛ',runs:'ЗАБЕГИ',totalSignals:'СОБРАНО Ø',totalDistance:'ОБЩАЯ ДИСТАНЦИЯ',achievements:'ДОСТИЖЕНИЯ',itemAcquired:'ПРЕДМЕТ ПОЛУЧЕН',achievementUnlocked:'ДОСТИЖЕНИЕ ОТКРЫТО'
+    lost:'ПЕРЕДАЧА ПОТЕРЯНА',reconnect:'ПЕРЕПОДКЛЮЧИТЬСЯ',speed:'СКОРОСТЬ',soundOff:'Выключить музыку игры',soundOn:'Включить музыку игры',calmSpace:'СПОКОЙНЫЙ КОСМОС',signalDrift:'ДРЕЙФ СИГНАЛА',distortionField:'ПОЛЕ ИСКАЖЕНИЙ',leaderboard:'ТАБЛИЦА ЛИДЕРОВ',player:'ИГРОК',saveScore:'СОХРАНИТЬ РЕЗУЛЬТАТ',namePlaceholder:'Введи имя',loadingBoard:'Загрузка рейтинга…',emptyBoard:'Пока нет результатов',saveOk:'РЕЗУЛЬТАТ СОХРАНЁН',saveError:'Не удалось сохранить результат',nameError:'Введи имя от 1 до 20 символов',store:'МАГАЗИН',storeClose:'ЗАКРЫТЬ МАГАЗИН',storeTitle:'ØN // МАГАЗИН',avatars:'ПЛАНЕТЫ',backgrounds:'ФОНЫ',obstacles:'ПРЕПЯТСТВИЯ',buy:'КУПИТЬ',equip:'ВЫБРАТЬ',equipped:'ИСПОЛЬЗУЕТСЯ',owned:'КУПЛЕНО',notEnough:'НЕ ХВАТАЕТ Ø-CREDITS',storeError:'Ошибка магазина',connecting:'ПОДКЛЮЧЕНИЕ…',earned:'ЗАРАБОТАНО',position:'ПОЗИЦИЯ',storeSubtitle:'Косметика для сигнала: меняй планету, пространство и препятствия.',free:'БЕСПЛАТНО',creditsLabel:'Ø-КРЕДИТЫ',itemsCount:'ПРЕДМЕТОВ',rarityCommon:'ОБЫЧНЫЙ',rarityRare:'РЕДКИЙ',rarityEpic:'ЭПИЧЕСКИЙ',rarityLegendary:'ЛЕГЕНДАРНЫЙ',rarityVoid:'БЕЗДНА',gravityShift:'ИНВЕРСИЯ ГРАВИТАЦИИ',gravityReturn:'ВОЗВРАТ ГРАВИТАЦИИ',bossDetected:'СЕКРЕТНЫЙ ОБЪЕКТ ОБНАРУЖЕН',modifierSignal:'МОДИФИКАТОР // СИГНАЛЬНЫЙ ПОТОК',modifierLowGravity:'МОДИФИКАТОР // ЛЁГКАЯ ГРАВИТАЦИЯ',rareGold:'ЗОЛОТОЙ СИГНАЛ +7 Ø',rareViolet:'ФИОЛЕТОВЫЙ СИГНАЛ +3 Ø',profile:'ПРОФИЛЬ',profileClose:'ЗАКРЫТЬ ПРОФИЛЬ',profileKicker:'ØN // ПРОФИЛЬ ИГРОКА',unknownPlayer:'НЕИЗВЕСТНЫЙ СИГНАЛ',runs:'ЗАБЕГИ',totalSignals:'СОБРАНО Ø',totalDistance:'ОБЩАЯ ДИСТАНЦИЯ',achievements:'ДОСТИЖЕНИЯ',itemAcquired:'ПРЕДМЕТ ПОЛУЧЕН',achievementUnlocked:'ДОСТИЖЕНИЕ ОТКРЫТО',devices:'УСТРОЙСТВА',devicesConnected:'ПОДКЛЮЧЕНО',deviceHint:'Один профиль на телефоне и ПК. Получи код на основном устройстве и введи его на втором.',createLink:'ПОЛУЧИТЬ КОД',connectDevice:'ПОДКЛЮЧИТЬ',linkPlaceholder:'КОД ПРИВЯЗКИ',linkCodeLabel:'КОД ДЕЙСТВУЕТ 10 МИНУТ',linkReady:'ВВЕДИ ЭТОТ КОД НА ДРУГОМ УСТРОЙСТВЕ',linkSuccess:'УСТРОЙСТВО ПОДКЛЮЧЕНО К ОБЩЕМУ ПРОФИЛЮ',linkInvalid:'КОД НЕВЕРНЫЙ ИЛИ ИСТЁК',linkHasProgress:'НА ЭТОМ УСТРОЙСТВЕ УЖЕ ЕСТЬ ОТДЕЛЬНЫЙ ПРОФИЛЬ'
   },
   en:{
     intercept:'ØN // INTERCEPT 003',previous:'PREVIOUS LOCK // VERIFIED',
@@ -1636,7 +1671,7 @@ const gameI18n={
     nearLock:'NEAR LOCK',nearHint:'FREQUENCY ALIGNMENT // VERY CLOSE',
     stabilizing:'STABILIZING',hold:'HOLD FREQUENCY // DO NOT MOVE',
     decryptComplete:'DECRYPTION COMPLETE // ØN-003',
-    lost:'TRANSMISSION LOST',reconnect:'RECONNECT',speed:'SPEED',soundOff:'Turn game music off',soundOn:'Turn game music on',calmSpace:'CALM SPACE',signalDrift:'SIGNAL DRIFT',distortionField:'DISTORTION FIELD',leaderboard:'LEADERBOARD',player:'PLAYER',saveScore:'SAVE RESULT',namePlaceholder:'Enter name',loadingBoard:'Loading leaderboard…',emptyBoard:'No scores yet',saveOk:'RESULT SAVED',saveError:'Could not save result',nameError:'Enter a name from 1 to 20 characters',store:'STORE',storeClose:'CLOSE STORE',storeTitle:'ØN // STORE',avatars:'PLANETS',backgrounds:'BACKGROUNDS',obstacles:'OBSTACLES',buy:'BUY',equip:'EQUIP',equipped:'EQUIPPED',owned:'OWNED',notEnough:'NOT ENOUGH Ø-CREDITS',storeError:'Store error',connecting:'CONNECTING…',earned:'EARNED',position:'POSITION',storeSubtitle:'Signal cosmetics: change your planet, space and obstacles.',free:'FREE',creditsLabel:'Ø-CREDITS',itemsCount:'ITEMS',rarityCommon:'COMMON',rarityRare:'RARE',rarityEpic:'EPIC',rarityLegendary:'LEGENDARY',rarityVoid:'VOID',gravityShift:'GRAVITY INVERSION',gravityReturn:'GRAVITY RESTORED',bossDetected:'SECRET ENTITY DETECTED',modifierSignal:'MODIFIER // SIGNAL SURGE',modifierLowGravity:'MODIFIER // LOW GRAVITY',rareGold:'GOLD SIGNAL +7 Ø',rareViolet:'VIOLET SIGNAL +3 Ø',profile:'PROFILE',profileClose:'CLOSE PROFILE',profileKicker:'ØN // PLAYER PROFILE',unknownPlayer:'UNKNOWN SIGNAL',runs:'RUNS',totalSignals:'COLLECTED Ø',totalDistance:'TOTAL DISTANCE',achievements:'ACHIEVEMENTS',itemAcquired:'ITEM ACQUIRED',achievementUnlocked:'ACHIEVEMENT UNLOCKED'
+    lost:'TRANSMISSION LOST',reconnect:'RECONNECT',speed:'SPEED',soundOff:'Turn game music off',soundOn:'Turn game music on',calmSpace:'CALM SPACE',signalDrift:'SIGNAL DRIFT',distortionField:'DISTORTION FIELD',leaderboard:'LEADERBOARD',player:'PLAYER',saveScore:'SAVE RESULT',namePlaceholder:'Enter name',loadingBoard:'Loading leaderboard…',emptyBoard:'No scores yet',saveOk:'RESULT SAVED',saveError:'Could not save result',nameError:'Enter a name from 1 to 20 characters',store:'STORE',storeClose:'CLOSE STORE',storeTitle:'ØN // STORE',avatars:'PLANETS',backgrounds:'BACKGROUNDS',obstacles:'OBSTACLES',buy:'BUY',equip:'EQUIP',equipped:'EQUIPPED',owned:'OWNED',notEnough:'NOT ENOUGH Ø-CREDITS',storeError:'Store error',connecting:'CONNECTING…',earned:'EARNED',position:'POSITION',storeSubtitle:'Signal cosmetics: change your planet, space and obstacles.',free:'FREE',creditsLabel:'Ø-CREDITS',itemsCount:'ITEMS',rarityCommon:'COMMON',rarityRare:'RARE',rarityEpic:'EPIC',rarityLegendary:'LEGENDARY',rarityVoid:'VOID',gravityShift:'GRAVITY INVERSION',gravityReturn:'GRAVITY RESTORED',bossDetected:'SECRET ENTITY DETECTED',modifierSignal:'MODIFIER // SIGNAL SURGE',modifierLowGravity:'MODIFIER // LOW GRAVITY',rareGold:'GOLD SIGNAL +7 Ø',rareViolet:'VIOLET SIGNAL +3 Ø',profile:'PROFILE',profileClose:'CLOSE PROFILE',profileKicker:'ØN // PLAYER PROFILE',unknownPlayer:'UNKNOWN SIGNAL',runs:'RUNS',totalSignals:'COLLECTED Ø',totalDistance:'TOTAL DISTANCE',achievements:'ACHIEVEMENTS',itemAcquired:'ITEM ACQUIRED',achievementUnlocked:'ACHIEVEMENT UNLOCKED',devices:'DEVICES',devicesConnected:'CONNECTED',deviceHint:'Use one profile on phone and PC. Create a code on the main device and enter it on the second.',createLink:'GET CODE',connectDevice:'CONNECT',linkPlaceholder:'LINK CODE',linkCodeLabel:'CODE EXPIRES IN 10 MINUTES',linkReady:'ENTER THIS CODE ON THE OTHER DEVICE',linkSuccess:'DEVICE CONNECTED TO SHARED PROFILE',linkInvalid:'CODE IS INVALID OR EXPIRED',linkHasProgress:'THIS DEVICE ALREADY HAS A SEPARATE PROFILE'
   }
 };
 function gameText(key){
@@ -1668,6 +1703,13 @@ function applyGameLanguage(lang){
   set('#runnerProfileDistanceLabel','totalDistance');
   set('#runnerAchTitle','achievements');
   set('#runnerLegendaryText','itemAcquired');
+  set('#runnerDeviceTitle','devices');
+  set('#runnerDeviceCountLabel','devicesConnected');
+  set('#runnerDeviceHint','deviceHint');
+  set('#runnerCreateLink','createLink');
+  set('#runnerRedeemLink','connectDevice');
+  set('#runnerLinkCodeLabel','linkCodeLabel');
+  const linkInput=document.getElementById('runnerLinkInput');if(linkInput){linkInput.placeholder=g.linkPlaceholder;linkInput.setAttribute('aria-label',g.linkPlaceholder)}
   const storeTitle=document.getElementById('runnerStoreTitle');if(storeTitle)storeTitle.textContent=g.storeTitle;
   const storeSubtitle=document.getElementById('runnerStoreSubtitle');if(storeSubtitle)storeSubtitle.textContent=g.storeSubtitle;
   const creditLabels=document.querySelectorAll('.runner-stat:nth-child(4) small,.runner-store-balance-box small');
@@ -1888,6 +1930,13 @@ const runnerAchievements=document.getElementById('runnerAchievements');
 const runnerLegendaryAcquire=document.getElementById('runnerLegendaryAcquire');
 const runnerLegendaryName=document.getElementById('runnerLegendaryName');
 const runnerLegendaryText=document.getElementById('runnerLegendaryText');
+const runnerDeviceCount=document.getElementById('runnerDeviceCount');
+const runnerCreateLink=document.getElementById('runnerCreateLink');
+const runnerRedeemLink=document.getElementById('runnerRedeemLink');
+const runnerLinkInput=document.getElementById('runnerLinkInput');
+const runnerLinkCodeBox=document.getElementById('runnerLinkCodeBox');
+const runnerLinkCode=document.getElementById('runnerLinkCode');
+const runnerLinkStatus=document.getElementById('runnerLinkStatus');
 
 const SIGNAL_TARGET=101.7;
 const SIGNAL_TOLERANCE=.25;
@@ -1994,7 +2043,8 @@ let runnerStoreState={
   selected_background:'deep_space',
   selected_obstacle:'signal_spires',
   profile:{display_name:'',runs_count:0,total_signals:0,total_distance:0,best_distance:0},
-  achievements:[]
+  achievements:[],
+  linked_devices:1
 };
 const RUNNER_ACHIEVEMENTS={
   first_contact:{ru:['ПЕРВЫЙ КОНТАКТ','Заверши первый забег','+10 Ø'],en:['FIRST CONTACT','Finish your first run','+10 Ø']},
@@ -2029,7 +2079,7 @@ const RUNNER_ITEM_META={
   orbital_debris:{ru:['ОРБИТАЛЬНЫЕ ОБЛОМКИ','Обломки спутников и модулей'],en:['ORBITAL DEBRIS','Satellite and module debris']},
   spirit_masks:{ru:['ДУХИ-МАСКИ','Оригинальные аниме-вдохновлённые духи в масках'],en:['SPIRIT MASKS','Original anime-inspired masked spirits']},
   glitch_slimes:{ru:['ГЛИТЧ-СЛАЙМЫ','Мультяшные цифровые существа с живой анимацией'],en:['GLITCH SLIMES','Cartoon digital creatures with lively motion']},
-  mecha_drones:{ru:['МЕХА-ДРОНЫ','Угловатые боевые дроны с сигнальным сканером'],en:['MECHA DRONES','Angular combat drones with signal scanners']},
+  mecha_drones:{ru:['МЕХА-ДРОНЫ','Боевые дроны с крыльями, визором и импульсными двигателями'],en:['MECHA DRONES','Combat drones with wings, visor and pulse thrusters']},
   moon_familiars:{ru:['ЛУННЫЕ ФАМИЛЬЯРЫ','Редкие лунные существа с мягкой аурой'],en:['MOON FAMILIARS','Rare lunar creatures with a soft aura']}
 };
 function runnerPlayerToken(){
@@ -2068,6 +2118,7 @@ function applyRunnerStoreState(data){
   if(Array.isArray(data?.inventory))runnerStoreState.inventory=data.inventory;
   if(Array.isArray(data?.items))runnerStoreState.items=data.items;
   if(Array.isArray(data?.achievements))runnerStoreState.achievements=data.achievements;
+  if(Number.isFinite(Number(data?.linked_devices)))runnerStoreState.linked_devices=Math.max(1,Number(data.linked_devices));
   if(p)runnerStoreState.profile={
     display_name:p.display_name||data?.profile?.name||runnerStoreState.profile.display_name||'',
     runs_count:Number(p.runs_count??data?.profile?.runs??runnerStoreState.profile.runs_count)||0,
@@ -2075,6 +2126,10 @@ function applyRunnerStoreState(data){
     total_distance:Number(p.total_distance??data?.profile?.total_distance??runnerStoreState.profile.total_distance)||0,
     best_distance:Number(p.best_distance??data?.profile?.best_distance??runnerStoreState.profile.best_distance)||0
   };
+  if(p?.display_name){
+    try{localStorage.setItem('ornivaise-runner-name',String(p.display_name).slice(0,20))}catch(e){}
+  }
+  if(Number(p?.best_distance)>getRunnerBest())setRunnerBest(Number(p.best_distance));
   updateRunnerCredits();
   renderRunnerStore();
   renderRunnerProfile();
@@ -2148,6 +2203,7 @@ function renderRunnerProfile(){
   runnerProfileBest.textContent=padRunner(profile.best_distance||0);
   runnerProfileSignals.textContent=String(profile.total_signals||0).padStart(4,'0');
   runnerProfileDistance.textContent=String(profile.total_distance||0).padStart(5,'0');
+  if(runnerDeviceCount)runnerDeviceCount.textContent=String(Math.max(1,runnerStoreState.linked_devices||1));
   const unlocked=new Set((runnerStoreState.achievements||[]).map(a=>a.achievement_id));
   const frag=document.createDocumentFragment();
   Object.entries(RUNNER_ACHIEVEMENTS).forEach(([id,meta])=>{
@@ -2159,6 +2215,37 @@ function renderRunnerProfile(){
     card.append(title,desc,reward);frag.appendChild(card);
   });
   runnerAchievements.replaceChildren(frag);
+}
+async function createRunnerDeviceLink(){
+  if(!runnerCreateLink)return;
+  runnerCreateLink.disabled=true;
+  if(runnerLinkStatus)runnerLinkStatus.textContent=gameText('connecting');
+  try{
+    const data=await runnerApi('create_link');
+    if(runnerLinkCode)runnerLinkCode.textContent=String(data.link_code||'—').replace(/(.{4})(.{4})/,'$1 $2');
+    runnerLinkCodeBox?.classList.add('visible');
+    if(runnerLinkStatus)runnerLinkStatus.textContent=gameText('linkReady');
+  }catch(e){
+    if(runnerLinkStatus)runnerLinkStatus.textContent=gameText('storeError');
+  }finally{runnerCreateLink.disabled=false}
+}
+async function redeemRunnerDeviceLink(){
+  if(!runnerRedeemLink||!runnerLinkInput)return;
+  const code=String(runnerLinkInput.value||'').toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,8);
+  if(code.length!==8){if(runnerLinkStatus)runnerLinkStatus.textContent=gameText('linkInvalid');return}
+  runnerRedeemLink.disabled=true;
+  if(runnerLinkStatus)runnerLinkStatus.textContent=gameText('connecting');
+  try{
+    const data=await runnerApi('redeem_link',{link_code:code});
+    applyRunnerStoreState(data);
+    runnerLinkInput.value='';
+    runnerLinkCodeBox?.classList.remove('visible');
+    if(runnerLinkStatus)runnerLinkStatus.textContent=gameText('linkSuccess');
+    await loadRunnerLeaderboard();
+  }catch(e){
+    const msg=String(e?.message||'');
+    if(runnerLinkStatus)runnerLinkStatus.textContent=msg.includes('device_has_progress')?gameText('linkHasProgress'):gameText('linkInvalid');
+  }finally{runnerRedeemLink.disabled=false}
 }
 function toggleRunnerProfile(){
   const open=!runnerProfilePanel?.classList.contains('open');
@@ -3054,16 +3141,56 @@ function drawRunner(){
       ctx.beginPath();ctx.moveTo(-w*.42,-h*.18);ctx.lineTo(-w*.58,-h*.18);ctx.moveTo(w*.36,-h*.64);ctx.lineTo(w*.55,-h*.64);ctx.stroke();ctx.globalAlpha=1;
     }else if(skin==='mecha_drones'){
       const cx=o.x+o.w/2,cy=o.y+o.h/2;
-      ctx.translate(cx,cy);
-      const tilt=(variant-1)*.05;
-      ctx.rotate(tilt);
-      ctx.fillStyle='rgba(108,127,143,.24)';ctx.strokeStyle='rgba(218,230,239,.62)';ctx.lineWidth=1;
-      ctx.beginPath();ctx.moveTo(-o.w*.42,-o.h*.35);ctx.lineTo(-o.w*.18,-o.h*.5);ctx.lineTo(o.w*.3,-o.h*.42);ctx.lineTo(o.w*.48,-o.h*.12);ctx.lineTo(o.w*.36,o.h*.46);ctx.lineTo(-o.w*.34,o.h*.46);ctx.lineTo(-o.w*.48,o.h*.05);ctx.closePath();ctx.fill();ctx.stroke();
-      ctx.fillStyle='rgba(27,37,45,.8)';ctx.fillRect(-o.w*.24,-o.h*.1,o.w*.48,o.h*.2);
-      const scan=((Math.sin(phase*2)+1)*.5);
-      ctx.strokeStyle='rgba(104,233,236,'+(.45+scan*.35)+')';ctx.shadowBlur=7;ctx.shadowColor='rgba(86,219,225,.3)';ctx.lineWidth=1.5;
-      ctx.beginPath();ctx.moveTo(-o.w*.18,-o.h*.02);ctx.lineTo(o.w*.18,-o.h*.02);ctx.stroke();ctx.shadowBlur=0;
-      ctx.strokeStyle='rgba(208,220,231,.3)';ctx.beginPath();ctx.moveTo(-o.w*.62,o.h*.1);ctx.lineTo(-o.w*.4,-o.h*.06);ctx.moveTo(o.w*.62,o.h*.1);ctx.lineTo(o.w*.4,-o.h*.06);ctx.stroke();
+      const hover=Math.sin(phase*.9+variant)*1.5;
+      const scan=.5+.5*Math.sin(phase*2.25+variant*.7);
+      ctx.translate(cx,cy+hover);
+      ctx.rotate(Math.sin(phase*.55+variant)*.018+(variant-1)*.022);
+
+      // restrained engine aura
+      ctx.globalAlpha=.18+.08*scan;
+      const aura=ctx.createRadialGradient(0,0,2,0,0,Math.max(o.w,o.h)*.72);
+      aura.addColorStop(0,'rgba(88,218,226,.15)');aura.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=aura;ctx.fillRect(-o.w,-o.h,o.w*2,o.h*2);ctx.globalAlpha=1;
+
+      // side wings / stabilizers — three silhouettes
+      ctx.fillStyle='rgba(92,111,127,.23)';ctx.strokeStyle='rgba(203,219,232,.55)';ctx.lineWidth=1;
+      if(variant===0){
+        ctx.beginPath();ctx.moveTo(-o.w*.28,-o.h*.12);ctx.lineTo(-o.w*.72,o.h*.02);ctx.lineTo(-o.w*.48,o.h*.22);ctx.lineTo(-o.w*.22,o.h*.15);ctx.closePath();ctx.fill();ctx.stroke();
+        ctx.beginPath();ctx.moveTo(o.w*.28,-o.h*.12);ctx.lineTo(o.w*.72,o.h*.02);ctx.lineTo(o.w*.48,o.h*.22);ctx.lineTo(o.w*.22,o.h*.15);ctx.closePath();ctx.fill();ctx.stroke();
+      }else if(variant===1){
+        ctx.beginPath();ctx.moveTo(-o.w*.25,-o.h*.2);ctx.lineTo(-o.w*.68,-o.h*.34);ctx.lineTo(-o.w*.55,o.h*.18);ctx.lineTo(-o.w*.22,o.h*.25);ctx.closePath();ctx.fill();ctx.stroke();
+        ctx.beginPath();ctx.moveTo(o.w*.25,-o.h*.2);ctx.lineTo(o.w*.68,-o.h*.34);ctx.lineTo(o.w*.55,o.h*.18);ctx.lineTo(o.w*.22,o.h*.25);ctx.closePath();ctx.fill();ctx.stroke();
+      }else{
+        ctx.beginPath();ctx.moveTo(-o.w*.24,-o.h*.08);ctx.lineTo(-o.w*.61,-o.h*.42);ctx.lineTo(-o.w*.7,o.h*.2);ctx.lineTo(-o.w*.2,o.h*.28);ctx.closePath();ctx.fill();ctx.stroke();
+        ctx.beginPath();ctx.moveTo(o.w*.24,-o.h*.08);ctx.lineTo(o.w*.61,-o.h*.42);ctx.lineTo(o.w*.7,o.h*.2);ctx.lineTo(o.w*.2,o.h*.28);ctx.closePath();ctx.fill();ctx.stroke();
+      }
+
+      // armored central body
+      const bodyG=ctx.createLinearGradient(0,-o.h*.5,0,o.h*.45);
+      bodyG.addColorStop(0,'rgba(184,202,216,.34)');bodyG.addColorStop(.55,'rgba(82,101,116,.28)');bodyG.addColorStop(1,'rgba(35,47,58,.35)');
+      ctx.fillStyle=bodyG;ctx.strokeStyle='rgba(225,235,243,.7)';
+      ctx.beginPath();
+      ctx.moveTo(-o.w*.3,-o.h*.34);ctx.lineTo(-o.w*.12,-o.h*.5);ctx.lineTo(o.w*.16,-o.h*.48);
+      ctx.lineTo(o.w*.34,-o.h*.28);ctx.lineTo(o.w*.4,o.h*.2);ctx.lineTo(o.w*.18,o.h*.46);
+      ctx.lineTo(-o.w*.2,o.h*.44);ctx.lineTo(-o.w*.4,o.h*.18);ctx.closePath();ctx.fill();ctx.stroke();
+
+      // face / scanner visor
+      ctx.fillStyle='rgba(8,17,23,.88)';
+      ctx.beginPath();ctx.roundRect(-o.w*.24,-o.h*.13,o.w*.48,o.h*.18,2);ctx.fill();
+      ctx.strokeStyle='rgba(102,236,239,'+(.55+scan*.35)+')';ctx.lineWidth=1.7;ctx.shadowBlur=8+scan*5;ctx.shadowColor='rgba(74,219,226,.38)';
+      ctx.beginPath();ctx.moveTo(-o.w*.18,-o.h*.04);ctx.lineTo(o.w*.18,-o.h*.04);ctx.stroke();ctx.shadowBlur=0;
+      const scannerX=-o.w*.16+scan*o.w*.32;
+      ctx.fillStyle='rgba(181,255,252,.85)';ctx.fillRect(scannerX,-o.h*.075,1.2,o.h*.07);
+
+      // panel seams
+      ctx.strokeStyle='rgba(205,219,231,.24)';ctx.lineWidth=.8;
+      ctx.beginPath();ctx.moveTo(0,-o.h*.43);ctx.lineTo(0,-o.h*.2);ctx.moveTo(-o.w*.25,o.h*.16);ctx.lineTo(-o.w*.08,o.h*.31);ctx.moveTo(o.w*.25,o.h*.16);ctx.lineTo(o.w*.08,o.h*.31);ctx.stroke();
+
+      // tiny pulse thrusters
+      const jet=.5+.5*Math.sin(phase*3.1);
+      ctx.strokeStyle='rgba(114,231,235,'+(.28+jet*.28)+')';ctx.lineWidth=1.3;
+      ctx.beginPath();ctx.moveTo(-o.w*.18,o.h*.44);ctx.lineTo(-o.w*.18,o.h*(.55+jet*.08));ctx.moveTo(o.w*.18,o.h*.44);ctx.lineTo(o.w*.18,o.h*(.55+jet*.08));ctx.stroke();
+      ctx.fillStyle='rgba(181,244,244,.48)';ctx.beginPath();ctx.arc(-o.w*.18,o.h*.44,1.4,0,Math.PI*2);ctx.arc(o.w*.18,o.h*.44,1.4,0,Math.PI*2);ctx.fill();
     }else if(skin==='moon_familiars'){
       const cx=o.x+o.w/2,cy=o.y+o.h/2;
       const pulse=.5+.5*Math.sin(phase*1.35);
@@ -3341,6 +3468,10 @@ signalRunnerStart?.addEventListener('click',openRunner);
 runnerBack?.addEventListener('click',()=>{closeRunner();signalTuner?.focus()});
 runnerStoreToggle?.addEventListener('click',toggleRunnerStore);
 runnerProfileToggle?.addEventListener('click',toggleRunnerProfile);
+runnerCreateLink?.addEventListener('click',createRunnerDeviceLink);
+runnerRedeemLink?.addEventListener('click',redeemRunnerDeviceLink);
+runnerLinkInput?.addEventListener('input',()=>{runnerLinkInput.value=runnerLinkInput.value.toUpperCase().replace(/[^A-Z0-9]/g,'').slice(0,8)});
+runnerLinkInput?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();redeemRunnerDeviceLink()}});
 runnerStoreContent?.addEventListener('click',e=>{
   const btn=e.target.closest('button[data-item]');if(!btn)return;
   handleRunnerStoreItem(btn.dataset.item,btn.dataset.owned==='1');
