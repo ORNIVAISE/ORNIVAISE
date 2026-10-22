@@ -43,7 +43,11 @@ BEGIN
 
     IF COALESCE(v_runs,0) > 0
        OR COALESCE(v_credits,0) > 0
-       OR COALESCE(v_name,'') <> '' THEN
+       OR COALESCE(v_name,'') <> ''
+       OR EXISTS (SELECT 1 FROM public.runner_inventory WHERE player_id = v_current)
+       OR EXISTS (SELECT 1 FROM public.runner_achievements WHERE player_id = v_current)
+       OR EXISTS (SELECT 1 FROM public.runner_scores WHERE player_id = v_current)
+       OR EXISTS (SELECT 1 FROM public.runner_runs WHERE player_id = v_current) THEN
       RAISE EXCEPTION 'device_has_progress';
     END IF;
   END IF;
@@ -84,6 +88,5 @@ GRANT EXECUTE ON FUNCTION public.redeem_runner_link_atomic(text,text) TO service
 -- (4) Failure during RPC -> transaction rollback.
 -- (5) Existing device mapping and a new device mapping both work.
 --
--- Important: device progress check mirrors the existing Edge Function.
--- A stronger progress definition should additionally consider inventory and
--- other player records before production rollout.
+-- Progress check also covers inventory, achievements, leaderboard and run history.
+-- Stage-test the complete flow before any production rollout.
