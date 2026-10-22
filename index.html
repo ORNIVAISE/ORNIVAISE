@@ -1337,7 +1337,7 @@ const gameI18n={
     nearLock:'ПОЧТИ ЗАХВАЧЕН',nearHint:'ВЫРАВНИВАНИЕ ЧАСТОТЫ // ОЧЕНЬ БЛИЗКО',
     stabilizing:'СТАБИЛИЗАЦИЯ',hold:'УДЕРЖИВАЙ ЧАСТОТУ // НЕ ДВИГАЙ',
     decryptComplete:'РАСШИФРОВКА ЗАВЕРШЕНА // ØN-003',
-    lost:'ПЕРЕДАЧА ПОТЕРЯНА',reconnect:'ПЕРЕПОДКЛЮЧИТЬСЯ',speed:'СКОРОСТЬ',soundOff:'Выключить музыку игры',soundOn:'Включить музыку игры',calmSpace:'СПОКОЙНЫЙ КОСМОС',signalDrift:'ДРЕЙФ СИГНАЛА',distortionField:'ПОЛЕ ИСКАЖЕНИЙ',leaderboard:'ТАБЛИЦА ЛИДЕРОВ',player:'ИГРОК',saveScore:'СОХРАНИТЬ РЕЗУЛЬТАТ',namePlaceholder:'Введи имя',loadingBoard:'Загрузка рейтинга…',emptyBoard:'Пока нет результатов',saveOk:'РЕЗУЛЬТАТ СОХРАНЁН',saveError:'Не удалось сохранить результат',nameError:'Введи имя от 1 до 20 символов',store:'МАГАЗИН',storeClose:'ЗАКРЫТЬ МАГАЗИН',storeTitle:'ØN // МАГАЗИН',avatars:'ПЛАНЕТЫ',backgrounds:'ФОНЫ',obstacles:'ПРЕПЯТСТВИЯ',buy:'КУПИТЬ',equip:'ВЫБРАТЬ',equipped:'ИСПОЛЬЗУЕТСЯ',owned:'КУПЛЕНО',notEnough:'НЕ ХВАТАЕТ Ø-CREDITS',storeError:'Ошибка магазина',connecting:'ПОДКЛЮЧЕНИЕ…',earned:'ЗАРАБОТАНО',position:'ПОЗИЦИЯ',storeSubtitle:'Косметика для сигнала: меняй планету, пространство и препятствия.',free:'БЕСПЛАТНО',rarityCommon:'COMMON',rarityRare:'RARE',rarityVoid:'VOID'
+    lost:'ПЕРЕДАЧА ПОТЕРЯНА',reconnect:'ПЕРЕПОДКЛЮЧИТЬСЯ',speed:'СКОРОСТЬ',soundOff:'Выключить музыку игры',soundOn:'Включить музыку игры',calmSpace:'СПОКОЙНЫЙ КОСМОС',signalDrift:'ДРЕЙФ СИГНАЛА',distortionField:'ПОЛЕ ИСКАЖЕНИЙ',leaderboard:'ТАБЛИЦА ЛИДЕРОВ',player:'ИГРОК',saveScore:'СОХРАНИТЬ РЕЗУЛЬТАТ',namePlaceholder:'Введи имя',loadingBoard:'Загрузка рейтинга…',emptyBoard:'Пока нет результатов',saveOk:'РЕЗУЛЬТАТ СОХРАНЁН',saveError:'Не удалось сохранить результат',nameError:'Введи имя от 1 до 20 символов',store:'МАГАЗИН',storeClose:'ЗАКРЫТЬ МАГАЗИН',storeTitle:'ØN // МАГАЗИН',avatars:'ПЛАНЕТЫ',backgrounds:'ФОНЫ',obstacles:'ПРЕПЯТСТВИЯ',buy:'КУПИТЬ',equip:'ВЫБРАТЬ',equipped:'ИСПОЛЬЗУЕТСЯ',owned:'КУПЛЕНО',notEnough:'НЕ ХВАТАЕТ Ø-CREDITS',storeError:'Ошибка магазина',connecting:'ПОДКЛЮЧЕНИЕ…',earned:'ЗАРАБОТАНО',position:'ПОЗИЦИЯ',storeSubtitle:'Косметика для сигнала: меняй планету, пространство и препятствия.',free:'БЕСПЛАТНО',creditsLabel:'Ø-КРЕДИТЫ',itemsCount:'ПРЕДМЕТОВ',rarityCommon:'ОБЫЧНЫЙ',rarityRare:'РЕДКИЙ',rarityEpic:'ЭПИЧЕСКИЙ',rarityLegendary:'ЛЕГЕНДАРНЫЙ',rarityVoid:'БЕЗДНА'
   },
   en:{
     intercept:'ØN // INTERCEPT 003',previous:'PREVIOUS LOCK // VERIFIED',
@@ -1355,7 +1355,7 @@ const gameI18n={
     nearLock:'NEAR LOCK',nearHint:'FREQUENCY ALIGNMENT // VERY CLOSE',
     stabilizing:'STABILIZING',hold:'HOLD FREQUENCY // DO NOT MOVE',
     decryptComplete:'DECRYPTION COMPLETE // ØN-003',
-    lost:'TRANSMISSION LOST',reconnect:'RECONNECT',speed:'SPEED',soundOff:'Turn game music off',soundOn:'Turn game music on',calmSpace:'CALM SPACE',signalDrift:'SIGNAL DRIFT',distortionField:'DISTORTION FIELD',leaderboard:'LEADERBOARD',player:'PLAYER',saveScore:'SAVE RESULT',namePlaceholder:'Enter name',loadingBoard:'Loading leaderboard…',emptyBoard:'No scores yet',saveOk:'RESULT SAVED',saveError:'Could not save result',nameError:'Enter a name from 1 to 20 characters',store:'STORE',storeClose:'CLOSE STORE',storeTitle:'ØN // STORE',avatars:'PLANETS',backgrounds:'BACKGROUNDS',obstacles:'OBSTACLES',buy:'BUY',equip:'EQUIP',equipped:'EQUIPPED',owned:'OWNED',notEnough:'NOT ENOUGH Ø-CREDITS',storeError:'Store error',connecting:'CONNECTING…',earned:'EARNED',position:'POSITION',storeSubtitle:'Signal cosmetics: change your planet, space and obstacles.',free:'FREE',rarityCommon:'COMMON',rarityRare:'RARE',rarityVoid:'VOID'
+    lost:'TRANSMISSION LOST',reconnect:'RECONNECT',speed:'SPEED',soundOff:'Turn game music off',soundOn:'Turn game music on',calmSpace:'CALM SPACE',signalDrift:'SIGNAL DRIFT',distortionField:'DISTORTION FIELD',leaderboard:'LEADERBOARD',player:'PLAYER',saveScore:'SAVE RESULT',namePlaceholder:'Enter name',loadingBoard:'Loading leaderboard…',emptyBoard:'No scores yet',saveOk:'RESULT SAVED',saveError:'Could not save result',nameError:'Enter a name from 1 to 20 characters',store:'STORE',storeClose:'CLOSE STORE',storeTitle:'ØN // STORE',avatars:'PLANETS',backgrounds:'BACKGROUNDS',obstacles:'OBSTACLES',buy:'BUY',equip:'EQUIP',equipped:'EQUIPPED',owned:'OWNED',notEnough:'NOT ENOUGH Ø-CREDITS',storeError:'Store error',connecting:'CONNECTING…',earned:'EARNED',position:'POSITION',storeSubtitle:'Signal cosmetics: change your planet, space and obstacles.',free:'FREE',creditsLabel:'Ø-CREDITS',itemsCount:'ITEMS',rarityCommon:'COMMON',rarityRare:'RARE',rarityEpic:'EPIC',rarityLegendary:'LEGENDARY',rarityVoid:'VOID'
   }
 };
 function gameText(key){
@@ -1380,6 +1380,8 @@ function applyGameLanguage(lang){
   if(storeButton)storeButton.textContent=document.getElementById('runnerStorePanel')?.classList.contains('open')?g.storeClose:g.store;
   const storeTitle=document.getElementById('runnerStoreTitle');if(storeTitle)storeTitle.textContent=g.storeTitle;
   const storeSubtitle=document.getElementById('runnerStoreSubtitle');if(storeSubtitle)storeSubtitle.textContent=g.storeSubtitle;
+  const creditLabels=document.querySelectorAll('.runner-stat:nth-child(4) small,.runner-store-balance-box small');
+  creditLabels.forEach(el=>el.textContent=g.creditsLabel);
   set('#signalZoneBadge','unknownTransmission');
   set('.runner-overlay small','runProtocol');
   set('.runner-controls > span','controls');
@@ -1698,20 +1700,20 @@ const RUNNER_ITEM_RARITY={
   signal_spires:'common',crystal_shards:'rare',orbital_debris:'void'
 };
 const RUNNER_ITEM_META={
-  orbit_o:{ru:['ORBIT Ø','Базовая планета ØRNIVAISE'],en:['ORBIT Ø','Default ØRNIVAISE planet']},
-  frost_moon:{ru:['FROST MOON','Холодная ледяная сфера'],en:['FROST MOON','Cold ice sphere']},
-  void_core:{ru:['VOID CORE','Тёмное ядро аномалии'],en:['VOID CORE','Dark anomaly core']},
-  signal_bloom:{ru:['SIGNAL BLOOM','Живой сигнальный импульс'],en:['SIGNAL BLOOM','Living signal pulse']},
-  crimson_pulse:{ru:['CRIMSON PULSE','Красное энергетическое ядро'],en:['CRIMSON PULSE','Crimson energy core']},
-  eclipse_halo:{ru:['ECLIPSE HALO','Чёрная планета в световом ореоле'],en:['ECLIPSE HALO','Black planet in a luminous halo']},
-  neon_reef:{ru:['NEON REEF','Неоновая сфера с двойным свечением'],en:['NEON REEF','Neon sphere with dual glow']},
-  ash_titan:{ru:['ASH TITAN','Пепельный титан с тлеющим ядром'],en:['ASH TITAN','Ash titan with a smouldering core']},
-  deep_space:{ru:['DEEP SPACE','Базовый глубокий космос'],en:['DEEP SPACE','Default deep space']},
-  violet_nebula:{ru:['VIOLET NEBULA','Фиолетовая сигнальная туманность'],en:['VIOLET NEBULA','Violet signal nebula']},
-  black_sun:{ru:['BLACK SUN','Затмение в мёртвой системе'],en:['BLACK SUN','Eclipse in a dead system']},
-  signal_spires:{ru:['SIGNAL SPIRES','Базовые сигнальные шпили'],en:['SIGNAL SPIRES','Default signal spires']},
-  crystal_shards:{ru:['CRYSTAL SHARDS','Осколки аномального кристалла'],en:['CRYSTAL SHARDS','Anomalous crystal shards']},
-  orbital_debris:{ru:['ORBITAL DEBRIS','Обломки спутников и модулей'],en:['ORBITAL DEBRIS','Satellite and module debris']}
+  orbit_o:{ru:['ОРБИТА Ø','Базовая планета ØRNIVAISE'],en:['ORBIT Ø','Default ØRNIVAISE planet']},
+  frost_moon:{ru:['ЛЕДЯНАЯ ЛУНА','Холодная ледяная сфера'],en:['FROST MOON','Cold ice sphere']},
+  void_core:{ru:['ЯДРО ПУСТОТЫ','Тёмное ядро аномалии'],en:['VOID CORE','Dark anomaly core']},
+  signal_bloom:{ru:['ИМПУЛЬС СИГНАЛА','Живой сигнальный импульс'],en:['SIGNAL BLOOM','Living signal pulse']},
+  crimson_pulse:{ru:['БАГРОВЫЙ ИМПУЛЬС','Красное энергетическое ядро'],en:['CRIMSON PULSE','Crimson energy core']},
+  eclipse_halo:{ru:['ОРЕОЛ ЗАТМЕНИЯ','Чёрная планета в световом ореоле'],en:['ECLIPSE HALO','Black planet in a luminous halo']},
+  neon_reef:{ru:['НЕОНОВЫЙ РИФ','Неоновая сфера с двойным свечением'],en:['NEON REEF','Neon sphere with dual glow']},
+  ash_titan:{ru:['ПЕПЕЛЬНЫЙ ТИТАН','Пепельный титан с тлеющим ядром'],en:['ASH TITAN','Ash titan with a smouldering core']},
+  deep_space:{ru:['ГЛУБОКИЙ КОСМОС','Базовый глубокий космос'],en:['DEEP SPACE','Default deep space']},
+  violet_nebula:{ru:['ФИОЛЕТОВАЯ ТУМАННОСТЬ','Фиолетовая сигнальная туманность'],en:['VIOLET NEBULA','Violet signal nebula']},
+  black_sun:{ru:['ЧЁРНОЕ СОЛНЦЕ','Затмение в мёртвой системе'],en:['BLACK SUN','Eclipse in a dead system']},
+  signal_spires:{ru:['СИГНАЛЬНЫЕ ШПИЛИ','Базовые сигнальные шпили'],en:['SIGNAL SPIRES','Default signal spires']},
+  crystal_shards:{ru:['КРИСТАЛЬНЫЕ ОСКОЛКИ','Осколки аномального кристалла'],en:['CRYSTAL SHARDS','Anomalous crystal shards']},
+  orbital_debris:{ru:['ОРБИТАЛЬНЫЕ ОБЛОМКИ','Обломки спутников и модулей'],en:['ORBITAL DEBRIS','Satellite and module debris']}
 };
 function runnerPlayerToken(){
   try{
@@ -1782,7 +1784,7 @@ function renderRunnerStore(){
     const section=document.createElement('section');section.className='runner-store-category';
     const header=document.createElement('div');header.className='runner-store-category-title';
     const h=document.createElement('h4');h.textContent=gameText(labelKey);
-    const count=document.createElement('span');count.className='runner-store-category-count';count.textContent=String(items.length).padStart(2,'0')+' ITEMS';
+    const count=document.createElement('span');count.className='runner-store-category-count';count.textContent=String(items.length).padStart(2,'0')+' '+gameText('itemsCount');
     header.append(h,count);section.appendChild(header);
     const grid=document.createElement('div');grid.className='runner-store-grid';
     items.forEach(item=>{
@@ -1795,7 +1797,7 @@ function renderRunnerStore(){
       const body=document.createElement('div');body.className='runner-shop-body';
       const top=document.createElement('div');top.className='runner-shop-topline';
       const title=document.createElement('strong');title.textContent=meta[0];
-      const badge=document.createElement('span');badge.className='runner-rarity '+rarity;badge.textContent=rarity==='legendary'?'LEGENDARY':rarity==='epic'?'EPIC':gameText(rarity==='void'?'rarityVoid':rarity==='rare'?'rarityRare':'rarityCommon');
+      const badge=document.createElement('span');badge.className='runner-rarity '+rarity;badge.textContent=gameText(rarity==='legendary'?'rarityLegendary':rarity==='epic'?'rarityEpic':rarity==='void'?'rarityVoid':rarity==='rare'?'rarityRare':'rarityCommon');
       top.append(title,badge);
       const desc=document.createElement('small');desc.textContent=meta[1];
       const price=document.createElement('div');price.className='runner-shop-price';
