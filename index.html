@@ -3575,6 +3575,41 @@ function drawRunner(){
   const avatar=runnerStoreState.selected_avatar;
   ctx.globalAlpha=portalVisual.alpha;
 
+  // Planet-specific ambient particles: decorative only, never modify collisions.
+  if(avatar==='frost_moon'||avatar==='solar_flare'||avatar==='toxic_bloom'){
+    ctx.save();
+    const cold=avatar==='frost_moon',solar=avatar==='solar_flare';
+    const phase=runnerDistanceValue*.045;
+    const primary=cold?'166,232,250':solar?'255,176,71':'145,245,101';
+    const secondary=cold?'223,249,255':solar?'255,99,48':'171,98,221';
+    const aura=ctx.createRadialGradient(cx,cy,15,cx,cy,cold?48:54);
+    aura.addColorStop(0,'rgba('+primary+',.13)');
+    aura.addColorStop(.58,'rgba('+secondary+',.07)');
+    aura.addColorStop(1,'rgba('+primary+',0)');
+    ctx.fillStyle=aura;ctx.fillRect(cx-56,cy-56,112,112);
+    for(let k=0;k<9;k++){
+      const angle=phase*(cold?.35:solar?.7:.52)+k*Math.PI*2/9;
+      const radius=27+(k%3)*5+Math.sin(phase+k)*2;
+      const px=cx+Math.cos(angle)*radius,py=cy+Math.sin(angle)*radius*.8;
+      ctx.globalAlpha=.18+(k%4)*.075;
+      ctx.fillStyle='rgba('+(k%3===0?secondary:primary)+',.9)';
+      if(cold){
+        ctx.strokeStyle=ctx.fillStyle;ctx.lineWidth=.9;
+        ctx.beginPath();ctx.moveTo(px-2,py);ctx.lineTo(px+2,py);
+        ctx.moveTo(px,py-2);ctx.lineTo(px,py+2);ctx.stroke();
+      }else{
+        ctx.beginPath();ctx.arc(px,py,solar?1.15+(k%3)*.4:1.2+(k%2)*.6,0,Math.PI*2);ctx.fill();
+      }
+    }
+    if(solar){
+      ctx.globalAlpha=.18;ctx.strokeStyle='rgba(255,137,64,.75)';
+      for(let k=0;k<3;k++){
+        const a=phase*.7+k*2.09;
+        ctx.beginPath();ctx.arc(cx+Math.cos(a)*4,cy+Math.sin(a)*4,38,a,a+.6);ctx.stroke();
+      }
+    }
+    ctx.restore();
+  }
   // Legendary motion signatures stay behind the player so obstacles remain readable.
   if(avatar==='frost_moon'){
     ctx.save();
