@@ -994,6 +994,26 @@ html{scroll-padding-top:80px}
 .runner-preview-obstacles.orbital_debris i:nth-child(1){width:35px;height:19px;left:6px;bottom:6px;transform:rotate(-13deg)}
 .runner-preview-obstacles.orbital_debris i:nth-child(2){width:17px;height:28px;right:4px;bottom:12px;transform:rotate(20deg)}
 .runner-preview-obstacles.orbital_debris i:nth-child(3){width:46px;height:1px;left:12px;bottom:33px;background:rgba(219,229,238,.3);transform:rotate(11deg)}
+.runner-preview-obstacles.spirit_masks i{position:absolute;bottom:4px;width:22px;height:30px;border:1px solid rgba(226,216,242,.62);background:linear-gradient(180deg,rgba(216,203,232,.2),rgba(79,61,95,.16));border-radius:48% 48% 42% 42%;clip-path:polygon(14% 15%,31% 0,42% 16%,58% 16%,69% 0,86% 15%,100% 48%,82% 100%,18% 100%,0 48%);box-shadow:0 0 9px rgba(170,121,211,.12)}
+.runner-preview-obstacles.spirit_masks i:before{content:"";position:absolute;left:5px;right:5px;top:13px;height:4px;background:radial-gradient(circle at 20% 50%,rgba(229,198,249,.9) 0 2px,transparent 2.5px),radial-gradient(circle at 80% 50%,rgba(229,198,249,.9) 0 2px,transparent 2.5px)}
+.runner-preview-obstacles.spirit_masks i:nth-child(1){left:0;transform:scale(.8)}
+.runner-preview-obstacles.spirit_masks i:nth-child(2){left:24px;bottom:7px}
+.runner-preview-obstacles.spirit_masks i:nth-child(3){left:50px;transform:scale(.72)}
+.runner-preview-obstacles.glitch_slimes i{position:absolute;bottom:2px;width:23px;height:24px;border:1px solid rgba(133,244,233,.5);background:radial-gradient(circle at 32% 28%,rgba(174,255,247,.56),rgba(68,177,177,.26) 50%,rgba(63,49,113,.2));border-radius:52% 48% 34% 38%;box-shadow:0 0 10px rgba(75,220,211,.1)}
+.runner-preview-obstacles.glitch_slimes i:before{content:"";position:absolute;left:5px;right:5px;top:8px;height:5px;background:radial-gradient(circle at 20% 50%,#dff 0 2px,transparent 2.5px),radial-gradient(circle at 80% 50%,#dff 0 2px,transparent 2.5px)}
+.runner-preview-obstacles.glitch_slimes i:nth-child(1){left:0;height:19px}
+.runner-preview-obstacles.glitch_slimes i:nth-child(2){left:25px;height:30px}
+.runner-preview-obstacles.glitch_slimes i:nth-child(3){left:51px;height:22px}
+.runner-preview-obstacles.mecha_drones i{position:absolute;bottom:7px;width:23px;height:25px;border:1px solid rgba(220,231,241,.56);background:linear-gradient(145deg,rgba(178,197,213,.24),rgba(53,67,78,.18));clip-path:polygon(18% 0,82% 0,100% 24%,88% 100%,12% 100%,0 24%)}
+.runner-preview-obstacles.mecha_drones i:before{content:"";position:absolute;left:4px;right:4px;top:10px;height:2px;background:rgba(117,226,232,.72);box-shadow:0 0 7px rgba(93,215,224,.25)}
+.runner-preview-obstacles.mecha_drones i:nth-child(1){left:0;transform:rotate(-7deg) scale(.85)}
+.runner-preview-obstacles.mecha_drones i:nth-child(2){left:25px;bottom:10px}
+.runner-preview-obstacles.mecha_drones i:nth-child(3){left:50px;transform:rotate(7deg) scale(.78)}
+.runner-preview-obstacles.moon_familiars i{position:absolute;bottom:3px;width:23px;height:27px;border:1px solid rgba(233,218,248,.58);background:radial-gradient(circle at 38% 30%,rgba(238,225,250,.32),rgba(92,64,121,.2) 64%,rgba(28,17,39,.18));clip-path:polygon(12% 22%,24% 0,40% 20%,60% 20%,76% 0,88% 22%,100% 55%,82% 100%,18% 100%,0 55%);box-shadow:0 0 12px rgba(183,126,222,.15)}
+.runner-preview-obstacles.moon_familiars i:before{content:"";position:absolute;left:5px;right:5px;top:12px;height:4px;background:radial-gradient(circle at 20% 50%,rgba(255,240,182,.95) 0 2px,transparent 2.5px),radial-gradient(circle at 80% 50%,rgba(255,240,182,.95) 0 2px,transparent 2.5px)}
+.runner-preview-obstacles.moon_familiars i:nth-child(1){left:0;transform:scale(.78)}
+.runner-preview-obstacles.moon_familiars i:nth-child(2){left:24px;bottom:8px}
+.runner-preview-obstacles.moon_familiars i:nth-child(3){left:50px;transform:scale(.72)}
 .runner-preview-background-planet{position:absolute;right:25px;top:20px;width:28px;height:28px;border-radius:50%;background:radial-gradient(circle at 34% 28%,#7e91a3,#22323f 60%,#06090c);border:1px solid rgba(235,241,248,.42)}
 .runner-preview-background-planet:before{content:"";position:absolute;width:42px;height:10px;left:50%;top:50%;border:1px solid rgba(231,238,245,.4);border-radius:50%;transform:translate(-50%,-50%) rotate(-14deg)}
 .runner-shop-body{min-height:72px}
@@ -1704,7 +1724,7 @@ const RUNNER_ITEM_RARITY={
   orbit_o:'common',frost_moon:'rare',void_core:'void',
   signal_bloom:'rare',crimson_pulse:'epic',eclipse_halo:'epic',neon_reef:'legendary',ash_titan:'legendary',
   deep_space:'common',violet_nebula:'rare',frozen_horizon:'rare',black_sun:'void',signal_storm:'epic',crimson_rift:'legendary',
-  signal_spires:'common',crystal_shards:'rare',orbital_debris:'void'
+  signal_spires:'common',crystal_shards:'rare',orbital_debris:'void',spirit_masks:'rare',glitch_slimes:'epic',mecha_drones:'epic',moon_familiars:'legendary'
 };
 const RUNNER_ITEM_META={
   orbit_o:{ru:['ОРБИТА Ø','Базовая планета ØRNIVAISE'],en:['ORBIT Ø','Default ØRNIVAISE planet']},
@@ -1723,7 +1743,11 @@ const RUNNER_ITEM_META={
   crimson_rift:{ru:['БАГРОВЫЙ РАЗЛОМ','Живой разлом в красной пустоте'],en:['CRIMSON RIFT','A living rift in the crimson void']},
   signal_spires:{ru:['СИГНАЛЬНЫЕ ШПИЛИ','Базовые сигнальные шпили'],en:['SIGNAL SPIRES','Default signal spires']},
   crystal_shards:{ru:['КРИСТАЛЬНЫЕ ОСКОЛКИ','Осколки аномального кристалла'],en:['CRYSTAL SHARDS','Anomalous crystal shards']},
-  orbital_debris:{ru:['ОРБИТАЛЬНЫЕ ОБЛОМКИ','Обломки спутников и модулей'],en:['ORBITAL DEBRIS','Satellite and module debris']}
+  orbital_debris:{ru:['ОРБИТАЛЬНЫЕ ОБЛОМКИ','Обломки спутников и модулей'],en:['ORBITAL DEBRIS','Satellite and module debris']},
+  spirit_masks:{ru:['ДУХИ-МАСКИ','Оригинальные аниме-вдохновлённые духи в масках'],en:['SPIRIT MASKS','Original anime-inspired masked spirits']},
+  glitch_slimes:{ru:['ГЛИТЧ-СЛАЙМЫ','Мультяшные цифровые существа с живой анимацией'],en:['GLITCH SLIMES','Cartoon digital creatures with lively motion']},
+  mecha_drones:{ru:['МЕХА-ДРОНЫ','Угловатые боевые дроны с сигнальным сканером'],en:['MECHA DRONES','Angular combat drones with signal scanners']},
+  moon_familiars:{ru:['ЛУННЫЕ ФАМИЛЬЯРЫ','Редкие лунные существа с мягкой аурой'],en:['MOON FAMILIARS','Rare lunar creatures with a soft aura']}
 };
 function runnerPlayerToken(){
   try{
@@ -2158,10 +2182,10 @@ function spawnRunnerObstacle(){
   const roll=Math.random();
   if(roll<.72){
     const h=34+Math.random()*45,w=20+Math.random()*18;
-    runnerObstacles.push({x:RUNNER_W+24,y:RUNNER_GROUND-h,w,h,type:'spire'});
+    runnerObstacles.push({x:RUNNER_W+24,y:RUNNER_GROUND-h,w,h,type:'spire',variant:Math.floor(Math.random()*3),phase:Math.random()*Math.PI*2});
   }else{
     const h=28+Math.random()*16,w=42+Math.random()*26;
-    runnerObstacles.push({x:RUNNER_W+24,y:RUNNER_GROUND-h,w,h,type:'block'});
+    runnerObstacles.push({x:RUNNER_W+24,y:RUNNER_GROUND-h,w,h,type:'block',variant:Math.floor(Math.random()*3),phase:Math.random()*Math.PI*2});
   }
 }
 function spawnRunnerOrb(){
@@ -2422,16 +2446,88 @@ function drawRunner(){
     ctx.save();
     const skin=runnerStoreState.selected_obstacle;
     const hot=stage>=2;
+    const variant=o.variant||0;
+    const phase=(o.phase||0)+runnerDistanceValue*.035;
+
     if(skin==='crystal_shards'){
+      const lean=(variant-1)*o.w*.08;
       ctx.fillStyle=hot?'rgba(172,126,218,.28)':'rgba(155,135,203,.22)';
       ctx.strokeStyle='rgba(220,198,241,.58)';ctx.lineWidth=1;
-      ctx.beginPath();ctx.moveTo(o.x,o.y+o.h);ctx.lineTo(o.x+o.w*.22,o.y+o.h*.25);ctx.lineTo(o.x+o.w*.48,o.y);ctx.lineTo(o.x+o.w*.66,o.y+o.h*.38);ctx.lineTo(o.x+o.w,o.y+o.h);ctx.closePath();ctx.fill();ctx.stroke();
-      ctx.strokeStyle='rgba(239,226,249,.22)';ctx.beginPath();ctx.moveTo(o.x+o.w*.48,o.y+3);ctx.lineTo(o.x+o.w*.42,o.y+o.h*.82);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(o.x,o.y+o.h);ctx.lineTo(o.x+o.w*.2,o.y+o.h*.3);ctx.lineTo(o.x+o.w*.48+lean,o.y);ctx.lineTo(o.x+o.w*.7,o.y+o.h*.42);ctx.lineTo(o.x+o.w,o.y+o.h);ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.strokeStyle='rgba(239,226,249,.22)';ctx.beginPath();ctx.moveTo(o.x+o.w*.48+lean,o.y+3);ctx.lineTo(o.x+o.w*(variant===2?.58:.42),o.y+o.h*.82);ctx.stroke();
     }else if(skin==='orbital_debris'){
-      ctx.translate(o.x+o.w/2,o.y+o.h/2);ctx.rotate(-.18);
+      ctx.translate(o.x+o.w/2,o.y+o.h/2);ctx.rotate((variant-1)*.14-.08);
       ctx.fillStyle='rgba(157,174,190,.2)';ctx.strokeStyle='rgba(218,228,237,.5)';
-      ctx.fillRect(-o.w/2,-o.h/2,o.w,o.h);ctx.strokeRect(-o.w/2+.5,-o.h/2+.5,o.w-1,o.h-1);
-      ctx.strokeStyle='rgba(218,228,237,.28)';ctx.beginPath();ctx.moveTo(-o.w*.8,0);ctx.lineTo(o.w*.8,0);ctx.moveTo(0,-o.h*.8);ctx.lineTo(0,o.h*.8);ctx.stroke();
+      if(variant===1){
+        ctx.beginPath();ctx.moveTo(-o.w*.5,-o.h*.35);ctx.lineTo(o.w*.34,-o.h*.5);ctx.lineTo(o.w*.5,o.h*.25);ctx.lineTo(-o.w*.3,o.h*.5);ctx.closePath();ctx.fill();ctx.stroke();
+      }else{
+        ctx.fillRect(-o.w/2,-o.h/2,o.w,o.h);ctx.strokeRect(-o.w/2+.5,-o.h/2+.5,o.w-1,o.h-1);
+      }
+      ctx.strokeStyle='rgba(218,228,237,.28)';ctx.beginPath();ctx.moveTo(-o.w*.72,0);ctx.lineTo(o.w*.72,0);ctx.moveTo(0,-o.h*.72);ctx.lineTo(0,o.h*.72);ctx.stroke();
+    }else if(skin==='spirit_masks'){
+      const cx=o.x+o.w/2,base=o.y+o.h;
+      const breathe=Math.sin(phase)*1.2;
+      ctx.translate(cx,o.y+o.h/2+breathe);
+      ctx.fillStyle='rgba(111,82,131,.2)';ctx.strokeStyle='rgba(229,211,242,.62)';ctx.lineWidth=1.1;
+      ctx.beginPath();
+      ctx.moveTo(-o.w*.42,o.h*.12);ctx.lineTo(-o.w*.34,-o.h*.28);
+      ctx.lineTo(-o.w*.2,-o.h*.5);ctx.lineTo(-o.w*.06,-o.h*.32);
+      ctx.lineTo(o.w*.08,-o.h*.34);ctx.lineTo(o.w*.24,-o.h*.5);
+      ctx.lineTo(o.w*.38,-o.h*.28);ctx.lineTo(o.w*.43,o.h*.08);
+      ctx.quadraticCurveTo(0,o.h*.52,-o.w*.42,o.h*.12);ctx.closePath();ctx.fill();ctx.stroke();
+      const blink=Math.sin(phase*1.8+variant)>.94;
+      ctx.strokeStyle='rgba(230,194,248,.9)';ctx.lineWidth=blink?1:2;
+      const ey=o.h*-.05;
+      ctx.beginPath();ctx.moveTo(-o.w*.22,ey);ctx.lineTo(-o.w*.08,ey+(variant-1)*1.5);ctx.moveTo(o.w*.08,ey+(1-variant)*1.5);ctx.lineTo(o.w*.22,ey);ctx.stroke();
+      ctx.globalAlpha=.25;ctx.strokeStyle='rgba(187,132,222,.65)';ctx.beginPath();ctx.arc(0,o.h*.08,Math.min(o.w,o.h)*.18,.15,Math.PI-.15);ctx.stroke();
+      ctx.globalAlpha=1;
+    }else if(skin==='glitch_slimes'){
+      const wobble=Math.sin(phase*1.7+variant)*2;
+      const squash=1+Math.sin(phase*1.45)*.035;
+      ctx.translate(o.x+o.w/2,o.y+o.h);
+      ctx.scale(1/squash,squash);
+      const h=o.h*.88,w=o.w*.88;
+      const sg=ctx.createLinearGradient(0,-h,0,0);
+      sg.addColorStop(0,'rgba(144,255,245,.46)');sg.addColorStop(.58,'rgba(54,181,181,.25)');sg.addColorStop(1,'rgba(92,64,153,.18)');
+      ctx.fillStyle=sg;ctx.strokeStyle='rgba(148,245,237,.58)';ctx.lineWidth=1.1;
+      ctx.beginPath();ctx.moveTo(-w*.48,0);ctx.quadraticCurveTo(-w*.58,-h*.38,-w*.3,-h*.76);
+      ctx.quadraticCurveTo(-w*.1,-h-wobble,0,-h*.86);ctx.quadraticCurveTo(w*.2,-h-wobble,w*.36,-h*.68);
+      ctx.quadraticCurveTo(w*.58,-h*.32,w*.48,0);ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.fillStyle='rgba(224,255,253,.92)';
+      const eyeY=-h*.48;
+      ctx.beginPath();ctx.arc(-w*.16,eyeY,2,0,Math.PI*2);ctx.arc(w*.16,eyeY+(variant-1)*1.5,2,0,Math.PI*2);ctx.fill();
+      ctx.globalAlpha=.36;ctx.strokeStyle=variant===2?'#b68af0':'#75ece5';ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(-w*.42,-h*.18);ctx.lineTo(-w*.58,-h*.18);ctx.moveTo(w*.36,-h*.64);ctx.lineTo(w*.55,-h*.64);ctx.stroke();ctx.globalAlpha=1;
+    }else if(skin==='mecha_drones'){
+      const cx=o.x+o.w/2,cy=o.y+o.h/2;
+      ctx.translate(cx,cy);
+      const tilt=(variant-1)*.05;
+      ctx.rotate(tilt);
+      ctx.fillStyle='rgba(108,127,143,.24)';ctx.strokeStyle='rgba(218,230,239,.62)';ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(-o.w*.42,-o.h*.35);ctx.lineTo(-o.w*.18,-o.h*.5);ctx.lineTo(o.w*.3,-o.h*.42);ctx.lineTo(o.w*.48,-o.h*.12);ctx.lineTo(o.w*.36,o.h*.46);ctx.lineTo(-o.w*.34,o.h*.46);ctx.lineTo(-o.w*.48,o.h*.05);ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.fillStyle='rgba(27,37,45,.8)';ctx.fillRect(-o.w*.24,-o.h*.1,o.w*.48,o.h*.2);
+      const scan=((Math.sin(phase*2)+1)*.5);
+      ctx.strokeStyle='rgba(104,233,236,'+(.45+scan*.35)+')';ctx.shadowBlur=7;ctx.shadowColor='rgba(86,219,225,.3)';ctx.lineWidth=1.5;
+      ctx.beginPath();ctx.moveTo(-o.w*.18,-o.h*.02);ctx.lineTo(o.w*.18,-o.h*.02);ctx.stroke();ctx.shadowBlur=0;
+      ctx.strokeStyle='rgba(208,220,231,.3)';ctx.beginPath();ctx.moveTo(-o.w*.62,o.h*.1);ctx.lineTo(-o.w*.4,-o.h*.06);ctx.moveTo(o.w*.62,o.h*.1);ctx.lineTo(o.w*.4,-o.h*.06);ctx.stroke();
+    }else if(skin==='moon_familiars'){
+      const cx=o.x+o.w/2,cy=o.y+o.h/2;
+      const pulse=.5+.5*Math.sin(phase*1.35);
+      ctx.translate(cx,cy);
+      const ag=ctx.createRadialGradient(0,0,Math.min(o.w,o.h)*.16,0,0,Math.max(o.w,o.h)*.72);
+      ag.addColorStop(0,'rgba(190,139,226,'+(.08+pulse*.05)+')');ag.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=ag;ctx.fillRect(-o.w,-o.h,o.w*2,o.h*2);
+      ctx.fillStyle='rgba(85,60,107,.25)';ctx.strokeStyle='rgba(232,215,245,.64)';ctx.lineWidth=1.1;
+      ctx.beginPath();
+      ctx.moveTo(-o.w*.42,o.h*.42);ctx.lineTo(-o.w*.36,-o.h*.15);
+      ctx.lineTo(-o.w*.23,-o.h*.5);ctx.lineTo(-o.w*.06,-o.h*.29);
+      ctx.lineTo(o.w*.08,-o.h*.3);ctx.lineTo(o.w*.25,-o.h*.5);
+      ctx.lineTo(o.w*.38,-o.h*.12);ctx.lineTo(o.w*.43,o.h*.42);
+      ctx.quadraticCurveTo(0,o.h*.55,-o.w*.42,o.h*.42);ctx.closePath();ctx.fill();ctx.stroke();
+      const eye='#ffe7a0';
+      ctx.fillStyle=eye;ctx.shadowBlur=8;ctx.shadowColor='rgba(255,222,148,.4)';
+      const ey=-o.h*.05;ctx.beginPath();ctx.arc(-o.w*.15,ey,1.7,0,Math.PI*2);ctx.arc(o.w*.15,ey,1.7,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+      ctx.globalAlpha=.4;ctx.strokeStyle='rgba(210,173,235,.7)';ctx.beginPath();ctx.arc(o.w*.33,o.h*.22,o.w*.2,-1.4,1.6);ctx.stroke();ctx.globalAlpha=1;
     }else{
       ctx.fillStyle=hot?'rgba(174,153,205,.22)':'rgba(205,215,226,.18)';
       ctx.strokeStyle=hot?'rgba(215,196,232,.5)':'rgba(222,230,239,.48)';ctx.lineWidth=1;
