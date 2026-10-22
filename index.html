@@ -1867,6 +1867,8 @@ function applyGameLanguage(lang){
   set('#runnerProfileBgTitle','profileBg');
   set('#runnerProfileBgHint','profileBgHint');
   set('#runnerLegendaryText','itemAcquired');
+  const overlay=document.getElementById('runnerOverlay');
+  if(overlay?.classList.contains('visible')&&!window.refreshGameLanguage){set('#runnerOverlayTitle','runnerTitle');set('#runnerOverlayText','jumpHint');set('#runnerOverlayButton','startRun')}
   set('.runner-store-kicker','gameName');
   set('.runner-legendary-acquire small','legendarySignal');
   set('#runnerDeviceTitle','devices');
@@ -3937,6 +3939,8 @@ window.refreshGameLanguage=()=>{
   if(runnerLbTitle)runnerLbTitle.textContent=gameText('leaderboard');
   if(runnerStoreTitle)runnerStoreTitle.textContent=gameText('storeTitle');
   if(runnerStoreToggle)runnerStoreToggle.textContent=gameText(runnerStorePanel?.classList.contains('open')?'storeClose':'store');
+  if(runnerProfileToggle)runnerProfileToggle.textContent=gameText(runnerProfilePanel?.classList.contains('open')?'profileClose':'profile');
+  renderRunnerProfile();
   renderRunnerStore();
   if(runnerNameInput)runnerNameInput.placeholder=gameText('namePlaceholder');
   if(runnerScoreSave)runnerScoreSave.textContent=gameText('saveScore');
