@@ -48,3 +48,18 @@ The `redeem_link` Edge Function currently performs separate REST calls to remap 
 ## Release gate
 
 Do not deploy database changes or merge `feature/signal-runner-v2` until these cases have been tested. Avoid testing purchases on real player balances.
+
+
+## Edge Function v8 integration plan (not deployed)
+
+Current `runner-store` v7 redeems a link with multiple independent REST requests. After the atomic RPC is tested on staging, replace only its `redeem_link` action so that it:
+
+1. Preserves the existing eight-character link-code validation.
+2. Hashes the code and device token using the existing SHA-256 helper.
+3. Sends both hashes to `/rest/v1/rpc/redeem_runner_link_atomic` in **one** POST.
+4. Uses the returned player ID to load the linked player and existing `getState` response.
+5. Preserves the other actions and their response shapes.
+
+**Deployment dependency:** the Edge Function update must not precede the SQL RPC deployment. Test with two independent devices, simultaneous redemptions, expired codes, an already-used code, and a device with existing progress.
+
+**Additional release blocker:** the proposed RPC currently mirrors the old progress check (runs, credits, display name). Before deployment, extend the check to inventory and other meaningful player records to avoid losing access to existing purchases.
