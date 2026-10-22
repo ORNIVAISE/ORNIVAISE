@@ -964,6 +964,16 @@ html{scroll-padding-top:80px}
 .runner-preview-planet.frost_moon:before{border-color:rgba(218,245,251,.84)}
 .runner-preview-planet.void_core{background:radial-gradient(circle at 43% 36%,#21152d,#060309 54%,#000 82%);border-color:rgba(205,165,231,.46);box-shadow:0 0 24px rgba(153,80,207,.34)}
 .runner-preview-planet.void_core:before{border-color:rgba(211,164,239,.86);box-shadow:0 0 13px rgba(178,105,226,.2)}
+.runner-preview-planet.signal_bloom{background:radial-gradient(circle at 34% 28%,#d9ffff,#62d6e8 38%,#155d73 67%,#06131a 88%);border-color:rgba(163,243,255,.72);box-shadow:0 0 22px rgba(71,214,236,.34),0 0 44px rgba(71,214,236,.12)}
+.runner-preview-planet.signal_bloom:before{border-color:rgba(170,244,255,.9);box-shadow:0 0 12px rgba(74,220,242,.28)}
+.runner-preview-planet.crimson_pulse{background:radial-gradient(circle at 42% 35%,#ffb0a1,#b83232 34%,#431016 66%,#100408 90%);border-color:rgba(255,157,147,.68);box-shadow:0 0 24px rgba(230,62,71,.36)}
+.runner-preview-planet.crimson_pulse:before{border-color:rgba(255,142,133,.82);box-shadow:0 0 13px rgba(235,60,70,.24)}
+.runner-preview-planet.eclipse_halo{background:radial-gradient(circle at 38% 33%,#171719,#030305 58%,#000 82%);border-color:rgba(240,222,181,.42);box-shadow:0 0 10px rgba(255,255,255,.12),0 0 27px rgba(235,205,147,.28),0 0 48px rgba(235,205,147,.11)}
+.runner-preview-planet.eclipse_halo:before{border-color:rgba(244,226,188,.86);box-shadow:0 0 16px rgba(238,210,157,.32)}
+.runner-preview-planet.neon_reef{background:radial-gradient(circle at 31% 28%,#d8ffff,#39e6e4 30%,#7051dc 59%,#130a32 84%);border-color:rgba(145,246,245,.7);box-shadow:0 0 20px rgba(61,224,224,.35),0 0 34px rgba(132,82,226,.25)}
+.runner-preview-planet.neon_reef:before{border-color:rgba(183,255,251,.9);box-shadow:0 0 12px rgba(79,228,232,.28)}
+.runner-preview-planet.ash_titan{background:radial-gradient(circle at 35% 27%,#b5aaa0,#514943 42%,#241d1a 66%,#090707 90%);border-color:rgba(221,192,166,.48);box-shadow:0 0 20px rgba(189,104,56,.2)}
+.runner-preview-planet.ash_titan:before{border-color:rgba(217,190,170,.66);box-shadow:0 0 10px rgba(189,109,62,.16)}
 .runner-preview-mini-planet{position:absolute;left:20px;bottom:35px;width:24px;height:24px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#8398aa,#293b49 58%,#080b10);border:1px solid rgba(235,242,248,.52);z-index:2}
 .runner-preview-mini-planet:before{content:"";position:absolute;width:35px;height:9px;left:50%;top:50%;border:1px solid rgba(230,238,246,.55);border-radius:50%;transform:translate(-50%,-50%) rotate(-12deg)}
 .runner-preview-mini-planet:after{content:"Ø";position:absolute;inset:0;display:grid;place-items:center;color:#eef3f7;font:700 10px Arial,sans-serif}
@@ -984,6 +994,8 @@ html{scroll-padding-top:80px}
 .runner-shop-card strong{display:block;min-width:0;font-size:10px;letter-spacing:.1em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .runner-rarity{flex:0 0 auto;padding:3px 6px;border:1px solid rgba(222,231,240,.13);border-radius:999px;color:#7f8a96;font-size:6px;letter-spacing:.12em}
 .runner-rarity.rare{color:#aabfd4;border-color:rgba(173,199,224,.2)}
+.runner-rarity.epic{color:#d0a6eb;border-color:rgba(205,155,235,.24);box-shadow:0 0 10px rgba(171,103,220,.08)}
+.runner-rarity.legendary{color:#e4d3ae;border-color:rgba(232,211,166,.25);box-shadow:0 0 12px rgba(224,190,125,.08)}
 .runner-rarity.void{color:#c6a6dd;border-color:rgba(192,151,222,.22)}
 .runner-shop-card small{display:block;min-height:32px;margin:0 0 9px;color:#717c88;font-size:8px;line-height:1.5;letter-spacing:.04em}
 .runner-shop-price{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px;color:#bec7d0;font-size:8px;letter-spacing:.1em}
@@ -1681,6 +1693,7 @@ let runnerStoreState={
 };
 const RUNNER_ITEM_RARITY={
   orbit_o:'common',frost_moon:'rare',void_core:'void',
+  signal_bloom:'rare',crimson_pulse:'epic',eclipse_halo:'epic',neon_reef:'legendary',ash_titan:'legendary',
   deep_space:'common',violet_nebula:'rare',black_sun:'void',
   signal_spires:'common',crystal_shards:'rare',orbital_debris:'void'
 };
@@ -1688,6 +1701,11 @@ const RUNNER_ITEM_META={
   orbit_o:{ru:['ORBIT Ø','Базовая планета ØRNIVAISE'],en:['ORBIT Ø','Default ØRNIVAISE planet']},
   frost_moon:{ru:['FROST MOON','Холодная ледяная сфера'],en:['FROST MOON','Cold ice sphere']},
   void_core:{ru:['VOID CORE','Тёмное ядро аномалии'],en:['VOID CORE','Dark anomaly core']},
+  signal_bloom:{ru:['SIGNAL BLOOM','Живой сигнальный импульс'],en:['SIGNAL BLOOM','Living signal pulse']},
+  crimson_pulse:{ru:['CRIMSON PULSE','Красное энергетическое ядро'],en:['CRIMSON PULSE','Crimson energy core']},
+  eclipse_halo:{ru:['ECLIPSE HALO','Чёрная планета в световом ореоле'],en:['ECLIPSE HALO','Black planet in a luminous halo']},
+  neon_reef:{ru:['NEON REEF','Неоновая сфера с двойным свечением'],en:['NEON REEF','Neon sphere with dual glow']},
+  ash_titan:{ru:['ASH TITAN','Пепельный титан с тлеющим ядром'],en:['ASH TITAN','Ash titan with a smouldering core']},
   deep_space:{ru:['DEEP SPACE','Базовый глубокий космос'],en:['DEEP SPACE','Default deep space']},
   violet_nebula:{ru:['VIOLET NEBULA','Фиолетовая сигнальная туманность'],en:['VIOLET NEBULA','Violet signal nebula']},
   black_sun:{ru:['BLACK SUN','Затмение в мёртвой системе'],en:['BLACK SUN','Eclipse in a dead system']},
@@ -1777,7 +1795,7 @@ function renderRunnerStore(){
       const body=document.createElement('div');body.className='runner-shop-body';
       const top=document.createElement('div');top.className='runner-shop-topline';
       const title=document.createElement('strong');title.textContent=meta[0];
-      const badge=document.createElement('span');badge.className='runner-rarity '+rarity;badge.textContent=gameText(rarity==='void'?'rarityVoid':rarity==='rare'?'rarityRare':'rarityCommon');
+      const badge=document.createElement('span');badge.className='runner-rarity '+rarity;badge.textContent=rarity==='legendary'?'LEGENDARY':rarity==='epic'?'EPIC':gameText(rarity==='void'?'rarityVoid':rarity==='rare'?'rarityRare':'rarityCommon');
       top.append(title,badge);
       const desc=document.createElement('small');desc.textContent=meta[1];
       const price=document.createElement('div');price.className='runner-shop-price';
@@ -2376,7 +2394,8 @@ function drawRunner(){
   for(let i=3;i>=1;i--){
     const tx=cx-i*(7+runnerSpeed*.008);
     ctx.globalAlpha=.035*i;
-    ctx.fillStyle=stage===3?'#bd8ddb':'#c8d7e5';
+    const trailColors={signal_bloom:'#68ddeb',crimson_pulse:'#df4c51',eclipse_halo:'#d8c39c',neon_reef:'#56dddd',ash_titan:'#9e745f',frost_moon:'#b8dce8',void_core:'#aa73cf'};
+    ctx.fillStyle=trailColors[runnerStoreState.selected_avatar]||(stage===3?'#bd8ddb':'#c8d7e5');
     ctx.beginPath();ctx.arc(tx,cy+i*.8,10+i*1.5,0,Math.PI*2);ctx.fill();
   }
   ctx.globalAlpha=1;
@@ -2391,6 +2410,45 @@ function drawRunner(){
     const core=ctx.createRadialGradient(-5,-6,2,0,0,21);
     core.addColorStop(0,'#16101d');core.addColorStop(.58,'#050307');core.addColorStop(1,'#000');
     ctx.fillStyle=core;ctx.beginPath();ctx.arc(0,0,19,0,Math.PI*2);ctx.fill();
+  }else if(avatar==='signal_bloom'){
+    const pulse=1.5+Math.sin(runnerDistanceValue*.09)*1.8;
+    ctx.strokeStyle='rgba(146,244,255,.88)';ctx.lineWidth=1.8;ctx.shadowBlur=16;ctx.shadowColor='rgba(70,220,240,.48)';
+    ctx.beginPath();ctx.ellipse(0,1,29+pulse,8.5+pulse*.25,-.24,0,Math.PI*2);ctx.stroke();
+    ctx.globalAlpha=.32;ctx.beginPath();ctx.arc(0,0,24+pulse*1.2,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=1;
+    const g=ctx.createRadialGradient(-7,-8,2,0,0,22);
+    g.addColorStop(0,'#e2ffff');g.addColorStop(.32,'#58dce9');g.addColorStop(.68,'#145e73');g.addColorStop(1,'#06141a');
+    ctx.fillStyle=g;ctx.shadowBlur=16;ctx.beginPath();ctx.arc(0,0,19,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+  }else if(avatar==='crimson_pulse'){
+    const beat=15+Math.sin(runnerDistanceValue*.11)*5;
+    ctx.strokeStyle='rgba(255,126,120,.86)';ctx.lineWidth=2;ctx.shadowBlur=beat;ctx.shadowColor='rgba(235,59,66,.48)';
+    ctx.beginPath();ctx.ellipse(0,1,29,8,-.24,0,Math.PI*2);ctx.stroke();
+    const g=ctx.createRadialGradient(-6,-7,2,0,0,22);
+    g.addColorStop(0,'#ffc0b5');g.addColorStop(.3,'#d94646');g.addColorStop(.65,'#4f1218');g.addColorStop(1,'#100408');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,19,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+    ctx.strokeStyle='rgba(255,170,158,.55)';ctx.lineWidth=.8;
+    ctx.beginPath();ctx.moveTo(-8,-10);ctx.lineTo(-2,-2);ctx.lineTo(-7,6);ctx.moveTo(5,-8);ctx.lineTo(1,0);ctx.lineTo(7,8);ctx.stroke();
+  }else if(avatar==='eclipse_halo'){
+    const halo=ctx.createRadialGradient(0,0,17,0,0,34);
+    halo.addColorStop(0,'rgba(4,4,5,.98)');halo.addColorStop(.58,'rgba(4,4,5,.98)');halo.addColorStop(.7,'rgba(243,224,184,.35)');halo.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=halo;ctx.fillRect(-38,-38,76,76);
+    ctx.strokeStyle='rgba(244,225,184,.88)';ctx.lineWidth=1.6;ctx.shadowBlur=18;ctx.shadowColor='rgba(238,209,157,.42)';
+    ctx.beginPath();ctx.ellipse(0,1,30,8,-.24,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;
+    ctx.fillStyle='#020203';ctx.beginPath();ctx.arc(0,0,19,0,Math.PI*2);ctx.fill();
+  }else if(avatar==='neon_reef'){
+    ctx.strokeStyle='rgba(165,255,250,.92)';ctx.lineWidth=2;ctx.shadowBlur=18;ctx.shadowColor='rgba(61,224,224,.52)';
+    ctx.beginPath();ctx.ellipse(0,1,29,8,-.24,0,Math.PI*2);ctx.stroke();
+    ctx.strokeStyle='rgba(173,121,245,.55)';ctx.beginPath();ctx.ellipse(0,1,32,10,.18,0,Math.PI*2);ctx.stroke();
+    const g=ctx.createRadialGradient(-7,-8,2,0,0,22);
+    g.addColorStop(0,'#ddffff');g.addColorStop(.3,'#42e0df');g.addColorStop(.62,'#7654df');g.addColorStop(1,'#130a32');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,19,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+  }else if(avatar==='ash_titan'){
+    ctx.strokeStyle='rgba(220,192,169,.68)';ctx.lineWidth=2;ctx.shadowBlur=12;ctx.shadowColor='rgba(190,105,59,.28)';
+    ctx.beginPath();ctx.ellipse(0,1,29,8,-.24,0,Math.PI*2);ctx.stroke();
+    const g=ctx.createRadialGradient(-7,-8,2,0,0,22);
+    g.addColorStop(0,'#c1b6ab');g.addColorStop(.38,'#5b5048');g.addColorStop(.7,'#241c19');g.addColorStop(1,'#090707');
+    ctx.fillStyle=g;ctx.beginPath();ctx.arc(0,0,19,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+    ctx.fillStyle='rgba(230,121,67,.65)';
+    for(let i=0;i<3;i++){const a=(runnerDistanceValue*.04+i*2.1)%(Math.PI*2);ctx.beginPath();ctx.arc(Math.cos(a)*14,Math.sin(a)*14,1.2,0,Math.PI*2);ctx.fill()}
   }else{
     ctx.strokeStyle=avatar==='frost_moon'?'rgba(218,244,251,.84)':(stage===3?'rgba(222,192,241,.82)':'rgba(225,234,243,.76)');
     ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(0,1,28,8,-.24,0,Math.PI*2);ctx.stroke();
