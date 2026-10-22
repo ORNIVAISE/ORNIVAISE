@@ -21,7 +21,12 @@ BEGIN
     RAISE EXCEPTION 'invalid_link_code';
   END IF;
 
-  -- Lock the code first. The second redeemer waits, then sees used_at.
+  -- Serialize requests for the same device even when its mapping row
+  -- does not exist yet. This prevents competing valid codes from
+  -- overwriting each other's newly created device mapping.
+  PERFORM pg_advisory_xact_lock(hashtextextended(p_device_hash, 0));
+
+  -- Lock the code. The second redeemer waits, then sees used_at.
   SELECT player_id INTO v_target
   FROM public.runner_device_link_codes
   WHERE code_hash = p_code_hash
@@ -87,6 +92,8 @@ GRANT EXECUTE ON FUNCTION public.redeem_runner_link_atomic(text,text) TO service
 -- (3) Device with progress -> 409 and code remains usable.
 -- (4) Failure during RPC -> transaction rollback.
 -- (5) Existing device mapping and a new device mapping both work.
+-- (6) Two different valid codes racing for the same new device serialize.
+-- (7) Verify ownership of paid inventory is never silently discarded.
 --
 -- Progress check also covers inventory, achievements, leaderboard and run history.
 -- Stage-test the complete flow before any production rollout.
