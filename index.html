@@ -1046,6 +1046,69 @@ html{scroll-padding-top:80px}
     bottom:max(6px,env(safe-area-inset-bottom));
   }
 }
+
+/* mobile hero readability — preserve original dark artwork/effects, show more of the scene */
+@media(max-width:700px){
+  .site-header{
+    height:64px;
+    padding-left:max(14px,env(safe-area-inset-left));
+    padding-right:max(14px,env(safe-area-inset-right));
+  }
+  .main-nav{top:64px}
+  .hero{
+    padding-top:64px;
+    min-height:680px;
+  }
+  .hero-bg,
+  .hero-noise,
+  .hero-glow,
+  .hero-particles{inset:64px 0 0}
+  .hero-bg{
+    background-size:100% 100%,132% auto!important;
+    background-position:center center,center 15%!important;
+    background-repeat:no-repeat,no-repeat!important;
+    transform:none!important;
+    animation:heroMobileWideBreath 28s ease-in-out infinite alternate!important;
+  }
+  .popular-card{
+    width:calc(100% - 12px);
+    bottom:12px;
+  }
+}
+@media(max-width:430px){
+  .hero{
+    min-height:min(680px,84svh);
+  }
+  .hero-bg{
+    background-size:100% 100%,138% auto!important;
+    background-position:center center,center 13%!important;
+  }
+  .hero-glow{
+    opacity:.18!important;
+    background:radial-gradient(circle at 50% 31%,rgba(255,255,255,.13),transparent 38%)!important;
+  }
+  .hero-noise{opacity:.09!important}
+  .popular-card{
+    width:calc(100% - 10px);
+    min-height:96px;
+    padding:10px 9px;
+  }
+}
+@media(max-width:380px){
+  .hero{min-height:min(650px,84svh)}
+  .hero-bg{
+    background-size:100% 100%,145% auto!important;
+    background-position:center center,center 12%!important;
+  }
+}
+@keyframes heroMobileWideBreath{
+  from{transform:scale(1.008);filter:brightness(.98)}
+  to{transform:scale(1.025);filter:brightness(1.01)}
+}
+@media(prefers-reduced-motion:reduce){
+  .hero-bg{animation:none!important;transform:none!important}
+}
+
 @media(max-width:430px){
   body{padding-bottom:116px}
   .wordmark{font-size:15px;letter-spacing:.2em}
