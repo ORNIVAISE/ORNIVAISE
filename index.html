@@ -2152,6 +2152,7 @@ let runnerRaf=0,runnerRunning=false,runnerGameOver=false,runnerLast=0;
 let runnerDistanceValue=0,runnerSignalCount=0,runnerSpeed=300,runnerSpawn=0,runnerOrbSpawn=0;
 let runnerObstacles=[],runnerOrbs=[],runnerDust=[],runnerStars=[],runnerSecret=false,runnerStage=0,runnerStageTimer=0;
 let runnerGravity=1,runnerGravityEvent=false,runnerGravityEnd=0,runnerNextGravity=0,runnerPortalFx=0;
+let runnerPortalTransition={active:false,t:0,duration:.92,target:1,fromGravity:1,switched:false};
 let runnerBossActive=false,runnerBossType=0,runnerBossEnd=0,runnerNextBoss=0,runnerEventTimer=0;
 let runnerModifier='none';
 let runnerGhostBest=[],runnerGhostCurrent=[];
@@ -2261,16 +2262,50 @@ function announceRunnerEvent(textValue,duration=1.7){
     signalZoneBadge.classList.add('visible');
   }
 }
-function setRunnerGravity(direction){
-  runnerGravity=direction;
-  runnerGravityEvent=direction===-1;
+function startRunnerGravityTransition(direction){
+  if(runnerPortalTransition.active||direction===runnerGravity)return;
+  runnerPortalTransition={active:true,t:0,duration:.92,target:direction,fromGravity:runnerGravity,switched:false};
   runnerPortalFx=1;
   runnerObstacles=[];
   runnerOrbs=[];
   runnerPlayer.vy=0;
-  runnerPlayer.onGround=true;
-  runnerPlayer.y=direction===1?RUNNER_GROUND-runnerPlayer.h:RUNNER_CEILING;
+  runnerPlayer.onGround=false;
   announceRunnerEvent(gameText(direction===-1?'gravityShift':'gravityReturn'),2.1);
+}
+function updateRunnerGravityTransition(dt){
+  const tr=runnerPortalTransition;
+  if(!tr.active)return false;
+  tr.t=Math.min(1,tr.t+dt/tr.duration);
+  if(!tr.switched&&tr.t>=.5){
+    tr.switched=true;
+    runnerGravity=tr.target;
+    runnerGravityEvent=tr.target===-1;
+    runnerPlayer.y=runnerGravity===1?RUNNER_GROUND-runnerPlayer.h:RUNNER_CEILING;
+    runnerPlayer.vy=0;
+  }
+  if(tr.t>=1){
+    tr.active=false;
+    runnerPlayer.y=runnerGravity===1?RUNNER_GROUND-runnerPlayer.h:RUNNER_CEILING;
+    runnerPlayer.vy=0;
+    runnerPlayer.onGround=true;
+    runnerPortalFx=.45;
+  }
+  return true;
+}
+function getRunnerPortalPlayerVisual(){
+  const tr=runnerPortalTransition;
+  if(!tr.active)return{x:runnerPlayer.x,y:runnerPlayer.y,scale:1,alpha:1};
+  const entering=tr.t<.5;
+  const raw=entering?tr.t*2:(tr.t-.5)*2;
+  const ease=raw<.5?2*raw*raw:1-Math.pow(-2*raw+2,2)/2;
+  const fromY=tr.fromGravity===1?RUNNER_GROUND-runnerPlayer.h:RUNNER_CEILING;
+  const toY=tr.target===1?RUNNER_GROUND-runnerPlayer.h:RUNNER_CEILING;
+  return{
+    x:runnerPlayer.x+(entering?ease:(1-ease))*68,
+    y:entering?fromY:toY,
+    scale:entering?1-ease*.68:.32+ease*.68,
+    alpha:entering?1-ease*.9:.1+ease*.9
+  };
 }
 
 function showRunnerOverlay(title,textValue,buttonText){
@@ -2295,6 +2330,7 @@ function resetRunner(){
   runnerObstacles=[];runnerOrbs=[];runnerDust=[];
   runnerSecret=false;runnerStage=0;runnerStageTimer=0;runnerEventTimer=0;
   runnerGravity=1;runnerGravityEvent=false;runnerGravityEnd=0;runnerNextGravity=850+Math.random()*650;runnerPortalFx=0;
+  runnerPortalTransition={active:false,t:0,duration:.92,target:1,fromGravity:1,switched:false};
   runnerBossActive=false;runnerBossType=0;runnerBossEnd=0;runnerNextBoss=1750+Math.random()*900;
   runnerModifier='none';
   runnerGhostCurrent=[];loadRunnerGhost();
@@ -2332,7 +2368,7 @@ function runnerJumpAction(){
     if(runnerGameOver)startRunner();
     return;
   }
-  if(runnerPlayer.onGround){
+  if(runnerPlayer.onGround&&!runnerPortalTransition.active){
     const jumpPower=runnerModifier==='low_gravity'?585:640;
     runnerPlayer.vy=-jumpPower*runnerGravity;
     runnerPlayer.onGround=false;
@@ -2430,15 +2466,15 @@ function updateRunner(dt){
     }
   }
 
-  if(!runnerGravityEvent&&runnerDistanceValue>=runnerNextGravity&&!runnerBossActive){
-    setRunnerGravity(-1);
+  if(!runnerPortalTransition.active&&!runnerGravityEvent&&runnerDistanceValue>=runnerNextGravity&&!runnerBossActive){
+    startRunnerGravityTransition(-1);
     runnerGravityEnd=runnerDistanceValue+520+Math.random()*150;
-  }else if(runnerGravityEvent&&runnerDistanceValue>=runnerGravityEnd){
-    setRunnerGravity(1);
+  }else if(!runnerPortalTransition.active&&runnerGravityEvent&&runnerDistanceValue>=runnerGravityEnd){
+    startRunnerGravityTransition(1);
     runnerNextGravity=runnerDistanceValue+1250+Math.random()*850;
   }
 
-  if(!runnerBossActive&&runnerDistanceValue>=runnerNextBoss&&!runnerGravityEvent){
+  if(!runnerBossActive&&runnerDistanceValue>=runnerNextBoss&&!runnerGravityEvent&&!runnerPortalTransition.active){
     runnerBossActive=true;
     runnerBossType=Math.floor(Math.random()*3);
     runnerBossEnd=runnerDistanceValue+560+Math.random()*180;
@@ -2448,24 +2484,27 @@ function updateRunner(dt){
     runnerNextBoss=runnerDistanceValue+2200+Math.random()*1200;
   }
 
-  const gravityStrength=runnerModifier==='low_gravity'?1460:1780;
-  runnerPlayer.vy+=gravityStrength*runnerGravity*dt;
-  runnerPlayer.y+=runnerPlayer.vy*dt;
-  if(runnerGravity===1&&runnerPlayer.y>=RUNNER_GROUND-runnerPlayer.h){
-    runnerPlayer.y=RUNNER_GROUND-runnerPlayer.h;runnerPlayer.vy=0;runnerPlayer.onGround=true;
-  }else if(runnerGravity===-1&&runnerPlayer.y<=RUNNER_CEILING){
-    runnerPlayer.y=RUNNER_CEILING;runnerPlayer.vy=0;runnerPlayer.onGround=true;
-  }
+  const portalActive=updateRunnerGravityTransition(dt);
+  if(!portalActive){
+    const gravityStrength=runnerModifier==='low_gravity'?1460:1780;
+    runnerPlayer.vy+=gravityStrength*runnerGravity*dt;
+    runnerPlayer.y+=runnerPlayer.vy*dt;
+    if(runnerGravity===1&&runnerPlayer.y>=RUNNER_GROUND-runnerPlayer.h){
+      runnerPlayer.y=RUNNER_GROUND-runnerPlayer.h;runnerPlayer.vy=0;runnerPlayer.onGround=true;
+    }else if(runnerGravity===-1&&runnerPlayer.y<=RUNNER_CEILING){
+      runnerPlayer.y=RUNNER_CEILING;runnerPlayer.vy=0;runnerPlayer.onGround=true;
+    }
 
-  runnerSpawn-=dt;
-  if(runnerSpawn<=0){
-    spawnRunnerObstacle();
-    runnerSpawn=Math.max(.58,1.48-runnerSpeed*.00105)+Math.random()*.46;
-  }
-  runnerOrbSpawn-=dt;
-  if(runnerOrbSpawn<=0){
-    if(Math.random()<.72)spawnRunnerOrb();
-    runnerOrbSpawn=1.25+Math.random()*2.1;
+    runnerSpawn-=dt;
+    if(runnerSpawn<=0){
+      spawnRunnerObstacle();
+      runnerSpawn=Math.max(.58,1.48-runnerSpeed*.00105)+Math.random()*.46;
+    }
+    runnerOrbSpawn-=dt;
+    if(runnerOrbSpawn<=0){
+      if(Math.random()<.72)spawnRunnerOrb();
+      runnerOrbSpawn=1.25+Math.random()*2.1;
+    }
   }
 
   runnerObstacles.forEach(o=>o.x-=runnerSpeed*dt);
@@ -2476,9 +2515,11 @@ function updateRunner(dt){
   runnerDust=runnerDust.filter(p=>p.life>0);
 
   const p={x:runnerPlayer.x,y:runnerPlayer.y,w:runnerPlayer.w,h:runnerPlayer.h};
-  for(const o of runnerObstacles){if(rectHit(p,o,5)){gameOverRunner();return}}
+  if(!runnerPortalTransition.active){
+    for(const o of runnerObstacles){if(rectHit(p,o,5)){gameOverRunner();return}}
+  }
 
-  runnerOrbs=runnerOrbs.filter(o=>{
+  runnerOrbs=runnerPortalTransition.active?[]:runnerOrbs.filter(o=>{
     const cx=Math.max(p.x,Math.min(o.x,p.x+p.w));
     const cy=Math.max(p.y,Math.min(o.y,p.y+p.h));
     const dx=o.x-cx,dy=o.y-cy;
@@ -2493,7 +2534,7 @@ function updateRunner(dt){
     return o.x+o.r>-30;
   });
   const ghostIndex=Math.floor(runnerDistanceValue/25);
-  if(runnerGhostCurrent.length<=ghostIndex)runnerGhostCurrent.push({y:Math.round(runnerPlayer.y),g:runnerGravity});
+  if(!runnerPortalTransition.active&&runnerGhostCurrent.length<=ghostIndex)runnerGhostCurrent.push({y:Math.round(runnerPlayer.y),g:runnerGravity});
   updateRunnerHud();
 }
 function drawRunner(){
@@ -2709,14 +2750,52 @@ function drawRunner(){
     for(let x=-topDash;x<RUNNER_W;x+=48){ctx.beginPath();ctx.moveTo(x,RUNNER_CEILING-16);ctx.lineTo(x+22,RUNNER_CEILING-16);ctx.stroke()}
     ctx.restore();
   }
-  if(runnerPortalFx>0){
+  if(runnerPortalTransition.active||runnerPortalFx>0){
     ctx.save();
-    const pcx=runnerPlayer.x+runnerPlayer.w/2,pcy=runnerGravity===-1?RUNNER_CEILING+runnerPlayer.h/2:RUNNER_GROUND-runnerPlayer.h/2;
-    ctx.globalAlpha=Math.min(1,runnerPortalFx)*.72;
-    ctx.strokeStyle='rgba(194,147,232,.75)';ctx.lineWidth=2;ctx.shadowBlur=18;ctx.shadowColor='rgba(165,102,214,.42)';
-    ctx.beginPath();ctx.ellipse(pcx,pcy,18+runnerPortalFx*18,44+runnerPortalFx*22,0,0,Math.PI*2);ctx.stroke();
-    ctx.strokeStyle='rgba(111,228,230,.5)';ctx.lineWidth=1;
-    ctx.beginPath();ctx.ellipse(pcx,pcy,12+runnerPortalFx*13,34+runnerPortalFx*16,0,0,Math.PI*2);ctx.stroke();
+    const tr=runnerPortalTransition;
+    const active=tr.active;
+    const progress=active?tr.t:1-runnerPortalFx;
+    const pulse=.5+.5*Math.sin(runnerDistanceValue*.11+progress*8);
+    const portalX=runnerPlayer.x+runnerPlayer.w/2+68;
+    const sourceGravity=active?tr.fromGravity:runnerGravity;
+    const targetGravity=active?tr.target:runnerGravity;
+    const sourceY=sourceGravity===1?RUNNER_GROUND-runnerPlayer.h/2:RUNNER_CEILING+runnerPlayer.h/2;
+    const targetY=targetGravity===1?RUNNER_GROUND-runnerPlayer.h/2:RUNNER_CEILING+runnerPlayer.h/2;
+    const entryAlpha=active?Math.max(0,1-tr.t*1.55):0;
+    const exitAlpha=active?Math.max(0,(tr.t-.34)*1.52):Math.min(1,runnerPortalFx)*.35;
+    const drawPortal=(py,alpha,flip=1)=>{
+      if(alpha<=0)return;
+      ctx.save();ctx.translate(portalX,py);ctx.scale(1,flip);
+      ctx.globalAlpha=alpha*.82;
+      const pg=ctx.createRadialGradient(0,0,2,0,0,48);
+      pg.addColorStop(0,'rgba(4,5,10,.94)');pg.addColorStop(.42,'rgba(63,31,91,.36)');pg.addColorStop(.72,'rgba(91,211,216,.08)');pg.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=pg;ctx.fillRect(-55,-64,110,128);
+      ctx.strokeStyle='rgba(202,151,239,.88)';ctx.lineWidth=2.2;ctx.shadowBlur=20;ctx.shadowColor='rgba(173,104,225,.52)';
+      ctx.beginPath();ctx.ellipse(0,0,18+pulse*2,39+pulse*4,0,0,Math.PI*2);ctx.stroke();
+      ctx.strokeStyle='rgba(105,231,233,.62)';ctx.lineWidth=1;
+      ctx.beginPath();ctx.ellipse(0,0,12+pulse,31+pulse*3,0,0,Math.PI*2);ctx.stroke();
+      ctx.shadowBlur=0;
+      for(let i=0;i<5;i++){
+        const a=progress*5+i*1.27;
+        ctx.globalAlpha=alpha*(.15+i*.025);
+        ctx.fillStyle=i%2?'#d7b4f2':'#8de7e8';
+        ctx.beginPath();ctx.arc(Math.cos(a)*24,Math.sin(a)*40,1.2,0,Math.PI*2);ctx.fill();
+      }
+      ctx.restore();
+    };
+    drawPortal(sourceY,entryAlpha,sourceGravity);
+    drawPortal(targetY,exitAlpha,targetGravity);
+    if(active){
+      ctx.globalAlpha=.12*Math.sin(Math.PI*tr.t);
+      ctx.fillStyle='rgba(178,137,222,.42)';
+      ctx.fillRect(0,0,RUNNER_W,RUNNER_H);
+      ctx.globalAlpha=.22*Math.sin(Math.PI*tr.t);
+      ctx.strokeStyle='rgba(130,222,228,.35)';ctx.lineWidth=1;
+      for(let i=0;i<6;i++){
+        const yy=74+i*38;
+        ctx.beginPath();ctx.moveTo(portalX-140,yy);ctx.lineTo(portalX+120,yy+(i%2?8:-8));ctx.stroke();
+      }
+    }
     ctx.restore();
   }
 
@@ -2908,8 +2987,10 @@ function drawRunner(){
 
   // Planet Ø: ringed sphere with soft motion trail.
   ctx.save();
-  const cx=runnerPlayer.x+runnerPlayer.w/2,cy=runnerPlayer.y+runnerPlayer.h/2;
+  const portalVisual=getRunnerPortalPlayerVisual();
+  const cx=portalVisual.x+runnerPlayer.w/2,cy=portalVisual.y+runnerPlayer.h/2;
   const avatar=runnerStoreState.selected_avatar;
+  ctx.globalAlpha=portalVisual.alpha;
 
   // Legendary motion signatures stay behind the player so obstacles remain readable.
   if(avatar==='neon_reef'){
@@ -2964,6 +3045,7 @@ function drawRunner(){
   }
   ctx.globalAlpha=1;
   ctx.translate(cx,cy);
+  ctx.scale(portalVisual.scale,portalVisual.scale);
   const spin=runnerDistanceValue*.035;
   ctx.rotate(Math.sin(spin)*.045);
 
