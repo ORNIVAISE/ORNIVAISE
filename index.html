@@ -754,6 +754,26 @@ body.audio-is-playing .player-54 .gp-meta small::before{
  .runner-preview-planet,.runner-preview-planet:before,.runner-preview-obstacles i,.runner-preview-scene:after{animation:none!important}
 }
 
+
+/* SIGNAL RUNNER V2 — readability and meteor preview pass */
+.runner-store-kicker,.runner-store-balance-box small,.runner-store-category-count,
+.runner-profile-head small,.runner-profile-stat small,.runner-device-link-head span{font-size:clamp(11px,1.5vw,13px)!important}
+.runner-store-head strong,.runner-profile-head strong{font-size:clamp(20px,3vw,25px)!important}
+.runner-store-subtitle,.runner-shop-card small,.runner-device-link-note{font-size:clamp(12px,1.6vw,14px)!important;line-height:1.55!important}
+.runner-store-category h4,.runner-shop-card strong,.runner-shop-price b,.runner-device-link-head strong{font-size:clamp(13px,1.7vw,16px)!important}
+.runner-rarity,.runner-shop-price,.runner-achievement span,.runner-achievement em,.runner-profile-theme-head span{font-size:11px!important}
+.runner-shop-card button,.runner-profile-bg-choice{font-size:12px!important;min-height:42px!important}
+.runner-profile-theme-head strong,.runner-ach-title,.runner-achievement b{font-size:12px!important}
+.runner-profile-stat strong{font-size:19px!important}
+.runner-preview-obstacles.orbital_debris i{border-radius:39% 61% 43% 57% / 58% 38% 62% 42%!important;background:repeating-conic-gradient(from 22deg at 46% 53%,transparent 0deg 35deg,rgba(255,101,30,.85) 37deg 40deg,transparent 43deg 90deg),radial-gradient(circle at 38% 29%,#b87d61 0%,#60433a 35%,#231b1c 76%,#100d10 100%)!important;box-shadow:inset -4px -3px 5px #130e10,0 0 8px rgba(255,99,30,.38)!important;filter:drop-shadow(-4px 0 5px rgba(255,87,22,.25))}
+.runner-preview-obstacles.orbital_debris i:nth-child(2){border-radius:63% 37% 58% 42% / 39% 59% 41% 61%!important}
+.runner-preview-obstacles.orbital_debris i:nth-child(3){border-radius:42% 58% 30% 70% / 66% 38% 62% 34%!important}
+.runner-preview-obstacles.orbital_debris i:before{width:38px!important;height:15px!important;right:86%!important;top:16%!important;background:linear-gradient(90deg,transparent,rgba(255,64,23,.35) 45%,rgba(255,203,76,.88))!important;filter:blur(2px)!important}
+.runner-preview-obstacles.orbital_debris i:after{content:"";position:absolute;right:110%;top:12%;width:32px;height:23px;background:radial-gradient(circle at 75% 50%,rgba(255,197,71,.9) 0 1px,transparent 2px),radial-gradient(circle at 35% 25%,rgba(255,95,36,.75) 0 1px,transparent 2px),radial-gradient(circle at 10% 78%,rgba(255,133,45,.6) 0 1px,transparent 2px);animation:runnerMeteorSparks 1.1s ease-out infinite}
+@keyframes runnerMeteorSparks{0%{opacity:.95;transform:translateX(4px) scale(.75)}100%{opacity:0;transform:translateX(-14px) scale(1.25)}}
+@media(prefers-reduced-motion:reduce){.runner-preview-obstacles.orbital_debris i:after{animation:none}}
+@media(max-width:760px){.runner-shop-card{min-width:0}.runner-shop-card button{min-height:46px!important}.runner-profile-bg-choice{padding:8px 12px!important}}
+
 </style>
 
 <style id="scroll-experiment-v12">
@@ -2180,7 +2200,7 @@ const RUNNER_ITEM_META={
   signal_bloom:{ru:['ИМПУЛЬС СИГНАЛА','Живой сигнальный импульс'],en:['SIGNAL BLOOM','Living signal pulse']},
   crimson_pulse:{ru:['БАГРОВЫЙ ИМПУЛЬС','Красное энергетическое ядро'],en:['CRIMSON PULSE','Crimson energy core']},
   eclipse_halo:{ru:['ОРЕОЛ ЗАТМЕНИЯ','Чёрная планета в световом ореоле'],en:['ECLIPSE HALO','Black planet in a luminous halo']},
-  solar_flare:{ru:['СОЛНЕЧНОЕ ЯДРО','Живая звезда: пламя, протуберанцы и огненный след'],en:['SOLAR CORE','Living star with flame, prominences and a burning trail']},
+  solar_flare:{ru:['СОЛНЕЧНАЯ ВСПЫШКА','Живая звезда: пламя, протуберанцы и огненный след'],en:['SOLAR CORE','Living star with flame, prominences and a burning trail']},
   toxic_bloom:{ru:['ЯДОВИТОЕ ЦВЕТЕНИЕ','Токсичная планета с кислотными всплесками и едким следом'],en:['TOXIC BLOOM','Toxic planet with acid splashes and a corrosive trail']},
   neon_reef:{ru:['НЕОНОВЫЙ РИФ','Неоновая сфера с двойным свечением'],en:['NEON REEF','Neon sphere with dual glow']},
   ash_titan:{ru:['ПЕПЕЛЬНЫЙ ТИТАН','Пепельный титан с тлеющим ядром'],en:['ASH TITAN','Ash titan with a smouldering core']},
