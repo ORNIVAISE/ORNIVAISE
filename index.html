@@ -1867,7 +1867,6 @@ function applyGameLanguage(lang){
   set('#runnerProfileBgTitle','profileBg');
   set('#runnerProfileBgHint','profileBgHint');
   set('#runnerLegendaryText','itemAcquired');
-  const overlay=document.getElementById('runnerOverlay');
   if(overlay?.classList.contains('visible')&&!window.refreshGameLanguage){set('#runnerOverlayTitle','runnerTitle');set('#runnerOverlayText','jumpHint');set('#runnerOverlayButton','startRun')}
   set('.runner-store-kicker','gameName');
   set('.runner-legendary-acquire small','legendarySignal');
