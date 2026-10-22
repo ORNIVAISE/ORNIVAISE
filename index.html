@@ -933,6 +933,37 @@ html{scroll-padding-top:80px}
 .runner-store-toggle:hover{border-color:rgba(238,243,249,.48);color:#fff}
 .runner-store-panel{display:none;border-top:1px solid rgba(226,233,242,.09);padding:18px 14px 20px;background:linear-gradient(180deg,rgba(255,255,255,.018),rgba(255,255,255,.004))}
 .runner-store-panel.open{display:block}
+.runner-profile-toggle{min-height:42px;border:1px solid rgba(228,235,244,.2);border-radius:999px;background:rgba(255,255,255,.025);color:#d9e0e8;padding:0 15px;font:inherit;font-size:9px;letter-spacing:.12em;cursor:pointer}
+.runner-profile-toggle:hover{border-color:rgba(238,243,249,.48);color:#fff}
+.runner-profile-panel{display:none;border-top:1px solid rgba(226,233,242,.09);padding:18px 14px 20px;background:linear-gradient(180deg,rgba(255,255,255,.016),rgba(255,255,255,.004))}
+.runner-profile-panel.open{display:block}
+.runner-profile-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:14px}
+.runner-profile-head small{display:block;color:#6f7a86;font-size:7px;letter-spacing:.2em;margin-bottom:5px}
+.runner-profile-head strong{display:block;font-size:16px;letter-spacing:.13em}
+.runner-profile-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:18px}
+.runner-profile-stat{padding:11px;border:1px solid rgba(226,233,242,.09);border-radius:11px;background:rgba(255,255,255,.018)}
+.runner-profile-stat small{display:block;margin-bottom:6px;color:#67727e;font-size:7px;letter-spacing:.14em}
+.runner-profile-stat strong{font-size:13px;letter-spacing:.1em;font-variant-numeric:tabular-nums}
+.runner-ach-title{margin:0 0 9px;color:#aeb8c3;font-size:8px;letter-spacing:.18em;font-weight:500}
+.runner-achievements{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.runner-achievement{min-width:0;padding:10px;border:1px solid rgba(226,233,242,.08);border-radius:11px;background:rgba(255,255,255,.012);opacity:.4}
+.runner-achievement.unlocked{opacity:1;border-color:rgba(221,207,235,.22);background:linear-gradient(180deg,rgba(174,129,207,.05),rgba(255,255,255,.012))}
+.runner-achievement b{display:block;margin-bottom:5px;font-size:8px;letter-spacing:.09em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.runner-achievement span{display:block;color:#707b87;font-size:7px;line-height:1.45}
+.runner-achievement em{display:inline-block;margin-top:7px;color:#cbb6dc;font-size:7px;font-style:normal;letter-spacing:.08em}
+.runner-legendary-acquire{position:absolute;inset:0;z-index:8;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 50%,rgba(113,76,139,.18),rgba(3,4,7,.88) 58%,rgba(3,4,7,.96));transition:opacity .22s ease}
+.runner-legendary-acquire.show{opacity:1}
+.runner-legendary-acquire-inner{text-align:center;padding:24px}
+.runner-legendary-acquire small{display:block;color:#d6c0e6;font-size:8px;letter-spacing:.28em}
+.runner-legendary-acquire strong{display:block;margin:10px 0 7px;font-size:clamp(20px,5vw,38px);letter-spacing:.12em;text-shadow:0 0 24px rgba(190,139,224,.22)}
+.runner-legendary-acquire span{display:block;color:#8d7f99;font-size:8px;letter-spacing:.16em}
+@media(max-width:700px){
+  .runner-profile-grid{grid-template-columns:1fr 1fr}
+  .runner-achievements{grid-template-columns:1fr 1fr}
+}
+@media(max-width:420px){
+  .runner-achievements{grid-template-columns:1fr}
+}
 .runner-store-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:14px}
 .runner-store-kicker{display:block;margin-bottom:5px;color:#697582;font-size:7px;letter-spacing:.22em}
 .runner-store-head strong{display:block;font-size:15px;letter-spacing:.16em;color:#eef3f7}
@@ -1246,6 +1277,9 @@ html{scroll-padding-top:80px}
         <div class="runner-canvas-wrap" id="runnerCanvasWrap">
           <canvas id="signalRunnerCanvas" width="960" height="360" tabindex="0" aria-label="SIGNAL RUNNER. Нажми пробел или коснись экрана, чтобы прыгнуть."></canvas>
           <div class="signal-zone-badge" id="signalZoneBadge">НЕИЗВЕСТНАЯ ПЕРЕДАЧА</div>
+          <div class="runner-legendary-acquire" id="runnerLegendaryAcquire" aria-hidden="true">
+            <div class="runner-legendary-acquire-inner"><small>ØN // LEGENDARY SIGNAL</small><strong id="runnerLegendaryName">—</strong><span id="runnerLegendaryText">ПРЕДМЕТ ПОЛУЧЕН</span></div>
+          </div>
           <div class="runner-overlay visible" id="runnerOverlay">
             <small>ØN // ПРОТОКОЛ ЗАПУСКА</small>
             <strong id="runnerOverlayTitle">SIGNAL RUNNER</strong>
@@ -1263,6 +1297,7 @@ html{scroll-padding-top:80px}
               </svg>
             </button>
             <button class="runner-store-toggle" id="runnerStoreToggle" type="button">МАГАЗИН</button>
+            <button class="runner-profile-toggle" id="runnerProfileToggle" type="button">ПРОФИЛЬ</button>
             <button class="runner-primary" id="runnerJump" type="button">ПРЫЖОК</button>
             <button class="runner-secondary" id="runnerBack" type="button">НАЗАД К ПРИЁМНИКУ</button>
           </div>
@@ -1283,6 +1318,20 @@ html{scroll-padding-top:80px}
           </div>
           <p class="runner-store-status" id="runnerStoreStatus" role="status"></p>
           <div id="runnerStoreContent"></div>
+        </div>
+
+        <div class="runner-profile-panel" id="runnerProfilePanel">
+          <div class="runner-profile-head">
+            <div><small id="runnerProfileKicker">ØN // ПРОФИЛЬ ИГРОКА</small><strong id="runnerProfileName">НЕИЗВЕСТНЫЙ СИГНАЛ</strong></div>
+          </div>
+          <div class="runner-profile-grid">
+            <div class="runner-profile-stat"><small id="runnerProfileRunsLabel">ЗАБЕГИ</small><strong id="runnerProfileRuns">000</strong></div>
+            <div class="runner-profile-stat"><small id="runnerProfileBestLabel">РЕКОРД</small><strong id="runnerProfileBest">00000</strong></div>
+            <div class="runner-profile-stat"><small id="runnerProfileSignalsLabel">СОБРАНО Ø</small><strong id="runnerProfileSignals">0000</strong></div>
+            <div class="runner-profile-stat"><small id="runnerProfileDistanceLabel">ОБЩАЯ ДИСТАНЦИЯ</small><strong id="runnerProfileDistance">00000</strong></div>
+          </div>
+          <h4 class="runner-ach-title" id="runnerAchTitle">ДОСТИЖЕНИЯ</h4>
+          <div class="runner-achievements" id="runnerAchievements"></div>
         </div>
 
         <div class="runner-leaderboard" id="runnerLeaderboard">
@@ -1376,7 +1425,7 @@ const gameI18n={
     nearLock:'ПОЧТИ ЗАХВАЧЕН',nearHint:'ВЫРАВНИВАНИЕ ЧАСТОТЫ // ОЧЕНЬ БЛИЗКО',
     stabilizing:'СТАБИЛИЗАЦИЯ',hold:'УДЕРЖИВАЙ ЧАСТОТУ // НЕ ДВИГАЙ',
     decryptComplete:'РАСШИФРОВКА ЗАВЕРШЕНА // ØN-003',
-    lost:'ПЕРЕДАЧА ПОТЕРЯНА',reconnect:'ПЕРЕПОДКЛЮЧИТЬСЯ',speed:'СКОРОСТЬ',soundOff:'Выключить музыку игры',soundOn:'Включить музыку игры',calmSpace:'СПОКОЙНЫЙ КОСМОС',signalDrift:'ДРЕЙФ СИГНАЛА',distortionField:'ПОЛЕ ИСКАЖЕНИЙ',leaderboard:'ТАБЛИЦА ЛИДЕРОВ',player:'ИГРОК',saveScore:'СОХРАНИТЬ РЕЗУЛЬТАТ',namePlaceholder:'Введи имя',loadingBoard:'Загрузка рейтинга…',emptyBoard:'Пока нет результатов',saveOk:'РЕЗУЛЬТАТ СОХРАНЁН',saveError:'Не удалось сохранить результат',nameError:'Введи имя от 1 до 20 символов',store:'МАГАЗИН',storeClose:'ЗАКРЫТЬ МАГАЗИН',storeTitle:'ØN // МАГАЗИН',avatars:'ПЛАНЕТЫ',backgrounds:'ФОНЫ',obstacles:'ПРЕПЯТСТВИЯ',buy:'КУПИТЬ',equip:'ВЫБРАТЬ',equipped:'ИСПОЛЬЗУЕТСЯ',owned:'КУПЛЕНО',notEnough:'НЕ ХВАТАЕТ Ø-CREDITS',storeError:'Ошибка магазина',connecting:'ПОДКЛЮЧЕНИЕ…',earned:'ЗАРАБОТАНО',position:'ПОЗИЦИЯ',storeSubtitle:'Косметика для сигнала: меняй планету, пространство и препятствия.',free:'БЕСПЛАТНО',creditsLabel:'Ø-КРЕДИТЫ',itemsCount:'ПРЕДМЕТОВ',rarityCommon:'ОБЫЧНЫЙ',rarityRare:'РЕДКИЙ',rarityEpic:'ЭПИЧЕСКИЙ',rarityLegendary:'ЛЕГЕНДАРНЫЙ',rarityVoid:'БЕЗДНА',gravityShift:'ИНВЕРСИЯ ГРАВИТАЦИИ',gravityReturn:'ВОЗВРАТ ГРАВИТАЦИИ',bossDetected:'СЕКРЕТНЫЙ ОБЪЕКТ ОБНАРУЖЕН',modifierSignal:'МОДИФИКАТОР // СИГНАЛЬНЫЙ ПОТОК',modifierLowGravity:'МОДИФИКАТОР // ЛЁГКАЯ ГРАВИТАЦИЯ',rareGold:'ЗОЛОТОЙ СИГНАЛ +7 Ø',rareViolet:'ФИОЛЕТОВЫЙ СИГНАЛ +3 Ø'
+    lost:'ПЕРЕДАЧА ПОТЕРЯНА',reconnect:'ПЕРЕПОДКЛЮЧИТЬСЯ',speed:'СКОРОСТЬ',soundOff:'Выключить музыку игры',soundOn:'Включить музыку игры',calmSpace:'СПОКОЙНЫЙ КОСМОС',signalDrift:'ДРЕЙФ СИГНАЛА',distortionField:'ПОЛЕ ИСКАЖЕНИЙ',leaderboard:'ТАБЛИЦА ЛИДЕРОВ',player:'ИГРОК',saveScore:'СОХРАНИТЬ РЕЗУЛЬТАТ',namePlaceholder:'Введи имя',loadingBoard:'Загрузка рейтинга…',emptyBoard:'Пока нет результатов',saveOk:'РЕЗУЛЬТАТ СОХРАНЁН',saveError:'Не удалось сохранить результат',nameError:'Введи имя от 1 до 20 символов',store:'МАГАЗИН',storeClose:'ЗАКРЫТЬ МАГАЗИН',storeTitle:'ØN // МАГАЗИН',avatars:'ПЛАНЕТЫ',backgrounds:'ФОНЫ',obstacles:'ПРЕПЯТСТВИЯ',buy:'КУПИТЬ',equip:'ВЫБРАТЬ',equipped:'ИСПОЛЬЗУЕТСЯ',owned:'КУПЛЕНО',notEnough:'НЕ ХВАТАЕТ Ø-CREDITS',storeError:'Ошибка магазина',connecting:'ПОДКЛЮЧЕНИЕ…',earned:'ЗАРАБОТАНО',position:'ПОЗИЦИЯ',storeSubtitle:'Косметика для сигнала: меняй планету, пространство и препятствия.',free:'БЕСПЛАТНО',creditsLabel:'Ø-КРЕДИТЫ',itemsCount:'ПРЕДМЕТОВ',rarityCommon:'ОБЫЧНЫЙ',rarityRare:'РЕДКИЙ',rarityEpic:'ЭПИЧЕСКИЙ',rarityLegendary:'ЛЕГЕНДАРНЫЙ',rarityVoid:'БЕЗДНА',gravityShift:'ИНВЕРСИЯ ГРАВИТАЦИИ',gravityReturn:'ВОЗВРАТ ГРАВИТАЦИИ',bossDetected:'СЕКРЕТНЫЙ ОБЪЕКТ ОБНАРУЖЕН',modifierSignal:'МОДИФИКАТОР // СИГНАЛЬНЫЙ ПОТОК',modifierLowGravity:'МОДИФИКАТОР // ЛЁГКАЯ ГРАВИТАЦИЯ',rareGold:'ЗОЛОТОЙ СИГНАЛ +7 Ø',rareViolet:'ФИОЛЕТОВЫЙ СИГНАЛ +3 Ø',profile:'ПРОФИЛЬ',profileClose:'ЗАКРЫТЬ ПРОФИЛЬ',profileKicker:'ØN // ПРОФИЛЬ ИГРОКА',unknownPlayer:'НЕИЗВЕСТНЫЙ СИГНАЛ',runs:'ЗАБЕГИ',totalSignals:'СОБРАНО Ø',totalDistance:'ОБЩАЯ ДИСТАНЦИЯ',achievements:'ДОСТИЖЕНИЯ',itemAcquired:'ПРЕДМЕТ ПОЛУЧЕН',achievementUnlocked:'ДОСТИЖЕНИЕ ОТКРЫТО'
   },
   en:{
     intercept:'ØN // INTERCEPT 003',previous:'PREVIOUS LOCK // VERIFIED',
@@ -1394,7 +1443,7 @@ const gameI18n={
     nearLock:'NEAR LOCK',nearHint:'FREQUENCY ALIGNMENT // VERY CLOSE',
     stabilizing:'STABILIZING',hold:'HOLD FREQUENCY // DO NOT MOVE',
     decryptComplete:'DECRYPTION COMPLETE // ØN-003',
-    lost:'TRANSMISSION LOST',reconnect:'RECONNECT',speed:'SPEED',soundOff:'Turn game music off',soundOn:'Turn game music on',calmSpace:'CALM SPACE',signalDrift:'SIGNAL DRIFT',distortionField:'DISTORTION FIELD',leaderboard:'LEADERBOARD',player:'PLAYER',saveScore:'SAVE RESULT',namePlaceholder:'Enter name',loadingBoard:'Loading leaderboard…',emptyBoard:'No scores yet',saveOk:'RESULT SAVED',saveError:'Could not save result',nameError:'Enter a name from 1 to 20 characters',store:'STORE',storeClose:'CLOSE STORE',storeTitle:'ØN // STORE',avatars:'PLANETS',backgrounds:'BACKGROUNDS',obstacles:'OBSTACLES',buy:'BUY',equip:'EQUIP',equipped:'EQUIPPED',owned:'OWNED',notEnough:'NOT ENOUGH Ø-CREDITS',storeError:'Store error',connecting:'CONNECTING…',earned:'EARNED',position:'POSITION',storeSubtitle:'Signal cosmetics: change your planet, space and obstacles.',free:'FREE',creditsLabel:'Ø-CREDITS',itemsCount:'ITEMS',rarityCommon:'COMMON',rarityRare:'RARE',rarityEpic:'EPIC',rarityLegendary:'LEGENDARY',rarityVoid:'VOID',gravityShift:'GRAVITY INVERSION',gravityReturn:'GRAVITY RESTORED',bossDetected:'SECRET ENTITY DETECTED',modifierSignal:'MODIFIER // SIGNAL SURGE',modifierLowGravity:'MODIFIER // LOW GRAVITY',rareGold:'GOLD SIGNAL +7 Ø',rareViolet:'VIOLET SIGNAL +3 Ø'
+    lost:'TRANSMISSION LOST',reconnect:'RECONNECT',speed:'SPEED',soundOff:'Turn game music off',soundOn:'Turn game music on',calmSpace:'CALM SPACE',signalDrift:'SIGNAL DRIFT',distortionField:'DISTORTION FIELD',leaderboard:'LEADERBOARD',player:'PLAYER',saveScore:'SAVE RESULT',namePlaceholder:'Enter name',loadingBoard:'Loading leaderboard…',emptyBoard:'No scores yet',saveOk:'RESULT SAVED',saveError:'Could not save result',nameError:'Enter a name from 1 to 20 characters',store:'STORE',storeClose:'CLOSE STORE',storeTitle:'ØN // STORE',avatars:'PLANETS',backgrounds:'BACKGROUNDS',obstacles:'OBSTACLES',buy:'BUY',equip:'EQUIP',equipped:'EQUIPPED',owned:'OWNED',notEnough:'NOT ENOUGH Ø-CREDITS',storeError:'Store error',connecting:'CONNECTING…',earned:'EARNED',position:'POSITION',storeSubtitle:'Signal cosmetics: change your planet, space and obstacles.',free:'FREE',creditsLabel:'Ø-CREDITS',itemsCount:'ITEMS',rarityCommon:'COMMON',rarityRare:'RARE',rarityEpic:'EPIC',rarityLegendary:'LEGENDARY',rarityVoid:'VOID',gravityShift:'GRAVITY INVERSION',gravityReturn:'GRAVITY RESTORED',bossDetected:'SECRET ENTITY DETECTED',modifierSignal:'MODIFIER // SIGNAL SURGE',modifierLowGravity:'MODIFIER // LOW GRAVITY',rareGold:'GOLD SIGNAL +7 Ø',rareViolet:'VIOLET SIGNAL +3 Ø',profile:'PROFILE',profileClose:'CLOSE PROFILE',profileKicker:'ØN // PLAYER PROFILE',unknownPlayer:'UNKNOWN SIGNAL',runs:'RUNS',totalSignals:'COLLECTED Ø',totalDistance:'TOTAL DISTANCE',achievements:'ACHIEVEMENTS',itemAcquired:'ITEM ACQUIRED',achievementUnlocked:'ACHIEVEMENT UNLOCKED'
   }
 };
 function gameText(key){
@@ -1417,6 +1466,15 @@ function applyGameLanguage(lang){
   set('.runner-stat:nth-child(3) small','best');
   const storeButton=document.getElementById('runnerStoreToggle');
   if(storeButton)storeButton.textContent=document.getElementById('runnerStorePanel')?.classList.contains('open')?g.storeClose:g.store;
+  const profileButton=document.getElementById('runnerProfileToggle');
+  if(profileButton)profileButton.textContent=document.getElementById('runnerProfilePanel')?.classList.contains('open')?g.profileClose:g.profile;
+  set('#runnerProfileKicker','profileKicker');
+  set('#runnerProfileRunsLabel','runs');
+  set('#runnerProfileBestLabel','best');
+  set('#runnerProfileSignalsLabel','totalSignals');
+  set('#runnerProfileDistanceLabel','totalDistance');
+  set('#runnerAchTitle','achievements');
+  set('#runnerLegendaryText','itemAcquired');
   const storeTitle=document.getElementById('runnerStoreTitle');if(storeTitle)storeTitle.textContent=g.storeTitle;
   const storeSubtitle=document.getElementById('runnerStoreSubtitle');if(storeSubtitle)storeSubtitle.textContent=g.storeSubtitle;
   const creditLabels=document.querySelectorAll('.runner-stat:nth-child(4) small,.runner-store-balance-box small');
@@ -1626,6 +1684,17 @@ const runnerStoreTitle=document.getElementById('runnerStoreTitle');
 const runnerStoreBalance=document.getElementById('runnerStoreBalance');
 const runnerStoreContent=document.getElementById('runnerStoreContent');
 const runnerStoreStatus=document.getElementById('runnerStoreStatus');
+const runnerProfileToggle=document.getElementById('runnerProfileToggle');
+const runnerProfilePanel=document.getElementById('runnerProfilePanel');
+const runnerProfileName=document.getElementById('runnerProfileName');
+const runnerProfileRuns=document.getElementById('runnerProfileRuns');
+const runnerProfileBest=document.getElementById('runnerProfileBest');
+const runnerProfileSignals=document.getElementById('runnerProfileSignals');
+const runnerProfileDistance=document.getElementById('runnerProfileDistance');
+const runnerAchievements=document.getElementById('runnerAchievements');
+const runnerLegendaryAcquire=document.getElementById('runnerLegendaryAcquire');
+const runnerLegendaryName=document.getElementById('runnerLegendaryName');
+const runnerLegendaryText=document.getElementById('runnerLegendaryText');
 
 const SIGNAL_TARGET=101.7;
 const SIGNAL_TOLERANCE=.25;
@@ -1730,7 +1799,16 @@ let runnerStoreState={
   items:[],
   selected_avatar:'orbit_o',
   selected_background:'deep_space',
-  selected_obstacle:'signal_spires'
+  selected_obstacle:'signal_spires',
+  profile:{display_name:'',runs_count:0,total_signals:0,total_distance:0,best_distance:0},
+  achievements:[]
+};
+const RUNNER_ACHIEVEMENTS={
+  first_contact:{ru:['ПЕРВЫЙ КОНТАКТ','Заверши первый забег','+10 Ø'],en:['FIRST CONTACT','Finish your first run','+10 Ø']},
+  signal_hunter:{ru:['ОХОТНИК ЗА СИГНАЛАМИ','Собери 50 Ø суммарно','+25 Ø'],en:['SIGNAL HUNTER','Collect 50 Ø in total','+25 Ø']},
+  void_walker:{ru:['ХОДЯЩИЙ ПО ПУСТОТЕ','Достигни дистанции 3000','+40 Ø'],en:['VOID WALKER','Reach distance 3000','+40 Ø']},
+  deep_runner:{ru:['ГЛУБОКИЙ БЕГУН','Достигни дистанции 5000','+75 Ø'],en:['DEEP RUNNER','Reach distance 5000','+75 Ø']},
+  transmission_legend:{ru:['ЛЕГЕНДА ПЕРЕДАЧИ','Достигни дистанции 10000','+150 Ø'],en:['TRANSMISSION LEGEND','Reach distance 10000','+150 Ø']}
 };
 const RUNNER_ITEM_RARITY={
   orbit_o:'common',frost_moon:'rare',void_core:'void',
@@ -1796,8 +1874,17 @@ function applyRunnerStoreState(data){
   if(p?.selected_obstacle)runnerStoreState.selected_obstacle=p.selected_obstacle;
   if(Array.isArray(data?.inventory))runnerStoreState.inventory=data.inventory;
   if(Array.isArray(data?.items))runnerStoreState.items=data.items;
+  if(Array.isArray(data?.achievements))runnerStoreState.achievements=data.achievements;
+  if(p)runnerStoreState.profile={
+    display_name:p.display_name||data?.profile?.name||runnerStoreState.profile.display_name||'',
+    runs_count:Number(p.runs_count??data?.profile?.runs??runnerStoreState.profile.runs_count)||0,
+    total_signals:Number(p.total_signals??data?.profile?.total_signals??runnerStoreState.profile.total_signals)||0,
+    total_distance:Number(p.total_distance??data?.profile?.total_distance??runnerStoreState.profile.total_distance)||0,
+    best_distance:Number(p.best_distance??data?.profile?.best_distance??runnerStoreState.profile.best_distance)||0
+  };
   updateRunnerCredits();
   renderRunnerStore();
+  renderRunnerProfile();
   drawRunner();
 }
 function updateRunnerCredits(){
@@ -1859,6 +1946,46 @@ function renderRunnerStore(){
   });
   runnerStoreContent.replaceChildren(frag);
 }
+function renderRunnerProfile(){
+  if(!runnerAchievements)return;
+  const lang=document.documentElement.lang==='en'?'en':'ru';
+  const profile=runnerStoreState.profile||{};
+  runnerProfileName.textContent=profile.display_name||gameText('unknownPlayer');
+  runnerProfileRuns.textContent=String(profile.runs_count||0).padStart(3,'0');
+  runnerProfileBest.textContent=padRunner(profile.best_distance||0);
+  runnerProfileSignals.textContent=String(profile.total_signals||0).padStart(4,'0');
+  runnerProfileDistance.textContent=String(profile.total_distance||0).padStart(5,'0');
+  const unlocked=new Set((runnerStoreState.achievements||[]).map(a=>a.achievement_id));
+  const frag=document.createDocumentFragment();
+  Object.entries(RUNNER_ACHIEVEMENTS).forEach(([id,meta])=>{
+    const data=meta[lang]||meta.ru;
+    const card=document.createElement('div');card.className='runner-achievement'+(unlocked.has(id)?' unlocked':'');
+    const title=document.createElement('b');title.textContent=(unlocked.has(id)?'◇ ':'○ ')+data[0];
+    const desc=document.createElement('span');desc.textContent=data[1];
+    const reward=document.createElement('em');reward.textContent=unlocked.has(id)?data[2]:'LOCKED';
+    card.append(title,desc,reward);frag.appendChild(card);
+  });
+  runnerAchievements.replaceChildren(frag);
+}
+function toggleRunnerProfile(){
+  const open=!runnerProfilePanel?.classList.contains('open');
+  runnerProfilePanel?.classList.toggle('open',open);
+  runnerStorePanel?.classList.remove('open');
+  if(runnerStoreToggle)runnerStoreToggle.textContent=gameText('store');
+  if(runnerProfileToggle)runnerProfileToggle.textContent=gameText(open?'profileClose':'profile');
+  if(open)loadRunnerStoreState();
+}
+let runnerLegendaryTimer=0;
+function showLegendaryAcquire(itemId){
+  if(!runnerLegendaryAcquire||!runnerLegendaryName)return;
+  clearTimeout(runnerLegendaryTimer);
+  const lang=document.documentElement.lang==='en'?'en':'ru';
+  runnerLegendaryName.textContent=RUNNER_ITEM_META[itemId]?.[lang]?.[0]||itemId;
+  if(runnerLegendaryText)runnerLegendaryText.textContent=gameText('itemAcquired');
+  runnerLegendaryAcquire.classList.add('show');
+  runnerLegendaryAcquire.setAttribute('aria-hidden','false');
+  runnerLegendaryTimer=setTimeout(()=>{runnerLegendaryAcquire.classList.remove('show');runnerLegendaryAcquire.setAttribute('aria-hidden','true')},1450);
+}
 async function loadRunnerStoreState(){
   try{
     const data=await runnerApi('state');
@@ -1875,6 +2002,7 @@ async function handleRunnerStoreItem(itemId,owned){
     if(!owned){
       const bought=await runnerApi('buy',{item_id:itemId});
       applyRunnerStoreState(bought);
+      if((RUNNER_ITEM_RARITY[itemId]||'common')==='legendary')showLegendaryAcquire(itemId);
     }
     const equipped=await runnerApi('equip',{item_id:itemId});
     applyRunnerStoreState(equipped);
@@ -1886,6 +2014,8 @@ async function handleRunnerStoreItem(itemId,owned){
 function toggleRunnerStore(){
   const open=!runnerStorePanel?.classList.contains('open');
   runnerStorePanel?.classList.toggle('open',open);
+  runnerProfilePanel?.classList.remove('open');
+  if(runnerProfileToggle)runnerProfileToggle.textContent=gameText('profile');
   if(runnerStoreToggle)runnerStoreToggle.textContent=gameText(open?'storeClose':'store');
   if(open)loadRunnerStoreState();
 }
@@ -2000,10 +2130,13 @@ async function saveRunnerScore(){
       signals:Math.floor(runnerSignalCount)
     });
     runnerLastSavedRunId=runnerCurrentRunId;
-    if(Number.isFinite(Number(data.credits)))runnerStoreState.credits=Number(data.credits);
-    updateRunnerCredits();
+    applyRunnerStoreState(data);
     try{localStorage.setItem('ornivaise-runner-name',name)}catch(e){}
-    if(runnerScoreStatus)runnerScoreStatus.textContent=gameText('saveOk')+' // '+gameText('earned')+' +'+(data.earned||0)+' Ø // '+gameText('position')+' #'+(data.rank||'—');
+    const achBonus=Number(data.achievement_bonus||0);
+    const unlocked=Array.isArray(data.new_achievements)?data.new_achievements:[];
+    let status=gameText('saveOk')+' // '+gameText('earned')+' +'+(data.earned||0)+' Ø // '+gameText('position')+' #'+(data.rank||'—');
+    if(achBonus>0)status+=' // '+gameText('achievementUnlocked')+' +'+achBonus+' Ø';
+    if(runnerScoreStatus)runnerScoreStatus.textContent=status;
     await loadRunnerLeaderboard();
   }catch(e){
     if(runnerScoreStatus)runnerScoreStatus.textContent=gameText('saveError');
@@ -2021,6 +2154,7 @@ let runnerObstacles=[],runnerOrbs=[],runnerDust=[],runnerStars=[],runnerSecret=f
 let runnerGravity=1,runnerGravityEvent=false,runnerGravityEnd=0,runnerNextGravity=0,runnerPortalFx=0;
 let runnerBossActive=false,runnerBossType=0,runnerBossEnd=0,runnerNextBoss=0,runnerEventTimer=0;
 let runnerModifier='none';
+let runnerGhostBest=[],runnerGhostCurrent=[];
 const runnerPlayer={x:104,y:RUNNER_GROUND-42,w:42,h:42,vy:0,onGround:true};
 
 let runnerMusicFade=0;
@@ -2080,6 +2214,15 @@ function getRunnerBest(){
 }
 function setRunnerBest(v){
   try{localStorage.setItem('ornivaise-runner-best',String(Math.floor(v)))}catch(e){}
+}
+function loadRunnerGhost(){
+  try{
+    const data=JSON.parse(localStorage.getItem('ornivaise-runner-ghost')||'[]');
+    runnerGhostBest=Array.isArray(data)?data.slice(0,500):[];
+  }catch(e){runnerGhostBest=[]}
+}
+function saveRunnerGhost(){
+  try{localStorage.setItem('ornivaise-runner-ghost',JSON.stringify(runnerGhostCurrent.slice(0,500)))}catch(e){}
 }
 function padRunner(v,len=5){return String(Math.max(0,Math.floor(v))).padStart(len,'0')}
 function seedRunnerStars(){
@@ -2154,6 +2297,7 @@ function resetRunner(){
   runnerGravity=1;runnerGravityEvent=false;runnerGravityEnd=0;runnerNextGravity=850+Math.random()*650;runnerPortalFx=0;
   runnerBossActive=false;runnerBossType=0;runnerBossEnd=0;runnerNextBoss=1750+Math.random()*900;
   runnerModifier='none';
+  runnerGhostCurrent=[];loadRunnerGhost();
   signalZoneBadge?.classList.remove('visible');
   Object.assign(runnerPlayer,{x:104,y:RUNNER_GROUND-42,vy:0,onGround:true});
   updateRunnerHud();
@@ -2250,7 +2394,9 @@ function gameOverRunner(){
   runnerRunning=false;runnerGameOver=true;
   cancelAnimationFrame(runnerRaf);runnerRaf=0;
   if(!getRunnerMusicMuted())fadeRunnerMusic(.11,320,false);
-  const best=Math.max(getRunnerBest(),runnerDistanceValue);
+  const previousBest=getRunnerBest();
+  const best=Math.max(previousBest,runnerDistanceValue);
+  if(runnerDistanceValue>previousBest){saveRunnerGhost();runnerGhostBest=runnerGhostCurrent.slice()}
   setRunnerBest(best);updateRunnerHud();
   showRunnerScoreForm();
   showRunnerOverlay(gameText('lost'),`${gameText('distance')} // ${padRunner(runnerDistanceValue)} · ${gameText('signals')} // ${padRunner(runnerSignalCount,2)}`,gameText('reconnect'));
@@ -2346,6 +2492,8 @@ function updateRunner(dt){
     }
     return o.x+o.r>-30;
   });
+  const ghostIndex=Math.floor(runnerDistanceValue/25);
+  if(runnerGhostCurrent.length<=ghostIndex)runnerGhostCurrent.push({y:Math.round(runnerPlayer.y),g:runnerGravity});
   updateRunnerHud();
 }
 function drawRunner(){
@@ -2745,6 +2893,19 @@ function drawRunner(){
     ctx.fillRect(particle.x,particle.y,dustSize,dustSize);ctx.restore();
   });
 
+  // Personal best ghost — trajectory only, never collides.
+  const ghostPoint=runnerGhostBest[Math.floor(runnerDistanceValue/25)];
+  if(ghostPoint&&getRunnerBest()>runnerDistanceValue+25){
+    ctx.save();
+    const gx=runnerPlayer.x+runnerPlayer.w/2,gy=ghostPoint.y+runnerPlayer.h/2;
+    ctx.globalAlpha=.16;
+    ctx.strokeStyle='rgba(208,220,235,.7)';ctx.lineWidth=1.2;
+    ctx.beginPath();ctx.ellipse(gx,gy,25,7,-.22,0,Math.PI*2);ctx.stroke();
+    ctx.fillStyle='rgba(182,202,222,.12)';ctx.beginPath();ctx.arc(gx,gy,16,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='rgba(229,237,245,.62)';ctx.font='bold 10px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('Ø',gx,gy);
+    ctx.restore();
+  }
+
   // Planet Ø: ringed sphere with soft motion trail.
   ctx.save();
   const cx=runnerPlayer.x+runnerPlayer.w/2,cy=runnerPlayer.y+runnerPlayer.h/2;
@@ -2904,6 +3065,7 @@ runnerOverlayButton?.addEventListener('click',startRunner);
 signalRunnerStart?.addEventListener('click',openRunner);
 runnerBack?.addEventListener('click',()=>{closeRunner();signalTuner?.focus()});
 runnerStoreToggle?.addEventListener('click',toggleRunnerStore);
+runnerProfileToggle?.addEventListener('click',toggleRunnerProfile);
 runnerStoreContent?.addEventListener('click',e=>{
   const btn=e.target.closest('button[data-item]');if(!btn)return;
   handleRunnerStoreItem(btn.dataset.item,btn.dataset.owned==='1');
