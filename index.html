@@ -2359,7 +2359,7 @@ function renderRunnerStore(){
       price.append(ownership,amount);
       const btn=document.createElement('button');btn.type='button';btn.dataset.item=item.item_id;btn.dataset.owned=owned?'1':'0';
       btn.textContent=equipped?gameText('equipped'):(owned?gameText('equip'):(gameText('buy')+' · '+item.price+' Ø'));
-      btn.disabled=equipped;
+      btn.disabled=runnerStoreTransactionPending?true:equipped;
       body.append(top,desc,price,btn);card.append(preview,body);grid.appendChild(card);
     });
     section.appendChild(grid);frag.appendChild(section);
@@ -2475,8 +2475,11 @@ async function loadRunnerStoreState(){
     if(runnerStoreStatus)runnerStoreStatus.textContent=gameText('storeError');
   }
 }
+let runnerStoreTransactionPending=false;
 async function handleRunnerStoreItem(itemId,owned){
-  if(!itemId)return;
+  if(!itemId||runnerStoreTransactionPending)return;
+  runnerStoreTransactionPending=true;
+  runnerStoreContent?.querySelectorAll('button[data-item]').forEach(button=>button.disabled=true);
   if(runnerStoreStatus)runnerStoreStatus.textContent=gameText('connecting');
   try{
     if(!owned){
@@ -2490,6 +2493,10 @@ async function handleRunnerStoreItem(itemId,owned){
     if(runnerStoreStatus)runnerStoreStatus.textContent='';
   }catch(e){
     if(runnerStoreStatus)runnerStoreStatus.textContent=String(e.message).includes('not_enough_credits')?gameText('notEnough'):gameText('storeError');
+    await loadRunnerStoreState().catch(()=>{});
+  }finally{
+    runnerStoreTransactionPending=false;
+    renderRunnerStore();
   }
 }
 function toggleRunnerStore(){
