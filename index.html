@@ -1014,6 +1014,18 @@ html{scroll-padding-top:80px}
 .runner-preview-obstacles.moon_familiars i:nth-child(1){left:0;transform:scale(.78)}
 .runner-preview-obstacles.moon_familiars i:nth-child(2){left:24px;bottom:8px}
 .runner-preview-obstacles.moon_familiars i:nth-child(3){left:50px;transform:scale(.72)}
+.runner-preview-obstacles.moon_familiars i:nth-child(1){animation:moonPreviewFloat1 2.8s ease-in-out infinite}
+.runner-preview-obstacles.moon_familiars i:nth-child(2){animation:moonPreviewFloat2 3.15s ease-in-out infinite -.55s}
+.runner-preview-obstacles.moon_familiars i:nth-child(3){animation:moonPreviewFloat3 2.55s ease-in-out infinite -.9s}
+.runner-preview-obstacles.moon_familiars i:before{animation:moonPreviewEyes 4.8s ease-in-out infinite}
+@keyframes moonPreviewFloat1{0%,100%{transform:translateY(0) scale(.78)}50%{transform:translateY(-3px) scale(.78)}}
+@keyframes moonPreviewFloat2{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes moonPreviewFloat3{0%,100%{transform:translateY(0) scale(.72)}50%{transform:translateY(-2px) scale(.72)}}
+@keyframes moonPreviewEyes{0%,44%,48%,100%{opacity:1}46%{opacity:.15}}
+@media(prefers-reduced-motion:reduce){
+  .runner-preview-obstacles.moon_familiars i,
+  .runner-preview-obstacles.moon_familiars i:before{animation:none}
+}
 .runner-preview-background-planet{position:absolute;right:25px;top:20px;width:28px;height:28px;border-radius:50%;background:radial-gradient(circle at 34% 28%,#7e91a3,#22323f 60%,#06090c);border:1px solid rgba(235,241,248,.42)}
 .runner-preview-background-planet:before{content:"";position:absolute;width:42px;height:10px;left:50%;top:50%;border:1px solid rgba(231,238,245,.4);border-radius:50%;transform:translate(-50%,-50%) rotate(-14deg)}
 .runner-shop-body{min-height:72px}
@@ -2513,10 +2525,27 @@ function drawRunner(){
     }else if(skin==='moon_familiars'){
       const cx=o.x+o.w/2,cy=o.y+o.h/2;
       const pulse=.5+.5*Math.sin(phase*1.35);
-      ctx.translate(cx,cy);
-      const ag=ctx.createRadialGradient(0,0,Math.min(o.w,o.h)*.16,0,0,Math.max(o.w,o.h)*.72);
-      ag.addColorStop(0,'rgba(190,139,226,'+(.08+pulse*.05)+')');ag.addColorStop(1,'rgba(0,0,0,0)');
+      const floatY=Math.sin(phase*.85+variant*.9)*1.8;
+      const tilt=Math.sin(phase*.62+variant)*.018;
+      ctx.translate(cx,cy+floatY);
+      ctx.rotate(tilt);
+
+      const ag=ctx.createRadialGradient(0,0,Math.min(o.w,o.h)*.16,0,0,Math.max(o.w,o.h)*.78);
+      ag.addColorStop(0,'rgba(190,139,226,'+(.09+pulse*.055)+')');
+      ag.addColorStop(.55,'rgba(136,91,174,'+(.035+pulse*.02)+')');
+      ag.addColorStop(1,'rgba(0,0,0,0)');
       ctx.fillStyle=ag;ctx.fillRect(-o.w,-o.h,o.w*2,o.h*2);
+
+      // Soft tail movement stays visually outside the solid body but not the collision box.
+      const tailWave=Math.sin(phase*1.1+variant)*o.h*.055;
+      ctx.globalAlpha=.46;
+      ctx.strokeStyle='rgba(210,173,235,.72)';ctx.lineWidth=1.1;
+      ctx.beginPath();
+      ctx.moveTo(o.w*.3,o.h*.19);
+      ctx.quadraticCurveTo(o.w*.62,o.h*.02+tailWave,o.w*.48,-o.h*.18+tailWave*.4);
+      ctx.stroke();
+      ctx.globalAlpha=1;
+
       ctx.fillStyle='rgba(85,60,107,.25)';ctx.strokeStyle='rgba(232,215,245,.64)';ctx.lineWidth=1.1;
       ctx.beginPath();
       ctx.moveTo(-o.w*.42,o.h*.42);ctx.lineTo(-o.w*.36,-o.h*.15);
@@ -2524,10 +2553,31 @@ function drawRunner(){
       ctx.lineTo(o.w*.08,-o.h*.3);ctx.lineTo(o.w*.25,-o.h*.5);
       ctx.lineTo(o.w*.38,-o.h*.12);ctx.lineTo(o.w*.43,o.h*.42);
       ctx.quadraticCurveTo(0,o.h*.55,-o.w*.42,o.h*.42);ctx.closePath();ctx.fill();ctx.stroke();
-      const eye='#ffe7a0';
-      ctx.fillStyle=eye;ctx.shadowBlur=8;ctx.shadowColor='rgba(255,222,148,.4)';
-      const ey=-o.h*.05;ctx.beginPath();ctx.arc(-o.w*.15,ey,1.7,0,Math.PI*2);ctx.arc(o.w*.15,ey,1.7,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
-      ctx.globalAlpha=.4;ctx.strokeStyle='rgba(210,173,235,.7)';ctx.beginPath();ctx.arc(o.w*.33,o.h*.22,o.w*.2,-1.4,1.6);ctx.stroke();ctx.globalAlpha=1;
+
+      const blink=Math.sin(phase*.36+variant*2.15)>.975;
+      const eyeY=-o.h*.05;
+      ctx.strokeStyle='#ffe7a0';ctx.fillStyle='#ffe7a0';ctx.shadowBlur=8;ctx.shadowColor='rgba(255,222,148,.4)';
+      if(blink){
+        ctx.lineWidth=1.15;
+        ctx.beginPath();ctx.moveTo(-o.w*.19,eyeY);ctx.lineTo(-o.w*.11,eyeY);ctx.moveTo(o.w*.11,eyeY);ctx.lineTo(o.w*.19,eyeY);ctx.stroke();
+      }else{
+        ctx.beginPath();ctx.arc(-o.w*.15,eyeY,1.7,0,Math.PI*2);ctx.arc(o.w*.15,eyeY,1.7,0,Math.PI*2);ctx.fill();
+      }
+      ctx.shadowBlur=0;
+
+      // One tiny lunar mote orbits slowly; intentionally subtle.
+      const moteA=phase*.48+variant*2.05;
+      const moteX=Math.cos(moteA)*o.w*.62;
+      const moteY=Math.sin(moteA)*o.h*.28-o.h*.14;
+      ctx.globalAlpha=.28+.2*pulse;
+      ctx.fillStyle='#f2ddff';ctx.shadowBlur=7;ctx.shadowColor='rgba(211,166,240,.45)';
+      ctx.beginPath();ctx.arc(moteX,moteY,1.15,0,Math.PI*2);ctx.fill();
+      ctx.shadowBlur=0;ctx.globalAlpha=1;
+
+      ctx.globalAlpha=.28+.16*pulse;
+      ctx.strokeStyle='rgba(210,173,235,.72)';
+      ctx.beginPath();ctx.arc(0,o.h*.04,Math.min(o.w,o.h)*(.56+pulse*.025),.08,Math.PI-.08);ctx.stroke();
+      ctx.globalAlpha=1;
     }else{
       ctx.fillStyle=hot?'rgba(174,153,205,.22)':'rgba(205,215,226,.18)';
       ctx.strokeStyle=hot?'rgba(215,196,232,.5)':'rgba(222,230,239,.48)';ctx.lineWidth=1;
