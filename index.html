@@ -1831,13 +1831,18 @@ function newRunnerRunId(){
     const r=Math.random()*16|0,v=c==='x'?r:(r&3|8);return v.toString(16);
   });
 }
+function runnerNameKey(value){
+  return String(value||'').trim().toLowerCase()
+    .replace(/[ø0о]/g,'o')
+    .replace(/[^a-z0-9а-яё]/g,'');
+}
 function renderRunnerLeaderboard(rows=runnerLeaderboardRows){
   if(!runnerLeaderboardBody)return;
   const source=Array.isArray(rows)?rows:[];
   const seen=new Set();
   runnerLeaderboardRows=[];
   source.forEach(row=>{
-    const key=String(row.player_name||'').trim().toLocaleLowerCase();
+    const key=runnerNameKey(row.player_name);
     if(!key||seen.has(key)||runnerLeaderboardRows.length>=20)return;
     seen.add(key);
     runnerLeaderboardRows.push(row);
@@ -1897,6 +1902,21 @@ async function saveRunnerScore(){
   const name=(runnerNameInput?.value||'').trim().slice(0,20);
   if(!name){
     if(runnerScoreStatus)runnerScoreStatus.textContent=gameText('nameError');
+    runnerNameInput?.focus();
+    return;
+  }
+  const nameKey=runnerNameKey(name);
+  let savedName='';
+  try{savedName=localStorage.getItem('ornivaise-runner-name')||''}catch(e){}
+  const savedKey=runnerNameKey(savedName);
+  const nameTaken=runnerLeaderboardRows.some(row=>runnerNameKey(row.player_name)===nameKey);
+  if(nameTaken&&savedKey!==nameKey){
+    if(runnerScoreStatus)runnerScoreStatus.textContent=document.documentElement.lang==='en'?'THIS NAME IS ALREADY TAKEN':'ЭТО ИМЯ УЖЕ ЗАНЯТО';
+    runnerNameInput?.focus();
+    return;
+  }
+  if(nameKey==='ornivaise'&&savedKey!=='ornivaise'){
+    if(runnerScoreStatus)runnerScoreStatus.textContent=document.documentElement.lang==='en'?'ØRNIVAISE NAME IS RESERVED':'ИМЯ ØRNIVAISE ЗАРЕЗЕРВИРОВАНО';
     runnerNameInput?.focus();
     return;
   }
