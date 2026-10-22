@@ -964,6 +964,136 @@ html{scroll-padding-top:80px}
 @media(max-width:420px){
   .runner-achievements{grid-template-columns:1fr}
 }
+@media(max-width:1024px){
+  .easter-overlay{
+    align-items:flex-start;
+    padding:max(8px,env(safe-area-inset-top)) max(8px,env(safe-area-inset-right)) max(8px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left));
+  }
+  .easter-panel.signal-game{
+    width:100%;
+    max-width:100%;
+    max-height:calc(100dvh - max(16px,env(safe-area-inset-top)) - max(16px,env(safe-area-inset-bottom)));
+    overflow:auto;
+    overscroll-behavior:contain;
+  }
+  .signal-game.runner-mode{width:100%;padding:14px}
+  .signal-game.runner-mode>.easter-code,
+  .signal-game.runner-mode>h2{display:none}
+  .runner-store-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .runner-achievements{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .runner-control-buttons{gap:6px}
+}
+@media(max-width:700px){
+  body{padding-bottom:136px}
+  .section{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}
+  .hero{min-height:min(620px,100svh)}
+  .easter-panel.signal-game{padding:12px 10px 14px;border-radius:12px}
+  .signal-game.runner-mode{padding:6px}
+  .runner-shell{border-radius:11px}
+  .runner-hud{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .runner-stat{padding:8px 6px;text-align:center}
+  .runner-stat small{font-size:6px;letter-spacing:.08em;margin-bottom:3px}
+  .runner-stat strong{font-size:10px;letter-spacing:.05em}
+  .runner-canvas-wrap{
+    aspect-ratio:8/3;
+    min-height:0;
+    width:100%;
+  }
+  #signalRunnerCanvas{
+    width:100%;
+    height:auto;
+    aspect-ratio:8/3;
+  }
+  .signal-zone-badge{top:7px;max-width:88%;padding:5px 7px;font-size:6px;letter-spacing:.12em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .runner-overlay{padding:10px;background:rgba(3,4,7,.5)}
+  .runner-overlay small{font-size:6px}
+  .runner-overlay strong{margin:5px 0;font-size:20px}
+  .runner-overlay p{margin-bottom:9px;font-size:7px}
+  .runner-overlay button{min-height:36px;padding-inline:13px;font-size:8px}
+  .runner-controls{padding:8px;gap:7px}
+  .runner-controls>span{display:none}
+  .runner-control-buttons{
+    width:100%;
+    display:grid;
+    grid-template-columns:42px 1fr 1fr;
+    gap:6px;
+  }
+  .runner-sound{width:42px;height:42px}
+  .runner-store-toggle,.runner-profile-toggle,.runner-primary,.runner-secondary{min-height:42px;padding:0 8px;font-size:7px;letter-spacing:.07em}
+  #runnerJump{grid-column:2/4}
+  #runnerBack{grid-column:1/4}
+  .runner-store-panel,.runner-profile-panel,.runner-leaderboard{padding:12px 8px 14px}
+  .runner-store-head,.runner-profile-head{gap:9px;margin-bottom:10px}
+  .runner-store-head{flex-direction:row;align-items:flex-start}
+  .runner-store-balance-box{min-width:100px;padding:8px}
+  .runner-store-grid{grid-template-columns:1fr 1fr;gap:7px}
+  .runner-shop-card{padding:7px;border-radius:11px}
+  .runner-shop-preview{height:86px;margin-bottom:8px}
+  .runner-shop-card strong{font-size:8px}
+  .runner-shop-card small{min-height:28px;font-size:7px;line-height:1.35}
+  .runner-rarity{font-size:5px;padding:3px 5px}
+  .runner-shop-price{font-size:7px;margin-bottom:7px}
+  .runner-shop-price b{font-size:8px}
+  .runner-shop-card button{min-height:34px;font-size:7px}
+  .runner-profile-grid{grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
+  .runner-profile-stat{padding:8px}
+  .runner-achievements{grid-template-columns:1fr 1fr;gap:6px}
+  .runner-achievement{padding:8px}
+  .runner-lb-row{min-height:42px}
+  .global-player.player-54{
+    left:max(6px,env(safe-area-inset-left));
+    right:max(6px,env(safe-area-inset-right));
+    bottom:max(6px,env(safe-area-inset-bottom));
+  }
+}
+@media(max-width:430px){
+  body{padding-bottom:116px}
+  .wordmark{font-size:15px;letter-spacing:.2em}
+  .lang-switch button{font-size:9px;padding-inline:3px}
+  .hero{min-height:min(570px,92svh)}
+  .hero-bg{background-position:50% 38%!important}
+  .popular-card{bottom:10px;border-radius:11px}
+  .section{padding-top:52px;padding-bottom:52px}
+  .release-body{padding:22px 17px}
+  .release-body h3{font-size:27px}
+  .signal-game.runner-mode{padding:4px}
+  .runner-hud{position:relative;z-index:3}
+  .runner-stat{padding:7px 3px}
+  .runner-stat small{font-size:5.5px}
+  .runner-stat strong{font-size:9px}
+  .runner-control-buttons{grid-template-columns:40px 1fr 1fr}
+  .runner-store-toggle,.runner-profile-toggle,.runner-primary,.runner-secondary{font-size:6.5px}
+  .runner-store-grid{grid-template-columns:1fr}
+  .runner-shop-preview{height:96px}
+  .runner-profile-grid{grid-template-columns:1fr 1fr}
+  .runner-achievements{grid-template-columns:1fr}
+  .runner-lb-labels,.runner-lb-row{grid-template-columns:30px minmax(0,1fr) 58px 32px;gap:4px}
+  .runner-lb-name{font-size:8px}
+  .runner-lb-distance,.runner-lb-signals{font-size:7px}
+  .global-player.player-54{
+    grid-template-columns:minmax(0,1fr) auto;
+    padding:7px 8px;
+    gap:4px 7px;
+  }
+  .gp-track{grid-template-columns:38px minmax(0,1fr);gap:7px}
+  .global-player.player-54 .gp-track>img{width:36px;height:36px}
+  .player-54 .gp-meta strong{font-size:10px}
+  .gp-actions #prevBtn,.gp-actions #nextBtn{width:25px;height:25px}
+  .player-54 .main-play,.player-54 .main-play svg{width:34px;height:34px}
+  .gp-timeline{grid-row:2;height:26px}
+  .gp-wave-track{top:18px;height:9px}
+  .gp-seek{height:20px}
+  .gp-volume{display:none}
+}
+@media(orientation:landscape) and (max-height:520px){
+  .easter-overlay{padding:4px}
+  .easter-panel.signal-game{max-height:calc(100dvh - 8px);padding:4px}
+  .signal-game.runner-mode{padding:2px}
+  .runner-canvas-wrap{aspect-ratio:8/3;max-height:calc(100dvh - 155px)}
+  .runner-controls{padding:5px 8px}
+  .runner-store-panel,.runner-profile-panel,.runner-leaderboard{padding-block:8px}
+}
+
 .runner-store-head{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;margin-bottom:14px}
 .runner-store-kicker{display:block;margin-bottom:5px;color:#697582;font-size:7px;letter-spacing:.22em}
 .runner-store-head strong{display:block;font-size:15px;letter-spacing:.16em;color:#eef3f7}
