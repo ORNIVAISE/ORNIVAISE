@@ -957,6 +957,9 @@ html{scroll-padding-top:80px}
 .runner-preview-scene:before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle at 14% 24%,rgba(255,255,255,.8) 0 1px,transparent 1.2px),radial-gradient(circle at 74% 18%,rgba(255,255,255,.55) 0 1px,transparent 1.2px),radial-gradient(circle at 47% 38%,rgba(255,255,255,.42) 0 1px,transparent 1.2px),radial-gradient(circle at 86% 58%,rgba(255,255,255,.36) 0 1px,transparent 1.2px),radial-gradient(circle at 28% 67%,rgba(255,255,255,.32) 0 1px,transparent 1.2px);opacity:.7}
 .runner-preview-scene.violet_nebula{background:radial-gradient(circle at 70% 28%,rgba(144,83,195,.34),transparent 36%),radial-gradient(circle at 25% 66%,rgba(67,91,161,.2),transparent 34%),linear-gradient(180deg,#120a1c,#05030a)}
 .runner-preview-scene.black_sun{background:radial-gradient(circle at 74% 33%,#010102 0 14%,rgba(231,209,168,.18) 15% 17%,transparent 25%),linear-gradient(180deg,#0b0907,#020202)}
+.runner-preview-scene.frozen_horizon{background:radial-gradient(ellipse at 50% 88%,rgba(127,206,230,.28),transparent 42%),linear-gradient(180deg,#07131b,#0a1a23 58%,#031017)}
+.runner-preview-scene.signal_storm{background:linear-gradient(150deg,transparent 0 42%,rgba(88,220,218,.13) 43% 44%,transparent 45% 58%,rgba(149,102,215,.11) 59% 60%,transparent 61%),radial-gradient(circle at 72% 24%,rgba(73,218,218,.18),transparent 34%),linear-gradient(180deg,#071116,#090713,#020406)}
+.runner-preview-scene.crimson_rift{background:linear-gradient(103deg,transparent 0 62%,rgba(226,72,79,.08) 63%,rgba(255,128,117,.28) 65%,rgba(226,72,79,.08) 67%,transparent 69%),radial-gradient(circle at 76% 30%,rgba(187,43,56,.22),transparent 34%),linear-gradient(180deg,#17080b,#090407 62%,#020203)}
 .runner-preview-ground{position:absolute;left:0;right:0;bottom:22px;height:1px;background:rgba(224,233,242,.22)}
 .runner-preview-ground:after{content:"";position:absolute;left:8%;right:8%;top:10px;height:1px;background:repeating-linear-gradient(90deg,rgba(224,233,242,.09) 0 18px,transparent 18px 30px)}
 .runner-preview-planet{position:absolute;left:50%;top:50%;width:42px;height:42px;border-radius:50%;transform:translate(-50%,-56%);background:radial-gradient(circle at 35% 28%,#879daf,#2b3f4e 54%,#080c11 78%);border:1px solid rgba(235,242,248,.6);box-shadow:0 0 16px rgba(173,201,225,.16)}
@@ -1700,7 +1703,7 @@ let runnerStoreState={
 const RUNNER_ITEM_RARITY={
   orbit_o:'common',frost_moon:'rare',void_core:'void',
   signal_bloom:'rare',crimson_pulse:'epic',eclipse_halo:'epic',neon_reef:'legendary',ash_titan:'legendary',
-  deep_space:'common',violet_nebula:'rare',black_sun:'void',
+  deep_space:'common',violet_nebula:'rare',frozen_horizon:'rare',black_sun:'void',signal_storm:'epic',crimson_rift:'legendary',
   signal_spires:'common',crystal_shards:'rare',orbital_debris:'void'
 };
 const RUNNER_ITEM_META={
@@ -1714,7 +1717,10 @@ const RUNNER_ITEM_META={
   ash_titan:{ru:['ПЕПЕЛЬНЫЙ ТИТАН','Пепельный титан с тлеющим ядром'],en:['ASH TITAN','Ash titan with a smouldering core']},
   deep_space:{ru:['ГЛУБОКИЙ КОСМОС','Базовый глубокий космос'],en:['DEEP SPACE','Default deep space']},
   violet_nebula:{ru:['ФИОЛЕТОВАЯ ТУМАННОСТЬ','Фиолетовая сигнальная туманность'],en:['VIOLET NEBULA','Violet signal nebula']},
+  frozen_horizon:{ru:['ЛЕДЯНОЙ ГОРИЗОНТ','Холодный мир с ледяным свечением'],en:['FROZEN HORIZON','Cold world with an icy horizon']},
   black_sun:{ru:['ЧЁРНОЕ СОЛНЦЕ','Затмение в мёртвой системе'],en:['BLACK SUN','Eclipse in a dead system']},
+  signal_storm:{ru:['ШТОРМ СИГНАЛА','Электрическое поле и импульсные разряды'],en:['SIGNAL STORM','Electric field with signal discharges']},
+  crimson_rift:{ru:['БАГРОВЫЙ РАЗЛОМ','Живой разлом в красной пустоте'],en:['CRIMSON RIFT','A living rift in the crimson void']},
   signal_spires:{ru:['СИГНАЛЬНЫЕ ШПИЛИ','Базовые сигнальные шпили'],en:['SIGNAL SPIRES','Default signal spires']},
   crystal_shards:{ru:['КРИСТАЛЬНЫЕ ОСКОЛКИ','Осколки аномального кристалла'],en:['CRYSTAL SHARDS','Anomalous crystal shards']},
   orbital_debris:{ru:['ОРБИТАЛЬНЫЕ ОБЛОМКИ','Обломки спутников и модулей'],en:['ORBITAL DEBRIS','Satellite and module debris']}
@@ -2251,9 +2257,18 @@ function drawRunner(){
   if(runnerStoreState.selected_background==='violet_nebula'){
     const violet=[['#100a19','#080712','#030307'],['#140b20','#0b0817','#030307'],['#180c25','#0d091b','#030307'],['#1b0b28','#090512','#020205']];
     p=violet[stage];
+  }else if(runnerStoreState.selected_background==='frozen_horizon'){
+    const frozen=[['#07151d','#0a1820','#031017'],['#081923','#0a1d27','#031018'],['#091b27','#0b202c','#031019'],['#0a1b28','#07151f','#02080d']];
+    p=frozen[stage];
   }else if(runnerStoreState.selected_background==='black_sun'){
     const eclipse=[['#0b0a09','#060606','#020202'],['#0d0b09','#070606','#020202'],['#100c09','#070504','#020202'],['#120c09','#060403','#010101']];
     p=eclipse[stage];
+  }else if(runnerStoreState.selected_background==='signal_storm'){
+    const storm=[['#071116','#080b12','#020507'],['#08151b','#0a0b17','#020507'],['#0a1820','#0c0b1b','#030507'],['#0c1720','#0b0716','#020305']];
+    p=storm[stage];
+  }else if(runnerStoreState.selected_background==='crimson_rift'){
+    const crimson=[['#16080b','#090407','#020203'],['#19090c','#0b0408','#020203'],['#1c0a0e','#0c0408','#020203'],['#210b10','#0a0306','#010102']];
+    p=crimson[stage];
   }
   const bg=ctx.createLinearGradient(0,0,0,RUNNER_H);
   bg.addColorStop(0,p[0]);bg.addColorStop(.68,p[1]);bg.addColorStop(1,p[2]);
@@ -2286,6 +2301,54 @@ function drawRunner(){
     const vg=ctx.createRadialGradient(RUNNER_W*.38,125,15,RUNNER_W*.38,125,270);
     vg.addColorStop(0,'rgba(138,79,188,.12)');vg.addColorStop(1,'rgba(0,0,0,0)');
     ctx.fillStyle=vg;ctx.fillRect(0,0,RUNNER_W,RUNNER_H);ctx.restore();
+  }else if(runnerStoreState.selected_background==='frozen_horizon'){
+    ctx.save();
+    const hg=ctx.createLinearGradient(0,RUNNER_GROUND-110,0,RUNNER_GROUND+8);
+    hg.addColorStop(0,'rgba(116,199,224,0)');hg.addColorStop(.7,'rgba(116,199,224,.055)');hg.addColorStop(1,'rgba(166,226,241,.14)');
+    ctx.fillStyle=hg;ctx.fillRect(0,RUNNER_GROUND-120,RUNNER_W,130);
+    const mx=RUNNER_W*.77,my=83;
+    ctx.globalAlpha=.32;
+    ctx.fillStyle='rgba(190,229,241,.15)';ctx.beginPath();ctx.arc(mx,my,36,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='rgba(206,238,247,.23)';ctx.lineWidth=1;ctx.beginPath();ctx.arc(mx,my,36,0,Math.PI*2);ctx.stroke();
+    ctx.globalAlpha=.16;
+    ctx.fillStyle='#b9dbe7';
+    for(let i=0;i<8;i++){const x=(i*139-(runnerDistanceValue*.05)%139)-25;const y=70+(i%4)*46;ctx.fillRect((x+RUNNER_W)%RUNNER_W,y,1.5,1.5)}
+    ctx.restore();
+  }else if(runnerStoreState.selected_background==='signal_storm'){
+    ctx.save();
+    const stormPhase=runnerDistanceValue*.028;
+    ctx.lineWidth=1;
+    for(let i=0;i<4;i++){
+      const y=58+i*53+Math.sin(stormPhase+i)*9;
+      ctx.strokeStyle=i%2?'rgba(155,111,220,.09)':'rgba(76,222,218,.11)';
+      ctx.beginPath();
+      ctx.moveTo(-20,y);
+      ctx.bezierCurveTo(RUNNER_W*.28,y-24,RUNNER_W*.58,y+22,RUNNER_W+20,y-5);
+      ctx.stroke();
+    }
+    const flash=(Math.sin(runnerDistanceValue*.085)+1)*.5;
+    if(flash>.88){
+      ctx.globalAlpha=(flash-.88)*.55;
+      ctx.strokeStyle='rgba(137,242,237,.42)';ctx.lineWidth=1.25;
+      const lx=RUNNER_W*.72;
+      ctx.beginPath();ctx.moveTo(lx,24);ctx.lineTo(lx-18,74);ctx.lineTo(lx+2,92);ctx.lineTo(lx-12,128);ctx.stroke();
+    }
+    ctx.restore();
+  }else if(runnerStoreState.selected_background==='crimson_rift'){
+    ctx.save();
+    const rx=RUNNER_W*.78+Math.sin(runnerDistanceValue*.012)*8;
+    const rg=ctx.createRadialGradient(rx,128,8,rx,128,145);
+    rg.addColorStop(0,'rgba(229,72,78,.14)');rg.addColorStop(.48,'rgba(139,35,49,.07)');rg.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.fillStyle=rg;ctx.fillRect(rx-160,0,320,RUNNER_GROUND);
+    ctx.strokeStyle='rgba(244,113,105,.22)';ctx.lineWidth=2;
+    ctx.beginPath();ctx.moveTo(rx-4,18);
+    for(let y=18;y<RUNNER_GROUND-35;y+=25){
+      const jitter=Math.sin(y*.09+runnerDistanceValue*.02)*7;
+      ctx.lineTo(rx+jitter,y);
+    }
+    ctx.stroke();
+    ctx.strokeStyle='rgba(205,58,70,.11)';ctx.lineWidth=6;ctx.stroke();
+    ctx.restore();
   }
 
   // Multi-depth star parallax.
@@ -2294,7 +2357,11 @@ function drawRunner(){
     const layer=1+(i%3);
     let x=(s.x-runnerDistanceValue*(.08*layer+s.r*.08))%RUNNER_W;if(x<0)x+=RUNNER_W;
     ctx.globalAlpha=s.a+stage*.035;
-    ctx.fillStyle=stage===3&&i%8===0?'#d4bdea':'#eef3f8';
+    const bgSkin=runnerStoreState.selected_background;
+    if(bgSkin==='frozen_horizon')ctx.fillStyle=i%7===0?'#c9f5ff':'#e8f5f8';
+    else if(bgSkin==='signal_storm')ctx.fillStyle=i%6===0?'#8fe7e3':(stage===3?'#d4bdea':'#eef3f8');
+    else if(bgSkin==='crimson_rift')ctx.fillStyle=i%7===0?'#e49a91':(stage===3?'#d4bdea':'#eef3f8');
+    else ctx.fillStyle=stage===3&&i%8===0?'#d4bdea':'#eef3f8';
     ctx.fillRect(x,s.y,s.r+(layer===3?.25:0),s.r+(layer===3?.25:0));
   });
   ctx.restore();
