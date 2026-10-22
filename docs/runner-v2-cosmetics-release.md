@@ -31,3 +31,15 @@
 - Test mobile frame rate on a lower-end device and the reduced-motion setting.
 - Verify all game physics, boss events, portals, 2-device connection, leaderboard and reward/achievement flows.
 - Re-run security and performance advisors; publish `main` only when all checks pass.
+
+## Visual pass: backgrounds, planets and obstacles (2026-10-22)
+
+- **10 worlds** now have bounded parallax accents and separate scenic landmarks: gas giant, nebular constellations, layered ice peaks, eclipse corona, forked lightning, floating rift shards, volcano ash, ice monoliths, astral tablets and deep-sea vegetation.
+- **14 planets** have surface markings rendered inside the existing planet hitbox: craters, frozen cracks, gravitational singularity, magma veins, solar bands, bioluminescence, electrical circuits, constellation runes and other unique signatures.
+- **11 obstacle types** have themed auras and particles, without changes to hitboxes or collision.
+- **The store now contains a synchronized loadout scene** showing the player's equipped planet, background and obstacles together. It uses already-validated selections and never makes purchases.
+- **All avatar preview cards display the Ø glyph** even when the rare/legendary CSS `:after` is used for particles or corona.
+- Low-cost motion is stopped in the new Canvas helper when `prefers-reduced-motion: reduce` is set; additional CSS animations are disabled in the same mode.
+- Additional checks in `tests/runner-v2-cosmetics.test.mjs` exercise 10 backgrounds at four distances, 11 obstacles at three phases, and 14 surfaces at three phases, checking finite Canvas arguments.
+- User-generated content is inserted using `textContent`; shop scene class IDs are whitelisted to alphanumeric/underscore identifiers.
+- **Not a live-browser verification.** Phone/tablet/browser screenshots and measured frame rate still need real-world checks before release.

@@ -28,12 +28,26 @@ assert.match(html,/runnerProfileBgPending/,'profile purchase guard');
 assert.match(html,/prefers-reduced-motion:reduce/,'accessibility');
 const worldStart=html.indexOf('function drawRunnerSpectacle(');
 const worldEnd=html.indexOf('function drawRunner(){',worldStart);
-const helpers=new Function('ctx','RUNNER_W','RUNNER_GROUND',html.slice(worldStart,worldEnd)+';return {drawRunnerSpectacle,drawRunnerAvatarCinematic};');
+const helpers=new Function('ctx','RUNNER_W','RUNNER_GROUND','RUNNER_H',html.slice(worldStart,worldEnd)+';return {drawRunnerSpectacle,drawRunnerAvatarCinematic,drawRunnerWorldAtmosphere,drawRunnerObstacleSignature,drawRunnerPlanetSurface};');
 let calls=0;
 const gradient=()=>({addColorStop(){}});
 const ctx=new Proxy({createRadialGradient:gradient,createLinearGradient:gradient},{get(obj,name){return name in obj?obj[name]:(...args)=>{for(const arg of args)if(typeof arg==='number')assert.ok(Number.isFinite(arg),String(name));calls++}},set(obj,name,value){if(typeof value==='number')assert.ok(Number.isFinite(value),String(name));obj[name]=value;return true}});
-const {drawRunnerSpectacle,drawRunnerAvatarCinematic}=helpers(ctx,960,330);
+const {drawRunnerSpectacle,drawRunnerAvatarCinematic,drawRunnerWorldAtmosphere,drawRunnerObstacleSignature,drawRunnerPlanetSurface}=helpers(ctx,960,330,430);
 for(const world of ['volcanic_cataclysm','aurora_sanctum','celestial_temple','abyssal_ocean','crimson_rift','deep_space'])for(const distance of [0,1000,5000,12000])drawRunnerSpectacle(ctx,world,distance,2);
 for(const avatar of ['magma_sovereign','astral_leviathan','storm_seraph','glacier_revenant','solar_flare','ash_titan','neon_reef','toxic_bloom','orbit_o'])for(const distance of [0,500,5000])drawRunnerAvatarCinematic(ctx,avatar,110,285,distance);
+
+for(const world of ['deep_space','violet_nebula','frozen_horizon','black_sun','signal_storm','crimson_rift','volcanic_cataclysm','aurora_sanctum','celestial_temple','abyssal_ocean']){
+  for(const distance of [0,350,2200,10000])drawRunnerWorldAtmosphere(ctx,world,distance,3);
+}
+for(const skin of ['signal_spires','crystal_shards','orbital_debris','spirit_masks','glitch_slimes','mecha_drones','moon_familiars','frost_spines','inferno_obelisks','thunder_sentinels','rift_serpents']){
+  for(const phase of [0,3,10])drawRunnerObstacleSignature(ctx,skin,{x:540,y:260,w:36,h:55},phase,3);
+}
+for(const skin of ['orbit_o','frost_moon','glacier_revenant','void_core','signal_bloom','crimson_pulse','ash_titan','magma_sovereign','eclipse_halo','solar_flare','toxic_bloom','neon_reef','storm_seraph','astral_leviathan']){
+  for(const phase of [0,4,16])drawRunnerPlanetSurface(ctx,skin,phase);
+}
+assert.ok(html.includes('id="runnerShowroomScene"'),'showroom missing from shop');
+assert.ok(html.includes('renderRunnerShowroom();'),'showroom not synced with store');
+assert.ok(html.includes('runner-preview-glyph'),'planet previews lack visible glyph');
+
 assert.ok(calls>1500);
-console.log('PASS: 4 scripts, unique IDs, 12 staged SKUs, background/profile flows, canvas effects ('+calls+' calls)');
+console.log('PASS: 4 scripts, unique IDs, 12 staged SKUs, 10 worlds / 14 planets / 11 obstacles, showroom and profile ('+calls+' canvas calls)');

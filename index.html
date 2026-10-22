@@ -1535,6 +1535,54 @@ html{scroll-padding-top:80px}
 .scene-crimson_rift .runner-vfx-ring{display:block;left:58%;top:10%;width:42px;height:110px;border:2px solid rgba(255,125,107,.47);border-radius:48%;filter:drop-shadow(0 0 12px rgba(255,88,70,.38));animation:runnerCelestialOrbit 6s linear infinite}
 .scene-ash_titan .runner-vfx-magma{opacity:.58}
 
+/* Showcase: purchased loadout, no new server action / no new purchases */
+.runner-showroom{position:relative;margin:16px 0 20px;padding:15px;border:1px solid rgba(196,172,232,.24);border-radius:15px;background:linear-gradient(145deg,rgba(33,30,52,.48),rgba(7,9,15,.92));overflow:hidden}
+.runner-showroom-heading{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.runner-showroom-heading strong{font-size:clamp(13px,1.8vw,18px);letter-spacing:.13em;color:#f0e8fd}
+.runner-showroom-heading p{margin:0;color:#a8aebf;font-size:clamp(11px,1.35vw,13px);line-height:1.5}
+.runner-showroom-display{position:relative;height:clamp(190px,28vw,275px);border:1px solid rgba(213,221,238,.16);border-radius:12px;overflow:hidden;background:#07111d}
+.runner-showroom-display .runner-preview-scene{position:absolute;inset:0;width:100%;height:100%}
+.runner-showroom-inner .runner-preview-planet{position:absolute;left:24%!important;top:auto!important;bottom:24%!important;width:54px!important;height:54px!important;transform:none!important;z-index:6;animation:runnerShowroomHover 3.4s ease-in-out infinite!important}
+.runner-showroom-inner .runner-preview-planet:before{z-index:7}
+.runner-showroom-inner .runner-preview-planet .runner-preview-glyph{position:absolute;inset:0;display:grid;place-items:center;z-index:8;color:#f2f6ff;font:bold 21px Arial,sans-serif;text-shadow:0 1px 8px rgba(0,0,0,.5)}
+.runner-preview-planet .runner-preview-glyph{position:absolute;inset:0;display:grid;place-items:center;z-index:9;color:#f3f7ff;font:700 20px Arial,sans-serif;text-shadow:0 0 9px rgba(20,12,32,.7);pointer-events:none}
+.runner-preview-scene.scene-avatar .runner-preview-planet:not(.solar_flare):not(.toxic_bloom):not(.frost_moon):not(.magma_sovereign):not(.astral_leviathan):not(.storm_seraph):not(.glacier_revenant):after,
+.runner-showroom-inner .runner-preview-planet:not(.solar_flare):not(.toxic_bloom):not(.frost_moon):not(.magma_sovereign):not(.astral_leviathan):not(.storm_seraph):not(.glacier_revenant):after{content:""!important}
+.runner-preview-planet.magma_sovereign:after{content:"";position:absolute;inset:-12px;border-radius:50%;background:repeating-conic-gradient(from 0deg,transparent 0 29deg,rgba(255,134,45,.49) 32deg 37deg,transparent 42deg 80deg);filter:blur(3px);animation:runnerMagmaCorona 3.4s linear infinite}
+.runner-preview-planet.astral_leviathan:after{content:"";position:absolute;inset:-14px;border-radius:50%;background:radial-gradient(circle at 9% 32%,#d3baff 0 2px,transparent 3px),radial-gradient(circle at 81% 11%,#b8e5ff 0 2px,transparent 3px),radial-gradient(circle at 87% 72%,#c7a5ff 0 2px,transparent 3px),radial-gradient(circle at 21% 90%,#d7e1ff 0 2px,transparent 3px);filter:drop-shadow(0 0 5px #b58bff);animation:runnerCelestialOrbit 7.6s linear infinite}
+.runner-preview-planet.storm_seraph:after{content:"";position:absolute;inset:-10px;border-radius:50%;background:linear-gradient(133deg,transparent 0 32%,rgba(173,255,247,.85) 33% 35%,transparent 36% 62%,rgba(126,170,255,.6) 63% 65%,transparent 66%);filter:drop-shadow(0 0 6px #87f3ed);animation:runnerStormFlash 3.5s ease-in-out infinite}
+.runner-preview-planet.glacier_revenant:after{content:"";position:absolute;inset:-10px;border-radius:50%;background:radial-gradient(circle at 16% 24%,#e1f9ff 0 2px,transparent 3px),radial-gradient(circle at 85% 43%,#b8eaff 0 2px,transparent 3px),radial-gradient(circle at 48% 92%,#f4ffff 0 2px,transparent 3px);filter:drop-shadow(0 0 5px rgba(172,236,255,.8));animation:runnerIceOrbit 5s linear infinite}
+.runner-preview-planet.magma_sovereign .runner-preview-glyph{color:#fff4ca;text-shadow:0 0 12px #ffaf59}
+.runner-preview-planet.astral_leviathan .runner-preview-glyph{color:#f8e6ff;text-shadow:0 0 12px #b88cfa}
+.runner-preview-planet.storm_seraph .runner-preview-glyph{color:#edffff;text-shadow:0 0 12px #9efdf8}
+.runner-preview-planet.glacier_revenant .runner-preview-glyph{color:#f1fbff;text-shadow:0 0 10px #aee9ff}
+@keyframes runnerMagmaCorona{from{transform:rotate(0);opacity:.52}50%{opacity:1}to{transform:rotate(360deg);opacity:.52}}
+@keyframes runnerIceOrbit{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+.runner-showroom-inner .runner-preview-obstacles{position:absolute;bottom:20%!important;right:18%!important;transform:scale(1.5)!important;transform-origin:bottom right;z-index:6}
+.runner-showroom-inner .runner-preview-background-planet{right:19%!important;top:14%!important;width:58px!important;height:58px!important}
+.runner-showroom-inner .runner-preview-ground{bottom:19%;z-index:5}
+.runner-showroom-labels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding-top:12px}
+.runner-showroom-labels>div{min-width:0;display:flex;flex-direction:column;gap:4px;padding:10px 12px;border:1px solid rgba(212,217,238,.13);border-radius:8px;background:rgba(255,255,255,.025)}
+.runner-showroom-labels small{font-size:10px;color:#9faabd;letter-spacing:.09em}
+.runner-showroom-labels strong{font-size:clamp(11px,1.4vw,13px);color:#f2f4f9;line-height:1.4;overflow-wrap:anywhere}
+@keyframes runnerShowroomHover{0%,100%{translate:0 0}50%{translate:0 -8px}}
+/* Rich silhouettes give even simple worlds depth instead of plain gradients. */
+.runner-preview-scene.scene-deep_space:before,.runner-preview-scene.scene-violet_nebula:before,.runner-preview-scene.scene-frozen_horizon:before,.runner-preview-scene.scene-black_sun:before,.runner-preview-scene.scene-signal_storm:before,.runner-preview-scene.scene-crimson_rift:before,.runner-preview-scene.scene-volcanic_cataclysm:before,.runner-preview-scene.scene-celestial_temple:before,.runner-preview-scene.scene-abyssal_ocean:before,.runner-preview-scene.scene-aurora_sanctum:before{content:"";position:absolute;inset:0;z-index:0;pointer-events:none;background-image:radial-gradient(1px 1px at 17% 21%,rgba(239,245,255,.58) 98%,transparent),radial-gradient(2px 2px at 82% 14%,rgba(229,220,255,.45) 98%,transparent),radial-gradient(1px 1px at 51% 41%,rgba(229,242,255,.6) 98%,transparent),radial-gradient(1px 1px at 64% 68%,rgba(230,255,250,.4) 98%,transparent);opacity:.72}
+.scene-deep_space .runner-vfx-ring{display:block;left:69%;top:9%;width:65px;height:65px;border:2px solid rgba(135,181,218,.28);border-radius:50%;box-shadow:0 0 19px rgba(69,108,167,.12);animation:runnerCosmicPulse 7s ease-in-out infinite}
+.scene-violet_nebula .runner-vfx-beam{display:block;inset:6% auto auto 13%;width:65%;height:90%;background:radial-gradient(ellipse at 43% 48%,rgba(203,115,239,.23),transparent 51%),radial-gradient(ellipse at 78% 25%,rgba(78,92,205,.24),transparent 50%);filter:blur(18px);animation:runnerNebulaDance 7s ease-in-out infinite alternate}
+.scene-frozen_horizon .runner-vfx-mountain,.scene-aurora_sanctum .runner-vfx-mountain{display:block;inset:auto 0 18% 0;height:50%;background:linear-gradient(0deg,rgba(26,80,104,.73),rgba(114,197,221,.38));clip-path:polygon(0 100%,0 72%,12% 33%,22% 73%,38% 14%,52% 78%,65% 25%,80% 81%,92% 36%,100% 73%,100% 100%);filter:drop-shadow(0 0 13px rgba(126,226,238,.26))}
+.scene-black_sun .runner-vfx-ring{display:block;left:61%;top:5%;width:92px;height:92px;border:9px solid rgba(216,172,112,.5);border-radius:50%;box-shadow:0 0 23px rgba(235,171,91,.55),inset 0 0 25px rgba(234,163,93,.27);background:radial-gradient(circle,#020203 52%,rgba(8,7,11,.95) 53%,transparent 59%);animation:runnerCosmicPulse 4.6s ease-in-out infinite}
+.scene-signal_storm .runner-vfx-beam{display:block;left:58%;top:-13%;width:22%;height:140%;background:linear-gradient(107deg,transparent 0 43%,rgba(144,254,252,.48) 44% 45%,transparent 46% 53%,rgba(121,108,244,.35) 54% 55%,transparent 56%);filter:drop-shadow(0 0 5px rgba(129,244,246,.42));animation:runnerStormFlash 4.1s ease-in-out infinite}
+.scene-abyssal_ocean .runner-vfx-ring{display:block;left:64%;top:13%;width:54px;height:54px;border:2px dotted rgba(107,246,224,.46);border-radius:50%;box-shadow:0 0 17px rgba(73,220,206,.23);animation:runnerBubbleRise 5s linear infinite}
+.scene-celestial_temple .runner-vfx-mountain{display:block;inset:auto 4% 19% auto;width:67%;height:58%;background:linear-gradient(90deg,rgba(134,103,188,.44),rgba(38,32,89,.52));clip-path:polygon(0 100%,0 36%,18% 36%,18% 3%,35% 3%,35% 56%,45% 56%,45% 19%,59% 19%,59% 60%,80% 60%,80% 8%,91% 8%,91% 100%)}
+@keyframes runnerNebulaDance{from{transform:translate(-7%,-2%) scale(.95)}to{transform:translate(8%,4%) scale(1.07)}}
+@keyframes runnerCosmicPulse{0%,100%{opacity:.43;transform:scale(.97)}50%{opacity:1;transform:scale(1.07)}}
+@keyframes runnerStormFlash{0%,21%,27%,83%,100%{opacity:.12}22%,24%,84%,86%{opacity:1}}
+@keyframes runnerBubbleRise{from{transform:translateY(27px) scale(.7);opacity:0}20%{opacity:.75}to{transform:translateY(-34px) scale(1.2);opacity:0}}
+@media(max-width:480px){.runner-showroom{padding:11px}.runner-showroom-display{height:205px}.runner-showroom-labels{gap:5px}.runner-showroom-labels>div{padding:8px 6px}.runner-showroom-labels small{font-size:9px}.runner-showroom-labels strong{font-size:10px}.runner-showroom-inner .runner-preview-obstacles{right:14%!important;transform:scale(1.15)!important}.runner-showroom-inner .runner-preview-planet{left:14%!important}}
+@media(prefers-reduced-motion:reduce){.runner-preview-planet.magma_sovereign:after,.runner-preview-planet.astral_leviathan:after,.runner-preview-planet.storm_seraph:after,.runner-preview-planet.glacier_revenant:after,.runner-showroom-inner .runner-preview-planet,.scene-deep_space .runner-vfx-ring,.scene-violet_nebula .runner-vfx-beam,.scene-black_sun .runner-vfx-ring,.scene-signal_storm .runner-vfx-beam,.scene-abyssal_ocean .runner-vfx-ring{animation:none!important}}
+
 </style>
 </head>
 <body data-track-theme="signal001">
@@ -1771,6 +1819,11 @@ html{scroll-padding-top:80px}
             </div>
           </div>
           <p class="runner-store-status" id="runnerStoreStatus" role="status"></p>
+          <section class="runner-showroom" aria-labelledby="runnerShowroomTitle">
+            <div class="runner-showroom-heading"><strong id="runnerShowroomTitle">ВАША КОМБИНАЦИЯ</strong><p id="runnerShowroomHint">Планета, фон и препятствия вместе в одной сцене.</p></div>
+            <div class="runner-showroom-display" id="runnerShowroomScene" aria-hidden="true"></div>
+            <div class="runner-showroom-labels" id="runnerShowroomLabels"></div>
+          </section>
           <div id="runnerStoreFilters" class="runner-store-filters" role="group" aria-label="Редкость предметов"></div>
           <div id="runnerStoreContent"></div>
         </div>
@@ -1903,7 +1956,7 @@ const gameI18n={
     nearLock:'ПОЧТИ ЗАХВАЧЕН',nearHint:'ВЫРАВНИВАНИЕ ЧАСТОТЫ // ОЧЕНЬ БЛИЗКО',
     stabilizing:'СТАБИЛИЗАЦИЯ',hold:'УДЕРЖИВАЙ ЧАСТОТУ // НЕ ДВИГАЙ',
     decryptComplete:'РАСШИФРОВКА ЗАВЕРШЕНА // ØN-003',
-    lost:'ПЕРЕДАЧА ПОТЕРЯНА',reconnect:'ПЕРЕПОДКЛЮЧИТЬСЯ',speed:'СКОРОСТЬ',soundOff:'Выключить музыку игры',soundOn:'Включить музыку игры',calmSpace:'СПОКОЙНЫЙ КОСМОС',signalDrift:'ДРЕЙФ СИГНАЛА',distortionField:'ПОЛЕ ИСКАЖЕНИЙ',leaderboard:'ТАБЛИЦА ЛИДЕРОВ',player:'ИГРОК',saveScore:'СОХРАНИТЬ РЕЗУЛЬТАТ',namePlaceholder:'Введи имя',loadingBoard:'Загрузка рейтинга…',emptyBoard:'Пока нет результатов',saveOk:'РЕЗУЛЬТАТ СОХРАНЁН',saveError:'Не удалось сохранить результат',nameError:'Введи имя от 1 до 20 символов',store:'МАГАЗИН',storeClose:'ЗАКРЫТЬ МАГАЗИН',storeTitle:'ØN // МАГАЗИН',avatars:'ПЛАНЕТЫ',backgrounds:'ФОНЫ',obstacles:'ПРЕПЯТСТВИЯ',buy:'КУПИТЬ',equip:'ВЫБРАТЬ',equipped:'ИСПОЛЬЗУЕТСЯ',owned:'КУПЛЕНО',notEnough:'НЕ ХВАТАЕТ Ø-КРЕДИТОВ',storeError:'Ошибка магазина',connecting:'ПОДКЛЮЧЕНИЕ…',earned:'ЗАРАБОТАНО',position:'ПОЗИЦИЯ',storeSubtitle:'Косметика для сигнала: меняй планету, пространство и препятствия.',free:'БЕСПЛАТНО',creditsLabel:'Ø-КРЕДИТЫ',itemsCount:'ПРЕДМЕТОВ',rarityCommon:'ОБЫЧНЫЙ',rarityRare:'РЕДКИЙ',rarityEpic:'ЭПИЧЕСКИЙ',rarityLegendary:'ЛЕГЕНДАРНЫЙ',rarityVoid:'БЕЗДНА',gravityShift:'ИНВЕРСИЯ ГРАВИТАЦИИ',gravityReturn:'ВОЗВРАТ ГРАВИТАЦИИ',bossDetected:'СЕКРЕТНЫЙ ОБЪЕКТ ОБНАРУЖЕН',modifierSignal:'МОДИФИКАТОР // СИГНАЛЬНЫЙ ПОТОК',modifierLowGravity:'МОДИФИКАТОР // ЛЁГКАЯ ГРАВИТАЦИЯ',rareGold:'ЗОЛОТОЙ СИГНАЛ +7 Ø',rareViolet:'ФИОЛЕТОВЫЙ СИГНАЛ +3 Ø',profile:'ПРОФИЛЬ',profileClose:'ЗАКРЫТЬ ПРОФИЛЬ',profileKicker:'ØN // ПРОФИЛЬ ИГРОКА',unknownPlayer:'НЕИЗВЕСТНЫЙ СИГНАЛ',runs:'ЗАБЕГИ',totalSignals:'СОБРАНО Ø',totalDistance:'ОБЩАЯ ДИСТАНЦИЯ',achievements:'ДОСТИЖЕНИЯ',itemAcquired:'ПРЕДМЕТ ПОЛУЧЕН',achievementUnlocked:'ДОСТИЖЕНИЕ ОТКРЫТО',devices:'УСТРОЙСТВА',devicesConnected:'ПОДКЛЮЧЕНО',deviceHint:'Один профиль на телефоне и ПК. Получи код на основном устройстве и введи его на втором.',createLink:'ПОЛУЧИТЬ КОД',connectDevice:'ПОДКЛЮЧИТЬ',linkPlaceholder:'КОД ПРИВЯЗКИ',linkCodeLabel:'КОД ДЕЙСТВУЕТ 10 МИНУТ',linkReady:'ВВЕДИ ЭТОТ КОД НА ДРУГОМ УСТРОЙСТВЕ',linkSuccess:'УСТРОЙСТВО ПОДКЛЮЧЕНО К ОБЩЕМУ ПРОФИЛЮ',linkInvalid:'КОД НЕВЕРНЫЙ ИЛИ ИСТЁК',linkHasProgress:'НА ЭТОМ УСТРОЙСТВЕ УЖЕ ЕСТЬ ОТДЕЛЬНЫЙ ПРОФИЛЬ',linkRateLimited:'СЛИШКОМ МНОГО ПОПЫТОК. ПОПРОБУЙ ПОЗЖЕ',linkError:'НЕ УДАЛОСЬ ПОДКЛЮЧИТЬ УСТРОЙСТВО',itemNotOwned:'ПРЕДМЕТ ЕЩЁ НЕ КУПЛЕН',profileBg:'ФОН ПРОФИЛЯ',profileBgHint:'Выбери из купленных фонов',profileBgSaved:'ФОН ПРОФИЛЯ СОХРАНЁН',profileUse:'УСТАНОВИТЬ В ПРОФИЛЬ',profileUsing:'В ПРОФИЛЕ',profileBuyHint:'КУПИ ФОН ДЛЯ ИГРЫ И ПРОФИЛЯ',profileShop:'МАГАЗИН ФОНОВ',storeAll:'ВСЁ',storePreview:'СКОРО',shopBackgroundHint:'ДОСТУПЕН ТАКЖЕ ДЛЯ ПРОФИЛЯ',storeFilterAria:'ФИЛЬТР ПО РЕДКОСТИ',lockedRu:'ЗАБЛОКИРОВАНО',gameName:'СИГНАЛЬНЫЙ ЗАБЕГ',legendarySignal:'ØN // ЛЕГЕНДАРНЫЙ СИГНАЛ'
+    lost:'ПЕРЕДАЧА ПОТЕРЯНА',reconnect:'ПЕРЕПОДКЛЮЧИТЬСЯ',speed:'СКОРОСТЬ',soundOff:'Выключить музыку игры',soundOn:'Включить музыку игры',calmSpace:'СПОКОЙНЫЙ КОСМОС',signalDrift:'ДРЕЙФ СИГНАЛА',distortionField:'ПОЛЕ ИСКАЖЕНИЙ',leaderboard:'ТАБЛИЦА ЛИДЕРОВ',player:'ИГРОК',saveScore:'СОХРАНИТЬ РЕЗУЛЬТАТ',namePlaceholder:'Введи имя',loadingBoard:'Загрузка рейтинга…',emptyBoard:'Пока нет результатов',saveOk:'РЕЗУЛЬТАТ СОХРАНЁН',saveError:'Не удалось сохранить результат',nameError:'Введи имя от 1 до 20 символов',store:'МАГАЗИН',storeClose:'ЗАКРЫТЬ МАГАЗИН',storeTitle:'ØN // МАГАЗИН',avatars:'ПЛАНЕТЫ',backgrounds:'ФОНЫ',obstacles:'ПРЕПЯТСТВИЯ',buy:'КУПИТЬ',equip:'ВЫБРАТЬ',equipped:'ИСПОЛЬЗУЕТСЯ',owned:'КУПЛЕНО',notEnough:'НЕ ХВАТАЕТ Ø-КРЕДИТОВ',storeError:'Ошибка магазина',connecting:'ПОДКЛЮЧЕНИЕ…',earned:'ЗАРАБОТАНО',position:'ПОЗИЦИЯ',storeSubtitle:'Косметика для сигнала: меняй планету, пространство и препятствия.',free:'БЕСПЛАТНО',creditsLabel:'Ø-КРЕДИТЫ',itemsCount:'ПРЕДМЕТОВ',rarityCommon:'ОБЫЧНЫЙ',rarityRare:'РЕДКИЙ',rarityEpic:'ЭПИЧЕСКИЙ',rarityLegendary:'ЛЕГЕНДАРНЫЙ',rarityVoid:'БЕЗДНА',gravityShift:'ИНВЕРСИЯ ГРАВИТАЦИИ',gravityReturn:'ВОЗВРАТ ГРАВИТАЦИИ',bossDetected:'СЕКРЕТНЫЙ ОБЪЕКТ ОБНАРУЖЕН',modifierSignal:'МОДИФИКАТОР // СИГНАЛЬНЫЙ ПОТОК',modifierLowGravity:'МОДИФИКАТОР // ЛЁГКАЯ ГРАВИТАЦИЯ',rareGold:'ЗОЛОТОЙ СИГНАЛ +7 Ø',rareViolet:'ФИОЛЕТОВЫЙ СИГНАЛ +3 Ø',profile:'ПРОФИЛЬ',profileClose:'ЗАКРЫТЬ ПРОФИЛЬ',profileKicker:'ØN // ПРОФИЛЬ ИГРОКА',unknownPlayer:'НЕИЗВЕСТНЫЙ СИГНАЛ',runs:'ЗАБЕГИ',totalSignals:'СОБРАНО Ø',totalDistance:'ОБЩАЯ ДИСТАНЦИЯ',achievements:'ДОСТИЖЕНИЯ',itemAcquired:'ПРЕДМЕТ ПОЛУЧЕН',achievementUnlocked:'ДОСТИЖЕНИЕ ОТКРЫТО',devices:'УСТРОЙСТВА',devicesConnected:'ПОДКЛЮЧЕНО',deviceHint:'Один профиль на телефоне и ПК. Получи код на основном устройстве и введи его на втором.',createLink:'ПОЛУЧИТЬ КОД',connectDevice:'ПОДКЛЮЧИТЬ',linkPlaceholder:'КОД ПРИВЯЗКИ',linkCodeLabel:'КОД ДЕЙСТВУЕТ 10 МИНУТ',linkReady:'ВВЕДИ ЭТОТ КОД НА ДРУГОМ УСТРОЙСТВЕ',linkSuccess:'УСТРОЙСТВО ПОДКЛЮЧЕНО К ОБЩЕМУ ПРОФИЛЮ',linkInvalid:'КОД НЕВЕРНЫЙ ИЛИ ИСТЁК',linkHasProgress:'НА ЭТОМ УСТРОЙСТВЕ УЖЕ ЕСТЬ ОТДЕЛЬНЫЙ ПРОФИЛЬ',linkRateLimited:'СЛИШКОМ МНОГО ПОПЫТОК. ПОПРОБУЙ ПОЗЖЕ',linkError:'НЕ УДАЛОСЬ ПОДКЛЮЧИТЬ УСТРОЙСТВО',itemNotOwned:'ПРЕДМЕТ ЕЩЁ НЕ КУПЛЕН',profileBg:'ФОН ПРОФИЛЯ',profileBgHint:'Выбери из купленных фонов',profileBgSaved:'ФОН ПРОФИЛЯ СОХРАНЁН',profileUse:'УСТАНОВИТЬ В ПРОФИЛЬ',profileUsing:'В ПРОФИЛЕ',profileBuyHint:'КУПИ ФОН ДЛЯ ИГРЫ И ПРОФИЛЯ',profileShop:'МАГАЗИН ФОНОВ',storeAll:'ВСЁ',storePreview:'СКОРО',shopBackgroundHint:'ДОСТУПЕН ТАКЖЕ ДЛЯ ПРОФИЛЯ',storeFilterAria:'ФИЛЬТР ПО РЕДКОСТИ',showroomTitle:'ВАША КОМБИНАЦИЯ',showroomHint:'Планета, мир и препятствия — вместе, как в забеге.',showroomPlanet:'ПЛАНЕТА',showroomWorld:'ФОН',showroomObstacles:'ПРЕПЯТСТВИЯ',lockedRu:'ЗАБЛОКИРОВАНО',gameName:'СИГНАЛЬНЫЙ ЗАБЕГ',legendarySignal:'ØN // ЛЕГЕНДАРНЫЙ СИГНАЛ'
   },
   en:{
     intercept:'ØN // INTERCEPT 003',previous:'PREVIOUS LOCK // VERIFIED',
@@ -1921,7 +1974,7 @@ const gameI18n={
     nearLock:'NEAR LOCK',nearHint:'FREQUENCY ALIGNMENT // VERY CLOSE',
     stabilizing:'STABILIZING',hold:'HOLD FREQUENCY // DO NOT MOVE',
     decryptComplete:'DECRYPTION COMPLETE // ØN-003',
-    lost:'TRANSMISSION LOST',reconnect:'RECONNECT',speed:'SPEED',soundOff:'Turn game music off',soundOn:'Turn game music on',calmSpace:'CALM SPACE',signalDrift:'SIGNAL DRIFT',distortionField:'DISTORTION FIELD',leaderboard:'LEADERBOARD',player:'PLAYER',saveScore:'SAVE RESULT',namePlaceholder:'Enter name',loadingBoard:'Loading leaderboard…',emptyBoard:'No scores yet',saveOk:'RESULT SAVED',saveError:'Could not save result',nameError:'Enter a name from 1 to 20 characters',store:'STORE',storeClose:'CLOSE STORE',storeTitle:'ØN // STORE',avatars:'PLANETS',backgrounds:'BACKGROUNDS',obstacles:'OBSTACLES',buy:'BUY',equip:'EQUIP',equipped:'EQUIPPED',owned:'OWNED',notEnough:'NOT ENOUGH Ø-CREDITS',storeError:'Store error',connecting:'CONNECTING…',earned:'EARNED',position:'POSITION',storeSubtitle:'Signal cosmetics: change your planet, space and obstacles.',free:'FREE',creditsLabel:'Ø-CREDITS',itemsCount:'ITEMS',rarityCommon:'COMMON',rarityRare:'RARE',rarityEpic:'EPIC',rarityLegendary:'LEGENDARY',rarityVoid:'VOID',gravityShift:'GRAVITY INVERSION',gravityReturn:'GRAVITY RESTORED',bossDetected:'SECRET ENTITY DETECTED',modifierSignal:'MODIFIER // SIGNAL SURGE',modifierLowGravity:'MODIFIER // LOW GRAVITY',rareGold:'GOLD SIGNAL +7 Ø',rareViolet:'VIOLET SIGNAL +3 Ø',profile:'PROFILE',profileClose:'CLOSE PROFILE',profileKicker:'ØN // PLAYER PROFILE',unknownPlayer:'UNKNOWN SIGNAL',runs:'RUNS',totalSignals:'COLLECTED Ø',totalDistance:'TOTAL DISTANCE',achievements:'ACHIEVEMENTS',itemAcquired:'ITEM ACQUIRED',achievementUnlocked:'ACHIEVEMENT UNLOCKED',devices:'DEVICES',devicesConnected:'CONNECTED',deviceHint:'Use one profile on phone and PC. Create a code on the main device and enter it on the second.',createLink:'GET CODE',connectDevice:'CONNECT',linkPlaceholder:'LINK CODE',linkCodeLabel:'CODE EXPIRES IN 10 MINUTES',linkReady:'ENTER THIS CODE ON THE OTHER DEVICE',linkSuccess:'DEVICE CONNECTED TO SHARED PROFILE',linkInvalid:'CODE IS INVALID OR EXPIRED',linkHasProgress:'THIS DEVICE ALREADY HAS A SEPARATE PROFILE',linkRateLimited:'TOO MANY ATTEMPTS. TRY AGAIN LATER',linkError:'COULD NOT CONNECT DEVICE',itemNotOwned:'ITEM NOT PURCHASED YET',profileBg:'PROFILE BACKGROUND',profileBgHint:'Choose from owned backgrounds',profileBgSaved:'PROFILE BACKGROUND SAVED',profileUse:'USE IN PROFILE',profileUsing:'IN PROFILE',profileBuyHint:'BUY FOR GAME AND PROFILE',profileShop:'BACKGROUND SHOP',storeAll:'ALL',storePreview:'COMING SOON',shopBackgroundHint:'ALSO AVAILABLE FOR PROFILE',storeFilterAria:'FILTER BY RARITY',lockedRu:'LOCKED',gameName:'SIGNAL RUNNER',legendarySignal:'ØN // LEGENDARY SIGNAL'
+    lost:'TRANSMISSION LOST',reconnect:'RECONNECT',speed:'SPEED',soundOff:'Turn game music off',soundOn:'Turn game music on',calmSpace:'CALM SPACE',signalDrift:'SIGNAL DRIFT',distortionField:'DISTORTION FIELD',leaderboard:'LEADERBOARD',player:'PLAYER',saveScore:'SAVE RESULT',namePlaceholder:'Enter name',loadingBoard:'Loading leaderboard…',emptyBoard:'No scores yet',saveOk:'RESULT SAVED',saveError:'Could not save result',nameError:'Enter a name from 1 to 20 characters',store:'STORE',storeClose:'CLOSE STORE',storeTitle:'ØN // STORE',avatars:'PLANETS',backgrounds:'BACKGROUNDS',obstacles:'OBSTACLES',buy:'BUY',equip:'EQUIP',equipped:'EQUIPPED',owned:'OWNED',notEnough:'NOT ENOUGH Ø-CREDITS',storeError:'Store error',connecting:'CONNECTING…',earned:'EARNED',position:'POSITION',storeSubtitle:'Signal cosmetics: change your planet, space and obstacles.',free:'FREE',creditsLabel:'Ø-CREDITS',itemsCount:'ITEMS',rarityCommon:'COMMON',rarityRare:'RARE',rarityEpic:'EPIC',rarityLegendary:'LEGENDARY',rarityVoid:'VOID',gravityShift:'GRAVITY INVERSION',gravityReturn:'GRAVITY RESTORED',bossDetected:'SECRET ENTITY DETECTED',modifierSignal:'MODIFIER // SIGNAL SURGE',modifierLowGravity:'MODIFIER // LOW GRAVITY',rareGold:'GOLD SIGNAL +7 Ø',rareViolet:'VIOLET SIGNAL +3 Ø',profile:'PROFILE',profileClose:'CLOSE PROFILE',profileKicker:'ØN // PLAYER PROFILE',unknownPlayer:'UNKNOWN SIGNAL',runs:'RUNS',totalSignals:'COLLECTED Ø',totalDistance:'TOTAL DISTANCE',achievements:'ACHIEVEMENTS',itemAcquired:'ITEM ACQUIRED',achievementUnlocked:'ACHIEVEMENT UNLOCKED',devices:'DEVICES',devicesConnected:'CONNECTED',deviceHint:'Use one profile on phone and PC. Create a code on the main device and enter it on the second.',createLink:'GET CODE',connectDevice:'CONNECT',linkPlaceholder:'LINK CODE',linkCodeLabel:'CODE EXPIRES IN 10 MINUTES',linkReady:'ENTER THIS CODE ON THE OTHER DEVICE',linkSuccess:'DEVICE CONNECTED TO SHARED PROFILE',linkInvalid:'CODE IS INVALID OR EXPIRED',linkHasProgress:'THIS DEVICE ALREADY HAS A SEPARATE PROFILE',linkRateLimited:'TOO MANY ATTEMPTS. TRY AGAIN LATER',linkError:'COULD NOT CONNECT DEVICE',itemNotOwned:'ITEM NOT PURCHASED YET',profileBg:'PROFILE BACKGROUND',profileBgHint:'Choose from owned backgrounds',profileBgSaved:'PROFILE BACKGROUND SAVED',profileUse:'USE IN PROFILE',profileUsing:'IN PROFILE',profileBuyHint:'BUY FOR GAME AND PROFILE',profileShop:'BACKGROUND SHOP',storeAll:'ALL',storePreview:'COMING SOON',shopBackgroundHint:'ALSO AVAILABLE FOR PROFILE',storeFilterAria:'FILTER BY RARITY',showroomTitle:'YOUR LOADOUT',showroomHint:'Planet, world and obstacles — together, as in the run.',showroomPlanet:'PLANET',showroomWorld:'BACKGROUND',showroomObstacles:'OBSTACLES',lockedRu:'LOCKED',gameName:'SIGNAL RUNNER',legendarySignal:'ØN // LEGENDARY SIGNAL'
   }
 };
 function gameText(key){
@@ -2425,13 +2478,47 @@ function runnerPreviewMarkup(itemId,category){
   const particles=enhanced?Array.from({length:rarity==='legendary'?10:6},(_,i)=>'<span class="runner-preview-spark spark-'+i+'"></span>').join(''):'';
   const fx='<div class="runner-preview-vfx"><i class="runner-vfx-mountain"></i><i class="runner-vfx-magma"></i><i class="runner-vfx-beam"></i><i class="runner-vfx-ring"></i>'+particles+'</div>';
   const scene=' scene-'+safeId+' scene-'+category+' rarity-'+rarity+(category==='background'?' '+safeId:'');
-  if(category==='avatar')return '<div class="runner-preview-scene'+scene+'">'+fx+'<div class="runner-preview-ground"></div><div class="runner-preview-planet '+safeId+'"></div></div>';
+  if(category==='avatar')return '<div class="runner-preview-scene'+scene+'">'+fx+'<div class="runner-preview-ground"></div><div class="runner-preview-planet '+safeId+'"><span class="runner-preview-glyph">Ø</span></div></div>';
   if(category==='background')return '<div class="runner-preview-scene'+scene+'">'+fx+'<div class="runner-preview-background-planet"></div><div class="runner-preview-mini-planet"></div><div class="runner-preview-ground"></div></div>';
   return '<div class="runner-preview-scene'+scene+'">'+fx+'<div class="runner-preview-mini-planet"></div><div class="runner-preview-obstacles '+safeId+'"><i></i><i></i><i></i></div><div class="runner-preview-ground"></div></div>';
 }
 const RUNNER_V2_UPCOMING_ITEMS=[{"item_id":"glacier_revenant","category":"avatar","price":220,"sort_order":90,"previewOnly":true},{"item_id":"storm_seraph","category":"avatar","price":520,"sort_order":100,"previewOnly":true},{"item_id":"magma_sovereign","category":"avatar","price":1150,"sort_order":110,"previewOnly":true},{"item_id":"astral_leviathan","category":"avatar","price":1350,"sort_order":120,"previewOnly":true},{"item_id":"abyssal_ocean","category":"background","price":240,"sort_order":70,"previewOnly":true},{"item_id":"aurora_sanctum","category":"background","price":620,"sort_order":80,"previewOnly":true},{"item_id":"volcanic_cataclysm","category":"background","price":1250,"sort_order":90,"previewOnly":true},{"item_id":"celestial_temple","category":"background","price":1450,"sort_order":100,"previewOnly":true},{"item_id":"frost_spines","category":"obstacle","price":190,"sort_order":80,"previewOnly":true},{"item_id":"inferno_obelisks","category":"obstacle","price":480,"sort_order":90,"previewOnly":true},{"item_id":"thunder_sentinels","category":"obstacle","price":590,"sort_order":100,"previewOnly":true},{"item_id":"rift_serpents","category":"obstacle","price":1180,"sort_order":110,"previewOnly":true}];
 const RUNNER_V2_PREVIEW_MODE=new URLSearchParams(location.search).get('v2preview')==='1';
 let runnerStoreRarityFilter='all';
+
+
+/* The same skins power the shop previews and the player loadout showroom. */
+function renderRunnerShowroom(){
+  const display=document.getElementById('runnerShowroomScene');
+  const labels=document.getElementById('runnerShowroomLabels');
+  if(!display||!labels)return;
+  const safe=(value,fallback)=>typeof value==='string'&&/^[a-z0-9_]+$/.test(value)?value:fallback;
+  const avatar=safe(runnerStoreState.selected_avatar,'orbit_o');
+  const background=safe(runnerStoreState.selected_background,'deep_space');
+  const obstacle=safe(runnerStoreState.selected_obstacle,'signal_spires');
+  const lang=document.documentElement.lang==='en'?'en':'ru';
+  const avatarName=RUNNER_ITEM_META[avatar]?.[lang]?.[0]||avatar;
+  const backgroundName=RUNNER_ITEM_META[background]?.[lang]?.[0]||background;
+  const obstacleName=RUNNER_ITEM_META[obstacle]?.[lang]?.[0]||obstacle;
+  const planet='<div class="runner-preview-planet '+avatar+'"><span class="runner-preview-glyph">Ø</span></div>';
+  const hazard='<div class="runner-preview-obstacles '+obstacle+'"><i></i><i></i><i></i></div>';
+  // Reuse the background scene, so the showroom matches the purchased world.
+  display.innerHTML=runnerPreviewMarkup(background,'background')
+    .replace('scene-background','scene-background runner-showroom-inner')
+    .replace('<div class="runner-preview-mini-planet"></div>',planet+hazard);
+  const caption=document.getElementById('runnerShowroomTitle');
+  const hint=document.getElementById('runnerShowroomHint');
+  if(caption)caption.textContent=gameText('showroomTitle');
+  if(hint)hint.textContent=gameText('showroomHint');
+  const frag=document.createDocumentFragment();
+  for(const [label,name] of [
+    ['showroomPlanet',avatarName],['showroomWorld',backgroundName],['showroomObstacles',obstacleName]
+  ]){
+    const entry=document.createElement('div'),k=document.createElement('small'),v=document.createElement('strong');
+    k.textContent=gameText(label);v.textContent=name;entry.append(k,v);frag.appendChild(entry);
+  }
+  labels.replaceChildren(frag);
+}
 
 function renderRunnerStore(){
   if(!runnerStoreContent)return;
@@ -2498,6 +2585,7 @@ function renderRunnerStore(){
     section.appendChild(grid);frag.appendChild(section);
   });
   runnerStoreContent.replaceChildren(frag);
+  renderRunnerShowroom();
 }
 function renderRunnerProfile(){
   if(!runnerAchievements)return;
@@ -3379,6 +3467,242 @@ function drawRunnerAvatarCinematic(ctx,avatar,cx,cy,dist){
   ctx.restore();
 }
 
+
+/* Additional world atmosphere and parallax: effects never interact with collision or rewards. */
+const runnerCinematicMotion=typeof window==='undefined'||typeof window.matchMedia!=='function'
+  ?true:!window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function drawRunnerWorldAtmosphere(ctx,world,distance,stage){
+  const t=(runnerCinematicMotion?distance:0)*.014;
+  const w=RUNNER_W,g=RUNNER_GROUND;
+  const intensity=.68+Math.min(.32,stage*.11);
+  ctx.save();
+  if(world==='deep_space'){
+    // Massive distant ringed gas giant; near planets remain behind the action lane.
+    const x=w*.68-Math.sin(t*.035)*24,y=114;
+    const giant=ctx.createRadialGradient(x-16,y-19,5,x,y,81);
+    giant.addColorStop(0,'rgba(120,174,214,.16)');
+    giant.addColorStop(.58,'rgba(45,94,136,.12)');
+    giant.addColorStop(1,'rgba(6,19,36,0)');
+    ctx.fillStyle=giant;ctx.beginPath();ctx.arc(x,y,82,0,Math.PI*2);ctx.fill();
+    ctx.strokeStyle='rgba(173,209,233,.17)';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.ellipse(x,y,110,23,-.3,0,Math.PI*2);ctx.stroke();
+    ctx.strokeStyle='rgba(184,223,255,.1)';
+    for(let k=0;k<3;k++){ctx.beginPath();ctx.arc(x,y,35+k*10,-.8,1.7);ctx.stroke();}
+  }else if(world==='violet_nebula'){
+    // Moving nebular dust layers and a geometric constellation.
+    const center=w*.72;
+    for(let k=0;k<4;k++){
+      const x=center+(k-2)*77+Math.sin(t*.06+k)*19;
+      const y=64+(k%3)*58+Math.cos(t*.08+k)*11;
+      const neb=ctx.createRadialGradient(x,y,3,x,y,67);
+      neb.addColorStop(0,k%2?'rgba(217,134,246,.12)':'rgba(118,113,238,.14)');
+      neb.addColorStop(1,'rgba(71,31,101,0)');
+      ctx.fillStyle=neb;ctx.fillRect(x-73,y-73,146,146);
+    }
+    ctx.lineWidth=1;ctx.strokeStyle='rgba(219,182,255,.23)';
+    ctx.beginPath();ctx.moveTo(w*.52,66);ctx.lineTo(w*.6,127);ctx.lineTo(w*.81,100);
+    ctx.lineTo(w*.88,174);ctx.lineTo(w*.72,215);ctx.stroke();
+    for(const [u,v] of [[.52,66],[.6,127],[.81,100],[.88,174],[.72,215]]){
+      ctx.fillStyle='rgba(240,205,255,.65)';ctx.beginPath();ctx.arc(w*u,v,1.8,0,Math.PI*2);ctx.fill();
+    }
+  }else if(world==='frozen_horizon'){
+    // Two independently scrolling ranges of ice cliffs.
+    for(let layer=0;layer<2;layer++){
+      const scroll=(distance*(layer?.047:.018))%175;
+      ctx.fillStyle=layer?'rgba(43,101,132,.27)':'rgba(120,205,228,.14)';
+      ctx.strokeStyle=layer?'rgba(147,230,245,.25)':'rgba(213,252,255,.16)';
+      ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(-175,g);
+      for(let i=-1;i<=7;i++){
+        const x=i*175-scroll,peak=g-(layer?70:112)-((i*i*17+layer*13)%42);
+        ctx.lineTo(x-55,g-(layer?40:61));ctx.lineTo(x,peak);ctx.lineTo(x+46,g-(layer?34:76));
+      }
+      ctx.lineTo(w+40,g);ctx.closePath();ctx.fill();ctx.stroke();
+    }
+    for(let i=0;i<11;i++){
+      const x=((i*127+distance*.047)%(w+40)+w+40)%(w+40);
+      const y=20+(i*47%(g-35));
+      ctx.strokeStyle='rgba(227,252,255,'+(.13+(i%3)*.055)*intensity+')';
+      ctx.lineWidth=.85;ctx.beginPath();ctx.moveTo(x-3,y);ctx.lineTo(x+3,y);
+      ctx.moveTo(x,y-3);ctx.lineTo(x,y+3);ctx.stroke();
+    }
+  }else if(world==='black_sun'){
+    // A dark eclipse with flowing coronal arcs.
+    const x=w*.76+Math.sin(t*.05)*8,y=94;
+    for(let i=0;i<8;i++){
+      const a=i*.785+t*.03,rad=62+(i%3)*8+Math.sin(t*.14+i)*3;
+      ctx.strokeStyle=i%2?'rgba(249,197,118,.23)':'rgba(241,234,179,.15)';
+      ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(x,y,rad,a,a+.45);ctx.stroke();
+    }
+    ctx.strokeStyle='rgba(245,186,118,.1)';ctx.lineWidth=1;
+    for(let j=0;j<4;j++){const y0=42+j*47;ctx.beginPath();ctx.moveTo(w*.5,y0);ctx.quadraticCurveTo(x,y0-4,w*.98,y0+7);ctx.stroke();}
+  }else if(world==='signal_storm'){
+    // Forked storm bolts are thin and never obscure obstacles.
+    for(let j=0;j<3;j++){
+      const flash=Math.sin(t*(1.15+j*.08)+j*2.9);
+      if(flash<.76)continue;
+      const x=w*(.5+j*.18),zig=12*Math.sin(t*.31+j);
+      ctx.globalAlpha=Math.min(.43,(flash-.76)*1.7)*intensity;
+      ctx.strokeStyle=j===1?'#d2a9ff':'#a4fcff';ctx.lineWidth=1.5;
+      ctx.beginPath();ctx.moveTo(x+zig,15);ctx.lineTo(x-10+zig,69);
+      ctx.lineTo(x+14+zig,88);ctx.lineTo(x-3+zig,140);ctx.lineTo(x+6+zig,173);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(x+14+zig,88);ctx.lineTo(x+45+zig,112);ctx.lineTo(x+37+zig,137);ctx.stroke();
+    }
+    ctx.globalAlpha=1;
+  }else if(world==='crimson_rift'){
+    // Shattered floating shards orbit the crimson tear.
+    const cx=w*.77;
+    for(let i=0;i<9;i++){
+      const a=i*2.399+t*.042;
+      const x=cx+Math.cos(a)*(42+i%3*29),y=100+Math.sin(a)*(49+i%3*22);
+      const spin=Math.sin(t*.08+i)*.14;
+      ctx.save();ctx.translate(x,y);ctx.rotate(spin);
+      ctx.fillStyle='rgba(145,29,50,.24)';ctx.strokeStyle='rgba(255,128,114,.26)';
+      ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(-6,0);ctx.lineTo(0,-13-i%3*4);
+      ctx.lineTo(9,2);ctx.lineTo(2,12);ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();
+    }
+  }else if(world==='volcanic_cataclysm'){
+    // Ash cloud banks and hot columns beyond the active lane.
+    for(let i=0;i<6;i++){
+      const x=w*(.37+i*.095)+Math.sin(t*.05+i)*26;
+      const y=45+(i%3)*30;
+      const ash=ctx.createRadialGradient(x,y,2,x,y,54);
+      ash.addColorStop(0,'rgba(117,59,48,.12)');
+      ash.addColorStop(1,'rgba(45,20,21,0)');
+      ctx.fillStyle=ash;ctx.fillRect(x-57,y-57,114,114);
+    }
+    for(let i=0;i<11;i++){
+      const x=((i*103+distance*.09)%(w+100)+w+100)%(w+100);
+      const y=24+(i*47%(g-70));
+      ctx.fillStyle='rgba(255,127,46,'+(.11+(i%3)*.055)*intensity+')';
+      ctx.beginPath();ctx.arc(x,y,1.5+i%2,0,Math.PI*2);ctx.fill();
+    }
+  }else if(world==='aurora_sanctum'){
+    // Northern lights over translucent ice monoliths.
+    for(let i=0;i<7;i++){
+      const x=i*151-(distance*.023%151);
+      const height=33+(i*23%58),base=g-15;
+      ctx.strokeStyle='rgba(154,251,240,.28)';ctx.fillStyle='rgba(62,156,176,.19)';
+      ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x,base);ctx.lineTo(x+19,base-height);
+      ctx.lineTo(x+39,base);ctx.closePath();ctx.fill();ctx.stroke();
+    }
+  }else if(world==='celestial_temple'){
+    // Levitation of stone tablets and arcane rune fragments.
+    for(let i=0;i<7;i++){
+      const x=((i*147+distance*.019)%(w+70)+w+70)%(w+70);
+      const y=54+(i*49%177)+Math.sin(t*.13+i)*7;
+      ctx.strokeStyle='rgba(214,180,249,.28)';ctx.fillStyle='rgba(99,71,165,.1)';
+      ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x,y-13);ctx.lineTo(x+11,y-4);
+      ctx.lineTo(x+5,y+14);ctx.lineTo(x-10,y+5);ctx.closePath();ctx.fill();ctx.stroke();
+      ctx.beginPath();ctx.moveTo(x-3,y-4);ctx.lineTo(x+4,y+2);ctx.lineTo(x-1,y+8);ctx.stroke();
+    }
+  }else if(world==='abyssal_ocean'){
+    // Deep-sea kelp and luminous caustics.
+    for(let i=0;i<13;i++){
+      const x=i*83-(distance*.023%83),height=18+(i*17%35);
+      ctx.strokeStyle=i%2?'rgba(68,203,173,.19)':'rgba(94,170,184,.19)';
+      ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(x,g);
+      ctx.quadraticCurveTo(x-11+Math.sin(t*.16+i)*7,g-height*.5,x+Math.sin(t*.09+i)*8,g-height);
+      ctx.stroke();
+    }
+    for(let i=0;i<5;i++){
+      const x=w*(.43+i*.115),y=57+i*34+Math.sin(t*.1+i)*6;
+      ctx.strokeStyle='rgba(147,248,223,.16)';ctx.lineWidth=2;
+      ctx.beginPath();ctx.arc(x,y,15+i%2*6,-.3,Math.PI+1.1);ctx.stroke();
+    }
+  }
+  ctx.restore();
+}
+function drawRunnerObstacleSignature(ctx,skin,o,phase,stage){
+  const glow={
+    signal_spires:null,crystal_shards:'165,200,251',orbital_debris:'255,140,69',
+    spirit_masks:'194,138,240',glitch_slimes:'94,228,207',
+    mecha_drones:'112,234,247',moon_familiars:'190,141,253',
+    frost_spines:'197,244,255',inferno_obelisks:'255,123,55',
+    thunder_sentinels:'118,242,253',rift_serpents:'193,147,255'
+  }[skin];
+  if(!glow)return;
+  const cx=o.x+o.w*.5,cy=o.y+o.h*.5;
+  const power=.72+.22*Math.sin(phase*(runnerCinematicMotion?1:0)+1.4);
+  ctx.save();
+  const aura=ctx.createRadialGradient(cx,cy,3,cx,cy,Math.max(o.w,o.h)*.88);
+  aura.addColorStop(0,'rgba('+glow+','+(.14*power)+')');
+  aura.addColorStop(1,'rgba('+glow+',0)');
+  ctx.fillStyle=aura;ctx.fillRect(cx-o.w,cy-o.h,o.w*2,o.h*2);
+  const count=skin==='rift_serpents'||skin==='moon_familiars'?6:skin==='orbital_debris'||skin==='inferno_obelisks'?5:3;
+  for(let i=0;i<count;i++){
+    const a=i*2.399+phase*.22*(runnerCinematicMotion?1:0);
+    const x=cx+Math.cos(a)*(o.w*.4+4);
+    const y=cy+Math.sin(a)*(o.h*.39+6);
+    const alpha=(.2+i%3*.075)*(stage>=2?1.1:.8);
+    ctx.fillStyle='rgba('+glow+','+alpha+')';
+    ctx.beginPath();ctx.arc(x,y,1+i%2*.5,0,Math.PI*2);ctx.fill();
+  }
+  ctx.restore();
+}
+/* Planet surfaces are clipped to the sphere and never affect gameplay. */
+function drawRunnerPlanetSurface(ctx,skin,phase){
+  ctx.save();ctx.beginPath();ctx.arc(0,0,18.5,0,Math.PI*2);ctx.clip();
+  ctx.lineCap='round';ctx.lineWidth=1;
+  const shade=(color,alpha)=>{ctx.strokeStyle=color;ctx.globalAlpha=alpha};
+  if(skin==='orbit_o'){
+    shade('#dcebf5',.23);
+    for(let i=0;i<3;i++){ctx.beginPath();ctx.ellipse(0,3+(i-1)*8,16-i*2,4,-.17,0,Math.PI*2);ctx.stroke();}
+  }else if(skin==='frost_moon'||skin==='glacier_revenant'){
+    shade('#e2f9ff',.65);
+    for(let k=0;k<5;k++){
+      const x=-15+k*7,y=-9+(k%3)*9;ctx.beginPath();ctx.moveTo(x,y-6);ctx.lineTo(x+3,y);
+      ctx.lineTo(x-2,y+6);ctx.lineTo(x+4,y+9);ctx.stroke();
+    }
+    ctx.strokeStyle='rgba(255,255,255,.38)';
+    ctx.beginPath();ctx.arc(-5,-8,4,.8,5.1);ctx.arc(9,6,5,.1,3.8);ctx.stroke();
+  }else if(skin==='void_core'){
+    shade('#bf8cee',.58);ctx.lineWidth=1.4;
+    for(let k=0;k<5;k++){const a=k*1.257+phase*.018;ctx.beginPath();ctx.moveTo(Math.cos(a)*3,Math.sin(a)*3);
+      ctx.lineTo(Math.cos(a+.3)*13,Math.sin(a+.3)*13);ctx.stroke();}
+    ctx.fillStyle='#020109';ctx.beginPath();ctx.arc(0,0,8,0,Math.PI*2);ctx.fill();
+  }else if(skin==='signal_bloom'){
+    shade('#d6fbff',.52);
+    for(let i=0;i<4;i++){ctx.beginPath();ctx.arc(-3,2,4+i*4,phase*.1+i,phase*.1+i+2.5);ctx.stroke();}
+  }else if(skin==='crimson_pulse'||skin==='ash_titan'||skin==='magma_sovereign'){
+    const fire=skin==='ash_titan'?'#eaa27a':'#ffbc73';
+    shade(fire,skin==='magma_sovereign'?.93:.66);
+    ctx.lineWidth=skin==='magma_sovereign'?1.9:1.1;
+    ctx.beginPath();ctx.moveTo(-15,-11);ctx.lineTo(-6,-5);ctx.lineTo(-10,1);ctx.lineTo(1,7);ctx.lineTo(-2,16);
+    ctx.moveTo(5,-17);ctx.lineTo(1,-9);ctx.lineTo(9,-2);ctx.lineTo(6,6);ctx.lineTo(16,10);ctx.stroke();
+    if(skin==='magma_sovereign'){
+      ctx.fillStyle='rgba(255,208,112,.65)';
+      for(let i=0;i<4;i++){const x=-12+i*8;ctx.beginPath();ctx.arc(x,11-i%2*14,1.4,0,Math.PI*2);ctx.fill();}
+    }
+  }else if(skin==='eclipse_halo'){
+    ctx.fillStyle='rgba(255,225,155,.15)';ctx.beginPath();ctx.arc(-5,-4,20,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#030408';ctx.beginPath();ctx.arc(4,0,17,0,Math.PI*2);ctx.fill();
+    shade('#fff1cd',.38);ctx.beginPath();ctx.arc(4,0,17,2,4);ctx.stroke();
+  }else if(skin==='solar_flare'){
+    shade('#fff4a5',.72);
+    for(let i=0;i<5;i++){const x=-14+i*6;ctx.beginPath();ctx.moveTo(x,18);ctx.quadraticCurveTo(x-7,-3,x, -18);ctx.stroke();}
+  }else if(skin==='toxic_bloom'){
+    shade('#dcff9d',.58);
+    for(let i=0;i<6;i++){const a=i*1.047+phase*.008;ctx.beginPath();ctx.arc(Math.cos(a)*9,Math.sin(a)*8,3+i%2,0,Math.PI*2);ctx.stroke();}
+  }else if(skin==='neon_reef'){
+    shade('#e1fffb',.6);
+    for(let i=0;i<4;i++){ctx.beginPath();ctx.moveTo(-20, -11+i*8);
+      ctx.bezierCurveTo(-7, -16+i*8,7,-3+i*8,20,-11+i*8);ctx.stroke();}
+  }else if(skin==='storm_seraph'){
+    shade('#d2fff9',.78);ctx.lineWidth=1.7;
+    ctx.beginPath();ctx.moveTo(-9,-18);ctx.lineTo(-3,-5);ctx.lineTo(-12,1);ctx.lineTo(1,7);
+    ctx.lineTo(-2,18);ctx.moveTo(12,-15);ctx.lineTo(5,-6);ctx.lineTo(12,2);ctx.stroke();
+  }else if(skin==='astral_leviathan'){
+    shade('#ede0ff',.65);ctx.lineWidth=1;
+    for(let i=0;i<7;i++){
+      const a=i*2.399+phase*.012;const x=Math.cos(a)*15,y=Math.sin(a)*14;
+      ctx.beginPath();ctx.moveTo(x-2,y);ctx.lineTo(x+2,y);ctx.moveTo(x,y-2);ctx.lineTo(x,y+2);ctx.stroke();
+    }
+    ctx.strokeStyle='rgba(191,169,252,.6)';ctx.beginPath();ctx.moveTo(-9,-6);ctx.lineTo(4,-12);ctx.lineTo(12,3);ctx.lineTo(-2,13);ctx.stroke();
+  }
+  ctx.restore();
+}
+
 function drawRunner(){
   if(!runnerCtx||!runnerCanvas)return;
   const ctx=runnerCtx;
@@ -3559,6 +3883,7 @@ function drawRunner(){
     ctx.restore();
   }
 
+  drawRunnerWorldAtmosphere(ctx,runnerStoreState.selected_background,runnerDistanceValue,stage);
   drawRunnerSpectacle(ctx,runnerStoreState.selected_background,runnerDistanceValue,stage);
 
   // Secret boss-events stay in the background and never change collision.
@@ -3725,6 +4050,7 @@ function drawRunner(){
     }
 
 
+    drawRunnerObstacleSignature(ctx,skin,o,phase,stage);
     if(skin==='frost_spines'){
       const icy=ctx.createLinearGradient(o.x,o.y,o.x+o.w,o.y+o.h);
       icy.addColorStop(0,'rgba(225,251,255,.9)');icy.addColorStop(.52,'rgba(89,176,205,.5)');icy.addColorStop(1,'rgba(22,69,112,.55)');
@@ -4272,6 +4598,7 @@ function drawRunner(){
     }
     ctx.shadowBlur=stage===3?22:13;ctx.fillStyle=planetGrad;ctx.beginPath();ctx.arc(0,0,19,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
   }
+  drawRunnerPlanetSurface(ctx,avatar,spin);
   ctx.strokeStyle='rgba(245,248,251,.22)';ctx.lineWidth=.8;ctx.beginPath();ctx.arc(-2,-1,12,-.6,1.8);ctx.stroke();
   ctx.fillStyle='#f0f4f7';ctx.font='bold 19px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('Ø',0,1);
   ctx.restore();
