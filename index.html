@@ -1645,6 +1645,81 @@ html{scroll-padding-top:80px}
   .runner-showroom-inner .runner-preview-planet{animation:none!important}
 }
 
+
+/* SIGNAL RUNNER / PORTAL Ø — discoverable game hub; no impact on music player */
+.runner-hero-portal{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:10px 14px;border:1px solid rgba(177,143,227,.39);border-radius:4px;background:rgba(104,69,138,.15);color:#e1d1fa!important;font-size:10px;font-weight:700;letter-spacing:.09em;transition:border-color .2s,background .2s}
+.runner-hero-portal:hover,.runner-hero-portal:focus-visible{border-color:rgba(211,174,255,.85);background:rgba(121,74,172,.24)}
+.runner-gateway{max-width:1420px;margin:0 auto;padding:clamp(56px,7vw,110px) clamp(18px,5vw,76px) clamp(62px,6vw,100px);content-visibility:auto;contain-intrinsic-size:auto 820px}
+.runner-gateway *{box-sizing:border-box}
+.runner-gateway-intro{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin-bottom:22px}
+.runner-gateway-eyebrow{display:block;margin-bottom:13px;color:#a78cca;font:700 11px/1.4 Arial,Helvetica,sans-serif;letter-spacing:.26em}
+.runner-gateway-intro h2{margin:0!important;color:#f6f4fa;font-size:clamp(42px,7vw,94px)!important;font-weight:800;line-height:.93;letter-spacing:-.055em;text-transform:uppercase}
+.runner-gateway-intro p{margin:19px 0 0;color:#9a9aa8;font-size:clamp(10px,1.5vw,14px);line-height:1.5;letter-spacing:.11em}
+.runner-gateway-readout{display:flex;gap:10px;align-items:center;white-space:nowrap;border:1px solid rgba(193,182,212,.16);padding:11px 14px;border-radius:40px;color:#b9afc8;font-size:10px;letter-spacing:.13em}
+.runner-gateway-led{display:inline-block;width:7px;height:7px;border-radius:50%;background:#9addd3;box-shadow:0 0 12px rgba(127,227,209,.75);animation:runnerGatePulse 2.4s ease-in-out infinite}
+.runner-gateway-shell{--gate-accent:#a47bfd;--gate-rgb:169,109,246;display:grid;grid-template-columns:minmax(0,1.55fr) minmax(265px,.85fr);min-height:370px;border:1px solid rgba(199,176,239,.25);border-radius:15px;overflow:hidden;background:#090912;box-shadow:0 30px 90px rgba(0,0,0,.24);transition:border-color .3s}
+.runner-gateway-shell[data-theme="lava"]{--gate-accent:#ffad64;--gate-rgb:255,134,63;border-color:rgba(251,132,71,.34)}
+.runner-gateway-shell[data-theme="frost"]{--gate-accent:#a5ebf5;--gate-rgb:134,230,249;border-color:rgba(134,226,249,.34)}
+.runner-gateway-shell[data-theme="storm"]{--gate-accent:#b4a0ff;--gate-rgb:151,128,247;border-color:rgba(138,140,255,.34)}
+.runner-gateway-shell[data-theme="rift"]{--gate-accent:#c88eff;--gate-rgb:191,112,244;border-color:rgba(180,117,255,.32)}
+.runner-gateway-stage{position:relative;min-height:370px;overflow:hidden;isolation:isolate;background:#100d1c}
+.runner-gateway-worldart{position:absolute;inset:-3%;background:url('assets/runner-worlds/rift.svg') center center/cover no-repeat;transform:scale(1.02);animation:runnerGateBreathe 13s ease-in-out infinite alternate}
+.runner-gateway-shell[data-theme="lava"] .runner-gateway-worldart{background-image:url('assets/runner-worlds/lava.svg')}
+.runner-gateway-shell[data-theme="frost"] .runner-gateway-worldart{background-image:url('assets/runner-worlds/frost.svg')}
+.runner-gateway-shell[data-theme="storm"] .runner-gateway-worldart{background-image:url('assets/runner-worlds/storm.svg')}
+.runner-gateway-haze{position:absolute;inset:0;background:radial-gradient(ellipse at 69% 30%,rgba(var(--gate-rgb),.22),transparent 46%),linear-gradient(to top,rgba(4,4,10,.65),transparent 70%);pointer-events:none}
+.runner-gateway-scangrid{position:absolute;inset:0;opacity:.35;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 31px,rgba(var(--gate-rgb),.055) 32px,transparent 33px),repeating-linear-gradient(90deg,transparent 0 64px,rgba(var(--gate-rgb),.037) 65px,transparent 66px)}
+.runner-gateway-signalring{position:absolute;left:28%;top:14%;width:min(37vw,220px);height:min(37vw,220px);border:1px solid rgba(var(--gate-rgb),.26);border-radius:50%;box-shadow:0 0 0 29px rgba(var(--gate-rgb),.018),0 0 0 64px rgba(var(--gate-rgb),.015),inset 0 0 40px rgba(var(--gate-rgb),.05);animation:runnerGatePulse 4.7s ease-in-out infinite;pointer-events:none}
+.runner-gateway-runner{position:absolute;z-index:4;left:26%;bottom:27%;width:76px;height:76px;animation:runnerGateFloat 4s ease-in-out infinite}
+.runner-gateway-runner .runner-preview-planet{position:absolute;left:7px;top:9px;width:59px!important;height:59px!important;z-index:4;box-shadow:0 0 19px rgba(var(--gate-rgb),.6);background:#152331;border:1px solid rgba(227,227,248,.7);border-radius:50%}
+.runner-gateway-runner .runner-preview-glyph{position:absolute;inset:0;z-index:6;display:grid;place-items:center;color:white;font-size:25px;font-weight:800;text-shadow:0 0 12px var(--gate-accent)}
+.runner-gateway-trail{position:absolute;z-index:-1;right:46px;top:34px;width:210px;height:12px;background:linear-gradient(90deg,transparent,rgba(var(--gate-rgb),.03),rgba(var(--gate-rgb),.43));filter:blur(3px);transform:skewX(-18deg)}
+.runner-gateway-trail:after{content:"";position:absolute;right:0;top:4px;width:205px;height:1px;background:linear-gradient(90deg,transparent,rgba(var(--gate-rgb),.82))}
+.runner-gateway-track{position:absolute;left:0;right:0;bottom:25%;height:2px;background:linear-gradient(90deg,rgba(var(--gate-rgb),0),rgba(var(--gate-rgb),.72),rgba(var(--gate-rgb),.2));box-shadow:0 0 20px rgba(var(--gate-rgb),.48);z-index:2}
+.runner-gateway-world-glow{position:absolute;left:0;right:0;bottom:0;height:25%;background:linear-gradient(180deg,rgba(var(--gate-rgb),.22),rgba(5,5,12,.95)),repeating-linear-gradient(172deg,transparent 0 24px,rgba(var(--gate-rgb),.15) 25px 26px,transparent 27px 49px);opacity:.75;z-index:1}
+.runner-gateway-world-index{position:absolute;z-index:6;left:20px;top:20px;color:rgba(238,235,249,.72);font:600 11px/1.3 monospace;letter-spacing:.22em}
+.runner-gateway-info{display:flex;flex-direction:column;justify-content:center;gap:0;padding:clamp(23px,3.3vw,49px);background:radial-gradient(ellipse at top right,rgba(var(--gate-rgb),.13),transparent 66%),#0b0b12}
+.runner-gateway-overline{display:block;color:var(--gate-accent);font-size:11px;font-weight:700;letter-spacing:.16em}
+.runner-gateway-info h3{margin:12px 0 14px;color:#f7f4fb;font-size:clamp(22px,2.6vw,38px);line-height:1.12;font-weight:700;letter-spacing:-.025em;text-wrap:balance}
+.runner-gateway-info>p:not(.runner-gateway-note){margin:0;color:#a8a5b5;font-size:13px;line-height:1.7}
+.runner-gateway-meta{display:flex;gap:13px;align-items:center;flex-wrap:wrap;margin:23px 0 16px}
+.runner-gateway-state{padding:8px 11px;border-radius:4px;border:1px solid rgba(var(--gate-rgb),.42);color:var(--gate-accent);font-size:10px;font-weight:700;letter-spacing:.08em}
+.runner-gateway-stat{display:flex;flex-direction:column;gap:5px;align-items:flex-start;padding-left:12px;border-left:1px solid rgba(207,197,231,.17)}
+.runner-gateway-stat small{font-size:9px;color:#89909e;letter-spacing:.08em}
+.runner-gateway-stat strong{font-size:16px;color:#f5f6fa}
+.runner-gateway-buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.runner-gateway-buttons button{min-height:51px;padding:12px;border-radius:5px;font-size:11px;letter-spacing:.065em;font-weight:700;cursor:pointer;transition:background .2s,transform .2s,border-color .2s}
+.runner-gateway-buttons button:focus-visible,.runner-gateway-world:focus-visible{outline:2px solid var(--gate-accent);outline-offset:3px}
+.runner-gateway-launch{display:flex;justify-content:space-between;align-items:center;gap:8px;background:var(--gate-accent);border:1px solid var(--gate-accent);color:#090813}
+.runner-gateway-launch:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.runner-gateway-equip{background:rgba(var(--gate-rgb),.1);color:#e7dcf8;border:1px solid rgba(var(--gate-rgb),.5)}
+.runner-gateway-equip:hover:not(:disabled){background:rgba(var(--gate-rgb),.22)}
+.runner-gateway-equip:disabled{opacity:.57;cursor:not-allowed}
+.runner-gateway-note{margin:13px 0 0!important;min-height:38px;color:#8b8e9e!important;font-size:11px!important;line-height:1.55!important}
+.runner-gateway-worlds{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:11px;margin-top:13px}
+.runner-gateway-world{display:flex;align-items:stretch;flex-direction:column;gap:0;padding:0;text-align:left;min-height:170px;overflow:hidden;background:#0b0d15;border:1px solid rgba(193,196,225,.17);border-radius:9px;color:#e5e6ed;cursor:pointer;transition:transform .25s,border-color .25s,box-shadow .25s}
+.runner-gateway-world:hover{transform:translateY(-3px);border-color:rgba(180,159,236,.5)}
+.runner-gateway-world.active{border-color:rgba(var(--gate-rgb),.85);box-shadow:0 0 0 1px rgba(var(--gate-rgb),.17),0 9px 29px rgba(var(--gate-rgb),.08)}
+.runner-gateway-thumb{flex:0 0 90px;width:100%;display:block;background:#0b0d18 center center/cover no-repeat;position:relative}
+.runner-gateway-thumb:after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(8,7,15,.72),transparent 72%)}
+.runner-gateway-thumb.world-lava{background-image:url('assets/runner-worlds/lava.svg')}
+.runner-gateway-thumb.world-frost{background-image:url('assets/runner-worlds/frost.svg')}
+.runner-gateway-thumb.world-storm{background-image:url('assets/runner-worlds/storm.svg')}
+.runner-gateway-thumb.world-rift{background-image:url('assets/runner-worlds/rift.svg')}
+.runner-gateway-world-copy{display:flex;flex:1;flex-direction:column;gap:6px;padding:12px}
+.runner-gateway-world-copy small{font-size:10px;color:#797e96;font-weight:700;letter-spacing:.12em}
+.runner-gateway-world-copy strong{font-size:clamp(11px,1.17vw,14px);line-height:1.28;overflow-wrap:anywhere}
+.runner-gateway-world-copy em{margin-top:auto;font-size:9px;letter-spacing:.12em;font-style:normal;color:#a7a0bf}
+.runner-gateway-world.active .runner-gateway-world-copy em{color:var(--gate-accent)}
+.runner-gateway-bottom{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-top:15px;color:#777c8a;font-size:10px;letter-spacing:.045em;line-height:1.6}
+@keyframes runnerGateFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+@keyframes runnerGateBreathe{from{transform:scale(1.02) translateX(0)}to{transform:scale(1.09) translateX(-1%)}}
+@keyframes runnerGatePulse{0%,100%{opacity:.47}50%{opacity:1}}
+@media(max-width:1050px){.runner-gateway-shell{grid-template-columns:1.1fr 1fr}.runner-gateway-stage{min-height:335px}.runner-gateway-info{padding:24px}.runner-gateway-meta{gap:9px}.runner-gateway-stat{padding-left:8px}.runner-gateway-worlds{grid-template-columns:repeat(2,minmax(0,1fr))}.runner-gateway-world{min-height:133px;flex-direction:row}.runner-gateway-thumb{flex:0 0 38%;min-height:132px}.runner-gateway-world-copy{padding:13px}.runner-gateway-readout{display:none}}
+@media(max-width:680px){.runner-gateway{padding:58px 18px 65px}.runner-gateway-intro h2{font-size:58px!important}.runner-gateway-intro p{font-size:10px}.runner-gateway-shell{display:flex;flex-direction:column}.runner-gateway-stage{min-height:250px}.runner-gateway-worldart{background-size:cover}.runner-gateway-signalring{width:140px;height:140px;left:23%;top:14%}.runner-gateway-info{padding:23px}.runner-gateway-info h3{font-size:27px}.runner-gateway-info>p:not(.runner-gateway-note){font-size:12px}.runner-gateway-meta{margin:19px 0 15px}.runner-gateway-worlds{gap:9px}.runner-gateway-world{min-height:159px;flex-direction:column}.runner-gateway-thumb{min-height:83px;flex-basis:83px}.runner-gateway-world-copy{padding:10px}.runner-gateway-world-copy strong{font-size:11px}.runner-gateway-world-copy em{font-size:9px}.runner-gateway-bottom{font-size:9px}}
+@media(max-width:360px){.runner-gateway-buttons{grid-template-columns:1fr}.runner-gateway-intro h2{font-size:45px!important}.runner-gateway-worlds{grid-template-columns:1fr 1fr}.runner-gateway-world{min-height:165px}}
+@media(prefers-reduced-motion:reduce){.runner-gateway-worldart,.runner-gateway-runner,.runner-gateway-signalring,.runner-gateway-led{animation:none!important}.runner-gateway-world,.runner-gateway-buttons button{transition:none!important}}
+
 </style>
 </head>
 <body data-track-theme="signal001">
@@ -1695,6 +1770,7 @@ html{scroll-padding-top:80px}
       <div class="popular-progress"><div class="signal-line hero-wave" id="heroWave"></div></div>
       <span class="popular-time" data-time-for="signal001">00:00 / 02:43</span>
       <a class="jump-link" href="#releases">СМОТРЕТЬ РЕЛИЗЫ ↓</a>
+      <a class="runner-hero-portal" id="runnerHeroPortal" href="#runner-gateway">Ø // ИГРОВОЙ ПОРТАЛ ↓</a>
     </div>
   </section>
 
@@ -1779,7 +1855,71 @@ html{scroll-padding-top:80px}
     </div>
   </section>
 
-  <section class="section news-section" id="news">
+  
+  <section class="section runner-gateway" id="runner-gateway" aria-labelledby="runnerGatewayHeading">
+    <div class="runner-gateway-intro">
+      <div>
+        <span class="runner-gateway-eyebrow" id="runnerGatewayEyebrow">ØN / GAME EXPERIENCE / 001</span>
+        <h2 id="runnerGatewayHeading">ПОРТАЛ Ø</h2>
+        <p id="runnerGatewayTagline">ЧЕТЫРЕ МИРА. ОДИН СИГНАЛ. БЕСКОНЕЧНЫЙ ЗАБЕГ.</p>
+      </div>
+      <div class="runner-gateway-readout"><span class="runner-gateway-led" aria-hidden="true"></span><span id="runnerGatewayReadout">СОЕДИНЕНИЕ С МИРАМИ</span></div>
+    </div>
+    <div class="runner-gateway-shell" id="runnerGatewayShell" data-world="crimson_rift" data-theme="rift">
+      <div class="runner-gateway-stage" id="runnerGatewayStage" aria-hidden="true">
+        <div class="runner-gateway-worldart"></div>
+        <div class="runner-gateway-haze"></div>
+        <div class="runner-gateway-scangrid"></div>
+        <div class="runner-gateway-signalring"></div>
+        <div class="runner-gateway-runner">
+          <span id="runnerGatewayOrb" class="runner-preview-planet orbit_o"><span class="runner-preview-glyph">Ø</span></span>
+          <span class="runner-gateway-trail"></span>
+        </div>
+        <div class="runner-gateway-track"></div>
+        <div class="runner-gateway-world-glow"></div>
+        <div class="runner-gateway-world-index">ØN // 00<span id="runnerGatewayIndex">4</span></div>
+      </div>
+      <div class="runner-gateway-info">
+        <span id="runnerGatewayWorldLabel" class="runner-gateway-overline">МИР 04 / РАЗЛОМ</span>
+        <h3 id="runnerGatewayWorldName">БАГРОВЫЙ РАЗЛОМ</h3>
+        <p id="runnerGatewayWorldDescription">Разорванное измерение, парящие обломки и энергия пустоты.</p>
+        <div class="runner-gateway-meta">
+          <span id="runnerGatewayWorldStatus" class="runner-gateway-state">ПРЕДПРОСМОТР</span>
+          <span class="runner-gateway-stat"><small id="runnerGatewayRecordLabel">ВАШ РЕКОРД</small><strong id="runnerGatewayRecord">—</strong></span>
+          <span class="runner-gateway-stat"><small>Ø-CREDITS</small><strong id="runnerGatewayCredits">—</strong></span>
+        </div>
+        <div class="runner-gateway-buttons">
+          <button id="runnerGatewayLaunch" class="runner-gateway-launch" type="button"><span>ВОЙТИ В ИГРУ</span><span aria-hidden="true">↗</span></button>
+          <button id="runnerGatewayEquip" class="runner-gateway-equip" type="button" disabled>ПРОВЕРКА ДОСТУПА…</button>
+        </div>
+        <p id="runnerGatewayStatus" class="runner-gateway-note" role="status">Мир в предпросмотре. В забеге используется установленный фон.</p>
+      </div>
+    </div>
+    <div class="runner-gateway-worlds" id="runnerGatewayWorlds" role="group" aria-label="Выбор мира для предпросмотра">
+      <button class="runner-gateway-world" data-gateway-world="volcanic_cataclysm" type="button" aria-pressed="false">
+        <span class="runner-gateway-thumb world-lava" aria-hidden="true"></span>
+        <span class="runner-gateway-world-copy"><small>01 / Ø</small><strong>ВУЛКАНИЧЕСКИЙ КАТАКЛИЗМ</strong><em id="runnerGatewayFlagLava">ПРЕДПРОСМОТР</em></span>
+      </button>
+      <button class="runner-gateway-world" data-gateway-world="frozen_horizon" type="button" aria-pressed="false">
+        <span class="runner-gateway-thumb world-frost" aria-hidden="true"></span>
+        <span class="runner-gateway-world-copy"><small>02 / Ø</small><strong>ЛЕДЯНОЙ ГОРИЗОНТ</strong><em id="runnerGatewayFlagFrost">ПРЕДПРОСМОТР</em></span>
+      </button>
+      <button class="runner-gateway-world" data-gateway-world="signal_storm" type="button" aria-pressed="false">
+        <span class="runner-gateway-thumb world-storm" aria-hidden="true"></span>
+        <span class="runner-gateway-world-copy"><small>03 / Ø</small><strong>ШТОРМ СИГНАЛА</strong><em id="runnerGatewayFlagStorm">ПРЕДПРОСМОТР</em></span>
+      </button>
+      <button class="runner-gateway-world active" data-gateway-world="crimson_rift" type="button" aria-pressed="true">
+        <span class="runner-gateway-thumb world-rift" aria-hidden="true"></span>
+        <span class="runner-gateway-world-copy"><small>04 / Ø</small><strong>БАГРОВЫЙ РАЗЛОМ</strong><em id="runnerGatewayFlagRift">ПРЕДПРОСМОТР</em></span>
+      </button>
+    </div>
+    <div class="runner-gateway-bottom">
+      <span id="runnerGatewayFooter">ØRNIVAISE // ЗАБЕГИ · ДОСТИЖЕНИЯ · КОСМЕТИКА · РЕКОРДЫ</span>
+      <span id="runnerGatewayDisclaimer">Миры можно просмотреть бесплатно. Покупки только внутри игры.</span>
+    </div>
+  </section>
+
+<section class="section news-section" id="news">
     <span class="section-label">СВЕЖИЕ НОВОСТИ</span>
     <h2>СЛЕДИ ЗА ØRNIVAISE</h2>
     <p class="news-lead">Новые релизы и важные обновления проекта публикуются во VK.</p>
@@ -2018,7 +2158,7 @@ const gameI18n={
     nearLock:'ПОЧТИ ЗАХВАЧЕН',nearHint:'ВЫРАВНИВАНИЕ ЧАСТОТЫ // ОЧЕНЬ БЛИЗКО',
     stabilizing:'СТАБИЛИЗАЦИЯ',hold:'УДЕРЖИВАЙ ЧАСТОТУ // НЕ ДВИГАЙ',
     decryptComplete:'РАСШИФРОВКА ЗАВЕРШЕНА // ØN-003',
-    lost:'ПЕРЕДАЧА ПОТЕРЯНА',reconnect:'ПЕРЕПОДКЛЮЧИТЬСЯ',speed:'СКОРОСТЬ',soundOff:'Выключить музыку игры',soundOn:'Включить музыку игры',calmSpace:'СПОКОЙНЫЙ КОСМОС',signalDrift:'ДРЕЙФ СИГНАЛА',distortionField:'ПОЛЕ ИСКАЖЕНИЙ',leaderboard:'ТАБЛИЦА ЛИДЕРОВ',player:'ИГРОК',saveScore:'СОХРАНИТЬ РЕЗУЛЬТАТ',namePlaceholder:'Введи имя',loadingBoard:'Загрузка рейтинга…',emptyBoard:'Пока нет результатов',saveOk:'РЕЗУЛЬТАТ СОХРАНЁН',saveError:'Не удалось сохранить результат',nameError:'Введи имя от 1 до 20 символов',store:'МАГАЗИН',storeClose:'ЗАКРЫТЬ МАГАЗИН',storeTitle:'ØN // МАГАЗИН',avatars:'ПЛАНЕТЫ',backgrounds:'ФОНЫ',obstacles:'ПРЕПЯТСТВИЯ',buy:'КУПИТЬ',equip:'ВЫБРАТЬ',equipped:'ИСПОЛЬЗУЕТСЯ',owned:'КУПЛЕНО',notEnough:'НЕ ХВАТАЕТ Ø-КРЕДИТОВ',storeError:'Ошибка магазина',connecting:'ПОДКЛЮЧЕНИЕ…',earned:'ЗАРАБОТАНО',position:'ПОЗИЦИЯ',storeSubtitle:'Косметика для сигнала: меняй планету, пространство и препятствия.',free:'БЕСПЛАТНО',creditsLabel:'Ø-КРЕДИТЫ',itemsCount:'ПРЕДМЕТОВ',rarityCommon:'ОБЫЧНЫЙ',rarityRare:'РЕДКИЙ',rarityEpic:'ЭПИЧЕСКИЙ',rarityLegendary:'ЛЕГЕНДАРНЫЙ',rarityVoid:'БЕЗДНА',gravityShift:'ИНВЕРСИЯ ГРАВИТАЦИИ',gravityReturn:'ВОЗВРАТ ГРАВИТАЦИИ',bossDetected:'СЕКРЕТНЫЙ ОБЪЕКТ ОБНАРУЖЕН',modifierSignal:'МОДИФИКАТОР // СИГНАЛЬНЫЙ ПОТОК',modifierLowGravity:'МОДИФИКАТОР // ЛЁГКАЯ ГРАВИТАЦИЯ',rareGold:'ЗОЛОТОЙ СИГНАЛ +7 Ø',rareViolet:'ФИОЛЕТОВЫЙ СИГНАЛ +3 Ø',profile:'ПРОФИЛЬ',profileClose:'ЗАКРЫТЬ ПРОФИЛЬ',profileKicker:'ØN // ПРОФИЛЬ ИГРОКА',unknownPlayer:'НЕИЗВЕСТНЫЙ СИГНАЛ',runs:'ЗАБЕГИ',totalSignals:'СОБРАНО Ø',totalDistance:'ОБЩАЯ ДИСТАНЦИЯ',achievements:'ДОСТИЖЕНИЯ',itemAcquired:'ПРЕДМЕТ ПОЛУЧЕН',achievementUnlocked:'ДОСТИЖЕНИЕ ОТКРЫТО',devices:'УСТРОЙСТВА',devicesConnected:'ПОДКЛЮЧЕНО',deviceHint:'Один профиль на телефоне и ПК. Получи код на основном устройстве и введи его на втором.',createLink:'ПОЛУЧИТЬ КОД',connectDevice:'ПОДКЛЮЧИТЬ',linkPlaceholder:'КОД ПРИВЯЗКИ',linkCodeLabel:'КОД ДЕЙСТВУЕТ 10 МИНУТ',linkReady:'ВВЕДИ ЭТОТ КОД НА ДРУГОМ УСТРОЙСТВЕ',linkSuccess:'УСТРОЙСТВО ПОДКЛЮЧЕНО К ОБЩЕМУ ПРОФИЛЮ',linkInvalid:'КОД НЕВЕРНЫЙ ИЛИ ИСТЁК',linkHasProgress:'НА ЭТОМ УСТРОЙСТВЕ УЖЕ ЕСТЬ ОТДЕЛЬНЫЙ ПРОФИЛЬ',linkRateLimited:'СЛИШКОМ МНОГО ПОПЫТОК. ПОПРОБУЙ ПОЗЖЕ',linkError:'НЕ УДАЛОСЬ ПОДКЛЮЧИТЬ УСТРОЙСТВО',itemNotOwned:'ПРЕДМЕТ ЕЩЁ НЕ КУПЛЕН',profileBg:'ФОН ПРОФИЛЯ',profileBgHint:'Выбери из купленных фонов',profileBgSaved:'ФОН ПРОФИЛЯ СОХРАНЁН',profileUse:'УСТАНОВИТЬ В ПРОФИЛЬ',profileUsing:'В ПРОФИЛЕ',profileBuyHint:'КУПИ ФОН ДЛЯ ИГРЫ И ПРОФИЛЯ',profileShop:'МАГАЗИН ФОНОВ',storeAll:'ВСЁ',storePreview:'СКОРО',shopBackgroundHint:'ДОСТУПЕН ТАКЖЕ ДЛЯ ПРОФИЛЯ',storeFilterAria:'ФИЛЬТР ПО РЕДКОСТИ',showroomTitle:'ВАША КОМБИНАЦИЯ',showroomHint:'Планета, мир и препятствия — вместе, как в забеге.',showroomPlanet:'ПЛАНЕТА',showroomWorld:'ФОН',showroomObstacles:'ПРЕПЯТСТВИЯ',lockedRu:'ЗАБЛОКИРОВАНО',gameName:'СИГНАЛЬНЫЙ ЗАБЕГ',legendarySignal:'ØN // ЛЕГЕНДАРНЫЙ СИГНАЛ'
+    lost:'ПЕРЕДАЧА ПОТЕРЯНА',reconnect:'ПЕРЕПОДКЛЮЧИТЬСЯ',speed:'СКОРОСТЬ',soundOff:'Выключить музыку игры',soundOn:'Включить музыку игры',calmSpace:'СПОКОЙНЫЙ КОСМОС',signalDrift:'ДРЕЙФ СИГНАЛА',distortionField:'ПОЛЕ ИСКАЖЕНИЙ',leaderboard:'ТАБЛИЦА ЛИДЕРОВ',player:'ИГРОК',saveScore:'СОХРАНИТЬ РЕЗУЛЬТАТ',namePlaceholder:'Введи имя',loadingBoard:'Загрузка рейтинга…',emptyBoard:'Пока нет результатов',saveOk:'РЕЗУЛЬТАТ СОХРАНЁН',saveError:'Не удалось сохранить результат',nameError:'Введи имя от 1 до 20 символов',store:'МАГАЗИН',storeClose:'ЗАКРЫТЬ МАГАЗИН',storeTitle:'ØN // МАГАЗИН',avatars:'ПЛАНЕТЫ',backgrounds:'ФОНЫ',obstacles:'ПРЕПЯТСТВИЯ',buy:'КУПИТЬ',equip:'ВЫБРАТЬ',equipped:'ИСПОЛЬЗУЕТСЯ',owned:'КУПЛЕНО',notEnough:'НЕ ХВАТАЕТ Ø-КРЕДИТОВ',storeError:'Ошибка магазина',connecting:'ПОДКЛЮЧЕНИЕ…',earned:'ЗАРАБОТАНО',position:'ПОЗИЦИЯ',storeSubtitle:'Косметика для сигнала: меняй планету, пространство и препятствия.',free:'БЕСПЛАТНО',creditsLabel:'Ø-КРЕДИТЫ',itemsCount:'ПРЕДМЕТОВ',rarityCommon:'ОБЫЧНЫЙ',rarityRare:'РЕДКИЙ',rarityEpic:'ЭПИЧЕСКИЙ',rarityLegendary:'ЛЕГЕНДАРНЫЙ',rarityVoid:'БЕЗДНА',gravityShift:'ИНВЕРСИЯ ГРАВИТАЦИИ',gravityReturn:'ВОЗВРАТ ГРАВИТАЦИИ',bossDetected:'СЕКРЕТНЫЙ ОБЪЕКТ ОБНАРУЖЕН',modifierSignal:'МОДИФИКАТОР // СИГНАЛЬНЫЙ ПОТОК',modifierLowGravity:'МОДИФИКАТОР // ЛЁГКАЯ ГРАВИТАЦИЯ',rareGold:'ЗОЛОТОЙ СИГНАЛ +7 Ø',rareViolet:'ФИОЛЕТОВЫЙ СИГНАЛ +3 Ø',profile:'ПРОФИЛЬ',profileClose:'ЗАКРЫТЬ ПРОФИЛЬ',profileKicker:'ØN // ПРОФИЛЬ ИГРОКА',unknownPlayer:'НЕИЗВЕСТНЫЙ СИГНАЛ',runs:'ЗАБЕГИ',totalSignals:'СОБРАНО Ø',totalDistance:'ОБЩАЯ ДИСТАНЦИЯ',achievements:'ДОСТИЖЕНИЯ',itemAcquired:'ПРЕДМЕТ ПОЛУЧЕН',achievementUnlocked:'ДОСТИЖЕНИЕ ОТКРЫТО',devices:'УСТРОЙСТВА',devicesConnected:'ПОДКЛЮЧЕНО',deviceHint:'Один профиль на телефоне и ПК. Получи код на основном устройстве и введи его на втором.',createLink:'ПОЛУЧИТЬ КОД',connectDevice:'ПОДКЛЮЧИТЬ',linkPlaceholder:'КОД ПРИВЯЗКИ',linkCodeLabel:'КОД ДЕЙСТВУЕТ 10 МИНУТ',linkReady:'ВВЕДИ ЭТОТ КОД НА ДРУГОМ УСТРОЙСТВЕ',linkSuccess:'УСТРОЙСТВО ПОДКЛЮЧЕНО К ОБЩЕМУ ПРОФИЛЮ',linkInvalid:'КОД НЕВЕРНЫЙ ИЛИ ИСТЁК',linkHasProgress:'НА ЭТОМ УСТРОЙСТВЕ УЖЕ ЕСТЬ ОТДЕЛЬНЫЙ ПРОФИЛЬ',linkRateLimited:'СЛИШКОМ МНОГО ПОПЫТОК. ПОПРОБУЙ ПОЗЖЕ',linkError:'НЕ УДАЛОСЬ ПОДКЛЮЧИТЬ УСТРОЙСТВО',itemNotOwned:'ПРЕДМЕТ ЕЩЁ НЕ КУПЛЕН',profileBg:'ФОН ПРОФИЛЯ',profileBgHint:'Выбери из купленных фонов',profileBgSaved:'ФОН ПРОФИЛЯ СОХРАНЁН',profileUse:'УСТАНОВИТЬ В ПРОФИЛЬ',profileUsing:'В ПРОФИЛЕ',profileBuyHint:'КУПИ ФОН ДЛЯ ИГРЫ И ПРОФИЛЯ',profileShop:'МАГАЗИН ФОНОВ',storeAll:'ВСЁ',storePreview:'СКОРО',shopBackgroundHint:'ДОСТУПЕН ТАКЖЕ ДЛЯ ПРОФИЛЯ',storeFilterAria:'ФИЛЬТР ПО РЕДКОСТИ',showroomTitle:'ВАША КОМБИНАЦИЯ',showroomHint:'Планета, мир и препятствия — вместе, как в забеге.',showroomPlanet:'ПЛАНЕТА',showroomWorld:'ФОН',showroomObstacles:'ПРЕПЯТСТВИЯ',gatewayEyebrow:'ØN / ИГРОВОЙ ОПЫТ / 001',gatewayHeading:'ПОРТАЛ Ø',gatewayTagline:'ЧЕТЫРЕ МИРА. ОДИН СИГНАЛ. БЕСКОНЕЧНЫЙ ЗАБЕГ.',gatewayReadout:'МИРЫ ПОДКЛЮЧЕНЫ',gatewayPreview:'ПРЕДПРОСМОТР',gatewaySoon:'СКОРО',gatewayOwned:'КУПЛЕНО',gatewayEquipped:'УСТАНОВЛЕНО',gatewayAvailable:'В МАГАЗИНЕ',gatewayLoading:'ПОДКЛЮЧЕНИЕ…',gatewayLaunch:'ВОЙТИ В ИГРУ',gatewayEquip:'УСТАНОВИТЬ МИР',gatewayStore:'ОТКРЫТЬ МАГАЗИН',gatewayRecord:'ВАШ РЕКОРД',gatewayFoot:'ØRNIVAISE // ЗАБЕГИ · ДОСТИЖЕНИЯ · КОСМЕТИКА · РЕКОРДЫ',gatewayDisclaimer:'Миры можно посмотреть бесплатно. Покупки только внутри игры.',gatewayNote:'Это предпросмотр. В забеге используется установленный фон.',gatewaySuccess:'МИР УСТАНОВЛЕН. ВЫБОР СОХРАНЁН.',gatewayError:'НЕ УДАЛОСЬ ПОЛУЧИТЬ ПРОФИЛЬ ИГРОКА',gatewayShopNote:'Мир ещё не куплен. Выбери его в магазине игры.',gatewaySoonNote:'Мир готовится к открытию. Пока доступен предпросмотр.',gatewayAria:'Выбор мира для предпросмотра',gatewayHeroLink:'Ø // ИГРОВОЙ ПОРТАЛ ↓',gatewayWorld:'МИР',lockedRu:'ЗАБЛОКИРОВАНО',gameName:'СИГНАЛЬНЫЙ ЗАБЕГ',legendarySignal:'ØN // ЛЕГЕНДАРНЫЙ СИГНАЛ'
   },
   en:{
     intercept:'ØN // INTERCEPT 003',previous:'PREVIOUS LOCK // VERIFIED',
@@ -2036,7 +2176,7 @@ const gameI18n={
     nearLock:'NEAR LOCK',nearHint:'FREQUENCY ALIGNMENT // VERY CLOSE',
     stabilizing:'STABILIZING',hold:'HOLD FREQUENCY // DO NOT MOVE',
     decryptComplete:'DECRYPTION COMPLETE // ØN-003',
-    lost:'TRANSMISSION LOST',reconnect:'RECONNECT',speed:'SPEED',soundOff:'Turn game music off',soundOn:'Turn game music on',calmSpace:'CALM SPACE',signalDrift:'SIGNAL DRIFT',distortionField:'DISTORTION FIELD',leaderboard:'LEADERBOARD',player:'PLAYER',saveScore:'SAVE RESULT',namePlaceholder:'Enter name',loadingBoard:'Loading leaderboard…',emptyBoard:'No scores yet',saveOk:'RESULT SAVED',saveError:'Could not save result',nameError:'Enter a name from 1 to 20 characters',store:'STORE',storeClose:'CLOSE STORE',storeTitle:'ØN // STORE',avatars:'PLANETS',backgrounds:'BACKGROUNDS',obstacles:'OBSTACLES',buy:'BUY',equip:'EQUIP',equipped:'EQUIPPED',owned:'OWNED',notEnough:'NOT ENOUGH Ø-CREDITS',storeError:'Store error',connecting:'CONNECTING…',earned:'EARNED',position:'POSITION',storeSubtitle:'Signal cosmetics: change your planet, space and obstacles.',free:'FREE',creditsLabel:'Ø-CREDITS',itemsCount:'ITEMS',rarityCommon:'COMMON',rarityRare:'RARE',rarityEpic:'EPIC',rarityLegendary:'LEGENDARY',rarityVoid:'VOID',gravityShift:'GRAVITY INVERSION',gravityReturn:'GRAVITY RESTORED',bossDetected:'SECRET ENTITY DETECTED',modifierSignal:'MODIFIER // SIGNAL SURGE',modifierLowGravity:'MODIFIER // LOW GRAVITY',rareGold:'GOLD SIGNAL +7 Ø',rareViolet:'VIOLET SIGNAL +3 Ø',profile:'PROFILE',profileClose:'CLOSE PROFILE',profileKicker:'ØN // PLAYER PROFILE',unknownPlayer:'UNKNOWN SIGNAL',runs:'RUNS',totalSignals:'COLLECTED Ø',totalDistance:'TOTAL DISTANCE',achievements:'ACHIEVEMENTS',itemAcquired:'ITEM ACQUIRED',achievementUnlocked:'ACHIEVEMENT UNLOCKED',devices:'DEVICES',devicesConnected:'CONNECTED',deviceHint:'Use one profile on phone and PC. Create a code on the main device and enter it on the second.',createLink:'GET CODE',connectDevice:'CONNECT',linkPlaceholder:'LINK CODE',linkCodeLabel:'CODE EXPIRES IN 10 MINUTES',linkReady:'ENTER THIS CODE ON THE OTHER DEVICE',linkSuccess:'DEVICE CONNECTED TO SHARED PROFILE',linkInvalid:'CODE IS INVALID OR EXPIRED',linkHasProgress:'THIS DEVICE ALREADY HAS A SEPARATE PROFILE',linkRateLimited:'TOO MANY ATTEMPTS. TRY AGAIN LATER',linkError:'COULD NOT CONNECT DEVICE',itemNotOwned:'ITEM NOT PURCHASED YET',profileBg:'PROFILE BACKGROUND',profileBgHint:'Choose from owned backgrounds',profileBgSaved:'PROFILE BACKGROUND SAVED',profileUse:'USE IN PROFILE',profileUsing:'IN PROFILE',profileBuyHint:'BUY FOR GAME AND PROFILE',profileShop:'BACKGROUND SHOP',storeAll:'ALL',storePreview:'COMING SOON',shopBackgroundHint:'ALSO AVAILABLE FOR PROFILE',storeFilterAria:'FILTER BY RARITY',showroomTitle:'YOUR LOADOUT',showroomHint:'Planet, world and obstacles — together, as in the run.',showroomPlanet:'PLANET',showroomWorld:'BACKGROUND',showroomObstacles:'OBSTACLES',lockedRu:'LOCKED',gameName:'SIGNAL RUNNER',legendarySignal:'ØN // LEGENDARY SIGNAL'
+    lost:'TRANSMISSION LOST',reconnect:'RECONNECT',speed:'SPEED',soundOff:'Turn game music off',soundOn:'Turn game music on',calmSpace:'CALM SPACE',signalDrift:'SIGNAL DRIFT',distortionField:'DISTORTION FIELD',leaderboard:'LEADERBOARD',player:'PLAYER',saveScore:'SAVE RESULT',namePlaceholder:'Enter name',loadingBoard:'Loading leaderboard…',emptyBoard:'No scores yet',saveOk:'RESULT SAVED',saveError:'Could not save result',nameError:'Enter a name from 1 to 20 characters',store:'STORE',storeClose:'CLOSE STORE',storeTitle:'ØN // STORE',avatars:'PLANETS',backgrounds:'BACKGROUNDS',obstacles:'OBSTACLES',buy:'BUY',equip:'EQUIP',equipped:'EQUIPPED',owned:'OWNED',notEnough:'NOT ENOUGH Ø-CREDITS',storeError:'Store error',connecting:'CONNECTING…',earned:'EARNED',position:'POSITION',storeSubtitle:'Signal cosmetics: change your planet, space and obstacles.',free:'FREE',creditsLabel:'Ø-CREDITS',itemsCount:'ITEMS',rarityCommon:'COMMON',rarityRare:'RARE',rarityEpic:'EPIC',rarityLegendary:'LEGENDARY',rarityVoid:'VOID',gravityShift:'GRAVITY INVERSION',gravityReturn:'GRAVITY RESTORED',bossDetected:'SECRET ENTITY DETECTED',modifierSignal:'MODIFIER // SIGNAL SURGE',modifierLowGravity:'MODIFIER // LOW GRAVITY',rareGold:'GOLD SIGNAL +7 Ø',rareViolet:'VIOLET SIGNAL +3 Ø',profile:'PROFILE',profileClose:'CLOSE PROFILE',profileKicker:'ØN // PLAYER PROFILE',unknownPlayer:'UNKNOWN SIGNAL',runs:'RUNS',totalSignals:'COLLECTED Ø',totalDistance:'TOTAL DISTANCE',achievements:'ACHIEVEMENTS',itemAcquired:'ITEM ACQUIRED',achievementUnlocked:'ACHIEVEMENT UNLOCKED',devices:'DEVICES',devicesConnected:'CONNECTED',deviceHint:'Use one profile on phone and PC. Create a code on the main device and enter it on the second.',createLink:'GET CODE',connectDevice:'CONNECT',linkPlaceholder:'LINK CODE',linkCodeLabel:'CODE EXPIRES IN 10 MINUTES',linkReady:'ENTER THIS CODE ON THE OTHER DEVICE',linkSuccess:'DEVICE CONNECTED TO SHARED PROFILE',linkInvalid:'CODE IS INVALID OR EXPIRED',linkHasProgress:'THIS DEVICE ALREADY HAS A SEPARATE PROFILE',linkRateLimited:'TOO MANY ATTEMPTS. TRY AGAIN LATER',linkError:'COULD NOT CONNECT DEVICE',itemNotOwned:'ITEM NOT PURCHASED YET',profileBg:'PROFILE BACKGROUND',profileBgHint:'Choose from owned backgrounds',profileBgSaved:'PROFILE BACKGROUND SAVED',profileUse:'USE IN PROFILE',profileUsing:'IN PROFILE',profileBuyHint:'BUY FOR GAME AND PROFILE',profileShop:'BACKGROUND SHOP',storeAll:'ALL',storePreview:'COMING SOON',shopBackgroundHint:'ALSO AVAILABLE FOR PROFILE',storeFilterAria:'FILTER BY RARITY',showroomTitle:'YOUR LOADOUT',showroomHint:'Planet, world and obstacles — together, as in the run.',showroomPlanet:'PLANET',showroomWorld:'BACKGROUND',showroomObstacles:'OBSTACLES',gatewayEyebrow:'ØN / GAME EXPERIENCE / 001',gatewayHeading:'PORTAL Ø',gatewayTagline:'FOUR WORLDS. ONE SIGNAL. AN ENDLESS RUN.',gatewayReadout:'WORLDS CONNECTED',gatewayPreview:'PREVIEW',gatewaySoon:'COMING SOON',gatewayOwned:'OWNED',gatewayEquipped:'EQUIPPED',gatewayAvailable:'IN SHOP',gatewayLoading:'CONNECTING…',gatewayLaunch:'ENTER THE GAME',gatewayEquip:'EQUIP WORLD',gatewayStore:'OPEN SHOP',gatewayRecord:'YOUR RECORD',gatewayFoot:'ØRNIVAISE // RUNS · ACHIEVEMENTS · COSMETICS · RECORDS',gatewayDisclaimer:'Preview worlds for free. Purchases happen only inside the game.',gatewayNote:'This is a preview. Runs use your equipped background.',gatewaySuccess:'WORLD EQUIPPED. SELECTION SAVED.',gatewayError:'COULD NOT LOAD PLAYER PROFILE',gatewayShopNote:'World not owned. Find it in the in-game shop.',gatewaySoonNote:'World is coming soon. Preview is available.',gatewayAria:'Choose a world to preview',gatewayHeroLink:'Ø // GAME PORTAL ↓',gatewayWorld:'WORLD',lockedRu:'LOCKED',gameName:'SIGNAL RUNNER',legendarySignal:'ØN // LEGENDARY SIGNAL'
   }
 };
 function gameText(key){
