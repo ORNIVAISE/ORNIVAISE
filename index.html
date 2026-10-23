@@ -1736,6 +1736,31 @@ html{scroll-padding-top:80px}
 @media(max-width:680px){.hero>.runner-hero-portal{bottom:128px;min-width:0;padding:9px 12px;font-size:9px}}
 @media(max-width:380px){.hero>.runner-hero-portal{bottom:122px}}
 
+/* Dual-jump ability: visible at desktop and in the cropped iPhone game canvas. */
+.runner-ability-hud{
+  position:absolute;z-index:5;top:13px;left:13px;display:flex;align-items:center;
+  gap:11px;padding:8px 11px;min-width:117px;pointer-events:none;
+  color:#effaff;border:1px solid rgba(143,220,250,.28);border-radius:10px;
+  background:rgba(4,11,20,.76);backdrop-filter:blur(6px);
+  box-shadow:inset 0 0 18px rgba(81,174,214,.04);transition:border-color .2s;
+}
+.runner-ability-hud.active{border-color:rgba(143,221,255,.5)}
+.runner-ability-hud>div:first-child{display:flex;flex-direction:column;gap:3px}
+.runner-ability-hud small{font-size:10px;color:#b8d1dd;font-weight:700;letter-spacing:.075em;white-space:nowrap}
+.runner-ability-hud strong{font-size:15px;font-weight:800;letter-spacing:.08em;font-variant-numeric:tabular-nums}
+.runner-ability-charges{display:flex;gap:4px}
+.runner-ability-charge{width:8px;height:25px;display:block;transform:skewX(-12deg);border-radius:2px;background:linear-gradient(#d2f7ff,#61cbeb);box-shadow:0 0 8px rgba(113,223,252,.45);transition:opacity .13s,box-shadow .13s}
+.runner-ability-charge.spent{background:rgba(100,139,155,.26);box-shadow:none;opacity:.5}
+.signal-game.runner-mode #runnerJump{touch-action:manipulation;user-select:none;-webkit-tap-highlight-color:transparent}
+@media(max-width:700px){
+ .runner-ability-hud{left:9px;top:9px;padding:5px 8px;gap:8px;min-width:0;border-radius:7px;background:rgba(4,11,20,.87)}
+ .runner-ability-hud small{font-size:9px}
+ .runner-ability-hud strong{font-size:13px}
+ .runner-ability-charge{height:20px;width:7px}
+}
+@media(max-width:380px){.runner-ability-hud{top:6px;left:6px}}
+@media(prefers-reduced-motion:reduce){.runner-ability-charge,.runner-ability-hud{transition:none!important}}
+
 </style>
 </head>
 <body data-track-theme="signal001">
@@ -4495,6 +4520,64 @@ function drawRunnerPremiumHazard(ctx,skin,o,variant,phase){
   return true;
 }
 
+
+/* SIGNAL RUNNER V2: small visual cues follow real physics.
+   No camera shake, no collision changes, no earned-score multipliers. */
+function drawRunnerFlowFx(ctx){
+  const x=runnerPlayer.x+runnerPlayer.w/2;
+  const y=runnerPlayer.y+runnerPlayer.h/2;
+  const reduced=typeof window!=='undefined'&&window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  const violet=runnerStoreState.selected_background==='crimson_rift'||
+    runnerStoreState.selected_background==='violet_nebula'||
+    runnerStoreState.selected_background==='celestial_temple';
+  const rgb=violet?'197,151,255':'134,225,247';
+  ctx.save();
+  if(runnerJumpPulse>0&&!runnerPortalTransition.active){
+    const p=1-runnerJumpPulse;
+    const radius=23+p*31;
+    ctx.globalAlpha=(reduced?.25:.53)*runnerJumpPulse;
+    ctx.strokeStyle='rgba('+rgb+',.95)';
+    ctx.lineWidth=runnerJumpsUsed>=2?2.1:1.2;
+    ctx.beginPath();ctx.arc(x,y,radius,0,Math.PI*2);ctx.stroke();
+    if(runnerJumpsUsed>=2){
+      ctx.beginPath();
+      ctx.arc(x,y,radius+11,-1.6+p*.6,1.6+p*.6);
+      ctx.stroke();
+      if(!reduced){
+        for(let i=0;i<9;i++){
+          const angle=i*2.399+p*2;
+          const px=x+Math.cos(angle)*(radius+7);
+          const py=y+Math.sin(angle)*(radius+7);
+          ctx.fillStyle='rgba('+rgb+',.9)';
+          ctx.beginPath();ctx.arc(px,py,i%3===0?1.9:1.1,0,Math.PI*2);ctx.fill();
+        }
+      }
+    }
+    ctx.globalAlpha=1;
+  }
+  if(runnerLandingPulse>0){
+    const surface=runnerGravity===1?RUNNER_GROUND:RUNNER_CEILING;
+    const amount=1-runnerLandingPulse;
+    ctx.globalAlpha=runnerLandingPulse*.48;
+    ctx.strokeStyle='rgba('+rgb+',.75)';
+    ctx.lineWidth=1.4;
+    ctx.beginPath();ctx.ellipse(x,surface,17+amount*62,3+amount*10,0,0,Math.PI*2);ctx.stroke();
+    ctx.globalAlpha=1;
+  }
+  for(const effect of runnerCoinEffects){
+    const progress=1-effect.life/.45;
+    const color=effect.kind==='gold'?'255,215,122':
+      effect.kind==='violet'?'218,171,255':'198,234,245';
+    const opacity=Math.max(0,effect.life/.45);
+    ctx.globalAlpha=opacity*.7;
+    ctx.strokeStyle='rgba('+color+',.86)';
+    ctx.lineWidth=1.4;
+    ctx.beginPath();ctx.arc(effect.x,effect.y,13+progress*35,0,Math.PI*2);ctx.stroke();
+    ctx.globalAlpha=1;
+  }
+  ctx.restore();
+}
+
 function drawRunner(){
   if(!runnerCtx||!runnerCanvas)return;
   const ctx=runnerCtx;
@@ -5091,7 +5174,8 @@ function drawRunner(){
   runnerDust.forEach((particle,i)=>{
     ctx.save();ctx.globalAlpha=Math.max(0,particle.life*1.8);
     const dustAvatar=runnerStoreState.selected_avatar;
-    if(particle.kind==='gold')ctx.fillStyle=i%2?'#ffe09a':'#c9963e';
+    if(particle.kind==='second_jump')ctx.fillStyle=i%2?'#c9b0ff':'#8de8f3';
+    else if(particle.kind==='gold')ctx.fillStyle=i%2?'#ffe09a':'#c9963e';
     else if(particle.kind==='violet')ctx.fillStyle=i%2?'#e2b9ff':'#a76cda';
     else if(dustAvatar==='neon_reef')ctx.fillStyle=i%2?'#71f1e9':'#b58af0';
     else if(dustAvatar==='ash_titan')ctx.fillStyle=i%3===0?'#d77f4c':'#a99a8f';
@@ -5399,10 +5483,18 @@ function drawRunner(){
   ctx.fillStyle='#f0f4f7';ctx.font='bold 19px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('Ø',0,1);
   ctx.restore();
 
+  drawRunnerFlowFx(ctx);
   drawRunnerLiveReflection(ctx,runnerStoreState.selected_background,runnerDistanceValue);
   ctx.save();
   ctx.fillStyle='rgba(210,219,229,.48)';ctx.font='9px Arial';ctx.textAlign='right';
   ctx.fillText('ØN // '+gameText('speed')+' '+Math.round(runnerSpeed),RUNNER_W-18,24);
+  if(runnerCoinChain>=2&&runnerCoinChainTimer>0){
+    const opacity=Math.min(1,runnerCoinChainTimer/.55);
+    ctx.globalAlpha=opacity;
+    ctx.font='bold 13px Arial';
+    ctx.fillStyle='rgba(225,205,255,.9)';
+    ctx.fillText(gameText('coinChain')+' ×'+runnerCoinChain,RUNNER_W-18,47);
+  }
   ctx.restore();
 }
 runnerScoreForm?.addEventListener('submit',e=>{e.preventDefault();saveRunnerScore()});
