@@ -15,3 +15,4 @@ jobs:
           node tests/runner-v2-reflections.test.mjs
           node tests/runner-v2-portal.test.mjs
           node tests/runner-v2-playability.test.mjs
+          node tests/runner-v2-session.test.mjs
