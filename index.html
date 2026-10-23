@@ -1761,6 +1761,18 @@ html{scroll-padding-top:80px}
 @media(max-width:380px){.runner-ability-hud{top:6px;left:6px}}
 @media(prefers-reduced-motion:reduce){.runner-ability-charge,.runner-ability-hud{transition:none!important}}
 
+/* Pause control stays reachable regardless of wide/cropped canvas viewport. */
+.runner-pause-toggle{
+  position:absolute;top:12px;right:12px;z-index:8;display:grid;place-items:center;
+  width:42px;height:39px;border:1px solid rgba(170,210,235,.38);border-radius:9px;
+  background:rgba(5,12,22,.83);color:#d9f0ff;font:800 18px/1 Arial,Helvetica,sans-serif;
+  cursor:pointer;touch-action:manipulation;
+}
+.runner-pause-toggle:hover:not(:disabled){border-color:#9beaf2;background:rgba(13,31,43,.9)}
+.runner-pause-toggle:focus-visible{outline:2px solid #adf0fb;outline-offset:2px}
+.runner-pause-toggle:disabled{opacity:.38;cursor:default}
+@media(max-width:700px){.runner-pause-toggle{top:7px;right:8px;width:38px;height:34px;font-size:15px}}
+
 </style>
 </head>
 <body data-track-theme="signal001">
@@ -2021,6 +2033,7 @@ html{scroll-padding-top:80px}
         </div>
         <div class="runner-canvas-wrap" id="runnerCanvasWrap">
           <canvas id="signalRunnerCanvas" width="960" height="360" tabindex="0" aria-label="SIGNAL RUNNER. Нажми пробел или коснись экрана, чтобы прыгнуть."></canvas>
+          <button id="runnerPauseToggle" class="runner-pause-toggle" type="button" aria-label="ПАУЗА" title="ПАУЗА" disabled>Ⅱ</button>
           <div class="runner-ability-hud" id="runnerAbilityHud" data-remaining="2" aria-label="Осталось прыжков: 2">
             <div><small id="runnerAbilityLabel">ДВОЙНОЙ ПРЫЖОК</small><strong id="runnerAbilityCount">2/2</strong></div>
             <div class="runner-ability-charges" aria-hidden="true"><i class="runner-ability-charge"></i><i class="runner-ability-charge"></i></div>
@@ -2195,8 +2208,8 @@ const gameI18n={
     startRunner:'ЗАПУСТИТЬ СИГНАЛЬНЫЙ ЗАБЕГ',distance:'ДИСТАНЦИЯ',signals:'СИГНАЛЫ',best:'РЕКОРД',
     runnerAria:'СИГНАЛЬНЫЙ ЗАБЕГ. Нажми пробел или коснись экрана, чтобы прыгнуть.',
     unknownTransmission:'НЕИЗВЕСТНАЯ ПЕРЕДАЧА',runProtocol:'ØN // ПРОТОКОЛ ЗАПУСКА',
-    runnerTitle:'СИГНАЛЬНЫЙ ЗАБЕГ',jumpHint:'ПРОБЕЛ / ТАП — ПРЫЖОК · ПОВТОР — ВТОРОЙ ПРЫЖОК',startRun:'НАЧАТЬ ЗАБЕГ',jumpCharges:'ПРЫЖКИ',coinChain:'СЕРИЯ Ø',landingRisk:'ВТОРОЙ ПРЫЖОК!',
-    controls:'ПРОБЕЛ / ТАП — ПРЫЖОК ×2 · ESC — ВЫХОД',jump:'ПРЫЖОК ×2',backTuner:'НАЗАД К ПРИЁМНИКУ',
+    runnerTitle:'СИГНАЛЬНЫЙ ЗАБЕГ',jumpHint:'ПРОБЕЛ / ТАП — ПРЫЖОК · ПОВТОР — ВТОРОЙ ПРЫЖОК',startRun:'НАЧАТЬ ЗАБЕГ',jumpCharges:'ПРЫЖКИ',coinChain:'СЕРИЯ Ø',landingRisk:'ВТОРОЙ ПРЫЖОК!',pauseRun:'ПАУЗА',resumeRun:'ПРОДОЛЖИТЬ',paused:'ПАУЗА',pauseHint:'ЗАБЕГ ПРИОСТАНОВЛЕН · ПРОДОЛЖИ, КОГДА БУДЕШЬ ГОТОВ',
+    controls:'ПРОБЕЛ / ТАП — ПРЫЖОК ×2 · P — ПАУЗА · ESC — ВЫХОД',jump:'ПРЫЖОК ×2',backTuner:'НАЗАД К ПРИЁМНИКУ',
     tuneAgain:'НАСТРОИТЬ СНОВА',close:'ЗАКРЫТЬ',tunerAria:'Настройка частоты сигнала',hotspotAria:'Скрытый сигнал ØN / 2026',
     weak:'СЛАБЫЙ СИГНАЛ',weakHint:'ИСТОЧНИК ОБНАРУЖЕН // ПРОДОЛЖАЙ НАСТРОЙКУ',
     detected:'СИГНАЛ ОБНАРУЖЕН',detectedHint:'НЕСУЩАЯ НАЙДЕНА // СУЗЬ ДИАПАЗОН',
@@ -2213,8 +2226,8 @@ const gameI18n={
     startRunner:'START SIGNAL RUNNER',distance:'DISTANCE',signals:'SIGNALS',best:'BEST',
     runnerAria:'SIGNAL RUNNER. Press Space or tap the screen to jump.',
     unknownTransmission:'UNKNOWN TRANSMISSION',runProtocol:'ØN // RUN PROTOCOL',
-    runnerTitle:'SIGNAL RUNNER',jumpHint:'SPACE / TAP — JUMP · TAP AGAIN — DOUBLE JUMP',startRun:'START RUN',jumpCharges:'JUMPS',coinChain:'Ø CHAIN',landingRisk:'DOUBLE JUMP!',
-    controls:'SPACE / TAP — DOUBLE JUMP · ESC — EXIT',jump:'JUMP ×2',backTuner:'BACK TO TUNER',
+    runnerTitle:'SIGNAL RUNNER',jumpHint:'SPACE / TAP — JUMP · TAP AGAIN — DOUBLE JUMP',startRun:'START RUN',jumpCharges:'JUMPS',coinChain:'Ø CHAIN',landingRisk:'DOUBLE JUMP!',pauseRun:'PAUSE',resumeRun:'RESUME',paused:'PAUSED',pauseHint:'RUN PAUSED · CONTINUE WHEN READY',
+    controls:'SPACE / TAP — DOUBLE JUMP · P — PAUSE · ESC — EXIT',jump:'JUMP ×2',backTuner:'BACK TO TUNER',
     tuneAgain:'TUNE AGAIN',close:'CLOSE',tunerAria:'Signal frequency tuning',hotspotAria:'Hidden signal ØN / 2026',
     weak:'WEAK SIGNAL',weakHint:'SOURCE DETECTED // KEEP TUNING',
     detected:'SIGNAL DETECTED',detectedHint:'CARRIER PRESENT // NARROW THE BAND',
@@ -3118,6 +3131,7 @@ async function setRunnerProfileBackground(itemId){
 }
 function toggleRunnerProfile(){
   const open=!runnerProfilePanel?.classList.contains('open');
+  if(open)pauseRunner();
   runnerProfilePanel?.classList.toggle('open',open);
   runnerStorePanel?.classList.remove('open');
   if(runnerStoreToggle)runnerStoreToggle.textContent=gameText('store');
@@ -3172,6 +3186,7 @@ async function handleRunnerStoreItem(itemId,owned){
 }
 function toggleRunnerStore(){
   const open=!runnerStorePanel?.classList.contains('open');
+  if(open)pauseRunner();
   runnerStorePanel?.classList.toggle('open',open);
   runnerProfilePanel?.classList.remove('open');
   if(runnerProfileToggle)runnerProfileToggle.textContent=gameText('profile');
@@ -3307,7 +3322,7 @@ async function saveRunnerScore(){
 /* SIGNAL RUNNER — lightweight canvas endless runner */
 const runnerCtx=runnerCanvas?.getContext('2d');
 const RUNNER_W=960,RUNNER_H=360,RUNNER_GROUND=292,RUNNER_CEILING=58;
-let runnerRaf=0,runnerRunning=false,runnerGameOver=false,runnerLast=0;
+let runnerRaf=0,runnerRunning=false,runnerGameOver=false,runnerLast=0,runnerPaused=false;
 let runnerDistanceValue=0,runnerSignalCount=0,runnerSpeed=300,runnerSpawn=0,runnerOrbSpawn=0;
 let runnerObstacles=[],runnerOrbs=[],runnerDust=[],runnerStars=[],runnerSecret=false,runnerStage=0,runnerStageTimer=0;
 let runnerGravity=1,runnerGravityEvent=false,runnerGravityEnd=0,runnerNextGravity=0,runnerPortalFx=0;
@@ -3362,7 +3377,7 @@ function setRunnerMusicMuted(muted){
   if(!runnerMusic)return;
   if(muted){
     runnerMusic.pause();
-  }else if(runnerRunning){
+  }else if(runnerRunning&&!runnerPaused){
     runnerMusic.volume=.26;
     runnerMusic.play().catch(()=>{});
   }
@@ -3522,7 +3537,7 @@ function updateRunnerHud(){
 }
 function resetRunner(){
   cancelAnimationFrame(runnerRaf);runnerRaf=0;
-  runnerRunning=false;runnerGameOver=false;runnerLast=0;
+  runnerRunning=false;runnerGameOver=false;runnerPaused=false;runnerLast=0;
   runnerDistanceValue=0;runnerSignalCount=0;runnerSpeed=300;
   runnerSpawn=.95;runnerOrbSpawn=1.9;
   runnerObstacles=[];runnerOrbs=[];runnerDust=[];
@@ -3538,6 +3553,7 @@ function resetRunner(){
   Object.assign(runnerPlayer,{x:104,y:RUNNER_GROUND-42,vy:0,onGround:true});
   updateRunnerHud();
   updateRunnerJumpHud();
+  updateRunnerPauseButton();
   drawRunner();
 }
 function openRunner(){
@@ -3553,7 +3569,8 @@ function openRunner(){
   setTimeout(()=>runnerCanvas?.focus(),0);
 }
 function closeRunner(){
-  cancelAnimationFrame(runnerRaf);runnerRaf=0;runnerRunning=false;
+  cancelAnimationFrame(runnerRaf);runnerRaf=0;runnerRunning=false;runnerPaused=false;
+  updateRunnerPauseButton();
   stopRunnerMusic(true);
   hideRunnerScoreForm();
   runnerStorePanel?.classList.remove('open');
@@ -3563,6 +3580,42 @@ function closeRunner(){
   document.getElementById('easterTitle').textContent=gameText('decryptTitle');
   signalZoneBadge?.classList.remove('visible');
 }
+
+function updateRunnerPauseButton(){
+  const button=document.getElementById('runnerPauseToggle');
+  if(!button)return;
+  button.textContent=runnerPaused?'▶':'Ⅱ';
+  button.disabled=!runnerRunning;
+  button.setAttribute('aria-label',gameText(runnerPaused?'resumeRun':'pauseRun'));
+  button.setAttribute('title',gameText(runnerPaused?'resumeRun':'pauseRun'));
+  button.setAttribute('aria-pressed',String(runnerPaused));
+}
+function pauseRunner(){
+  if(!runnerRunning||runnerGameOver||runnerPaused)return false;
+  runnerPaused=true;
+  cancelAnimationFrame(runnerRaf);runnerRaf=0;
+  runnerMusic?.pause();
+  showRunnerOverlay(gameText('paused'),gameText('pauseHint'),gameText('resumeRun'));
+  updateRunnerPauseButton();
+  return true;
+}
+function resumeRunner(){
+  if(!runnerPaused||!runnerRunning||runnerGameOver)return false;
+  if(document.hidden||runnerStorePanel?.classList.contains('open')||runnerProfilePanel?.classList.contains('open'))return false;
+  runnerPaused=false;
+  runnerLast=performance.now();
+  hideRunnerOverlay();
+  if(!getRunnerMusicMuted())runnerMusic?.play().catch(()=>{});
+  runnerRaf=requestAnimationFrame(runnerLoop);
+  updateRunnerPauseButton();
+  runnerCanvas?.focus();
+  return true;
+}
+function toggleRunnerPause(){
+  if(runnerPaused)return resumeRunner();
+  return pauseRunner();
+}
+
 function updateRunnerJumpHud(){
   const root=document.getElementById('runnerAbilityHud');
   if(!root)return;
@@ -3611,7 +3664,7 @@ function runnerJumpAction(){
     if(runnerGameOver)startRunner();
     return;
   }
-  if(runnerPortalTransition.active)return;
+  if(runnerPortalTransition.active||runnerPaused)return;
   if(!performRunnerJump()&&runnerJumpsUsed>=RUNNER_MAX_JUMPS)runnerJumpBuffer=RUNNER_JUMP_BUFFER;
 }
 async function startRunner(){
@@ -3630,6 +3683,7 @@ async function startRunner(){
   const modifierRoll=Math.random();
   runnerModifier=modifierRoll<.18?'low_gravity':modifierRoll<.42?'signal_surge':'none';
   runnerRunning=true;
+  updateRunnerPauseButton();
   startRunnerMusic();
   hideRunnerOverlay();
   if(runnerModifier==='low_gravity')announceRunnerEvent(gameText('modifierLowGravity'),1.9);
@@ -3685,7 +3739,8 @@ function rectHit(a,b,pad=4){
   return a.x+pad<b.x+b.w-pad&&a.x+a.w-pad>b.x+pad&&a.y+pad<b.y+b.h-pad&&a.y+a.h-pad>b.y+pad;
 }
 function gameOverRunner(){
-  runnerRunning=false;runnerGameOver=true;
+  runnerRunning=false;runnerGameOver=true;runnerPaused=false;
+  updateRunnerPauseButton();
   runnerSfx('lose');
   cancelAnimationFrame(runnerRaf);runnerRaf=0;
   if(!getRunnerMusicMuted())fadeRunnerMusic(.11,320,false);
@@ -3697,7 +3752,7 @@ function gameOverRunner(){
   showRunnerOverlay(gameText('lost'),`${gameText('distance')} // ${padRunner(runnerDistanceValue)} · ${gameText('signals')} // ${padRunner(runnerSignalCount,2)}`,gameText('reconnect'));
 }
 function runnerLoop(ts){
-  if(!runnerRunning)return;
+  if(!runnerRunning||runnerPaused)return;
   const dt=Math.min(.032,(ts-runnerLast)/1000||.016);runnerLast=ts;
   updateRunner(dt);
   drawRunner();
@@ -5557,7 +5612,7 @@ function drawRunner(){
   ctx.restore();
 }
 runnerScoreForm?.addEventListener('submit',e=>{e.preventDefault();saveRunnerScore()});
-runnerOverlayButton?.addEventListener('click',startRunner);
+runnerOverlayButton?.addEventListener('click',()=>runnerPaused?resumeRunner():startRunner());
 signalRunnerStart?.addEventListener('click',openRunner);
 runnerBack?.addEventListener('click',()=>{closeRunner();signalTuner?.focus()});
 runnerStoreToggle?.addEventListener('click',toggleRunnerStore);
@@ -5590,6 +5645,7 @@ runnerStoreContent?.addEventListener('click',e=>{
   handleRunnerStoreItem(btn.dataset.item,btn.dataset.owned==='1');
 });
 runnerSoundToggle?.addEventListener('click',()=>setRunnerMusicMuted(!getRunnerMusicMuted()));
+document.getElementById('runnerPauseToggle')?.addEventListener('click',toggleRunnerPause);
 runnerJump?.addEventListener('click',runnerJumpAction);
 runnerCanvas?.addEventListener('pointerdown',e=>{e.preventDefault();runnerJumpAction()});
 // Keyboard jumps are handled once on document: canvas keydown bubbles here.
@@ -5599,11 +5655,14 @@ document.addEventListener('keydown',e=>{
     if(e.repeat||e.target?.closest?.('button,input,textarea,select,[contenteditable]'))return;
     e.preventDefault();runnerJumpAction();
   }
+  if(e.code==='KeyP'&&!e.repeat&&!e.target?.closest?.('input,textarea,select,[contenteditable]')){e.preventDefault();toggleRunnerPause()}
   if(e.key==='Escape'){e.preventDefault();closeRunner();signalTuner?.focus()}
 });
 updateRunnerHud();
 syncRunnerSoundButton();
+updateRunnerPauseButton();
 drawRunner();
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&runnerRunning)pauseRunner()});
 initializeRunnerGateway();
 
 function openEaster(){
@@ -5654,6 +5713,7 @@ window.refreshGameLanguage=()=>{
   renderRunnerStore();
   renderRunnerGateway();
   updateRunnerJumpHud();
+  updateRunnerPauseButton();
   if(runnerNameInput)runnerNameInput.placeholder=gameText('namePlaceholder');
   if(runnerScoreSave)runnerScoreSave.textContent=gameText('saveScore');
   if(signalZoneBadge)signalZoneBadge.textContent=getRunnerStageLabel(runnerStage);
@@ -5663,6 +5723,8 @@ window.refreshGameLanguage=()=>{
     if(runnerOverlay?.classList.contains('visible')){
       if(runnerGameOver){
         showRunnerOverlay(gameText('lost'),`${gameText('distance')} // ${padRunner(runnerDistanceValue)} · ${gameText('signals')} // ${padRunner(runnerSignalCount,2)}`,gameText('reconnect'));
+      }else if(runnerPaused){
+        showRunnerOverlay(gameText('paused'),gameText('pauseHint'),gameText('resumeRun'));
       }else{
         showRunnerOverlay(gameText('runnerTitle'),gameText('jumpHint'),gameText('startRun'));
       }
