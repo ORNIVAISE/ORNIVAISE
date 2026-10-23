@@ -2696,6 +2696,12 @@ async function runnerApi(action,payload={}){
   if(!res.ok)throw new Error(data?.error||('runner api '+res.status));
   return data;
 }
+// Obsolete state reads must never roll back a just-confirmed server purchase or equip.
+let runnerStoreMutationVersion=0,runnerStoreFetchVersion=0;
+function applyRunnerStoreMutation(data){
+  runnerStoreMutationVersion++;
+  applyRunnerStoreState(data);
+}
 function applyRunnerStoreState(data){
   const p=data?.player||data;
   if(p&&Number.isFinite(Number(p.credits)))runnerStoreState.credits=Number(p.credits);
@@ -2890,7 +2896,7 @@ async function equipRunnerGatewayWorld(){
     if(runnerStoreState.selected_background===item.item_id)return;
     // Server confirms ownership and persists the selected world across devices.
     const result=await runnerApi('equip',{item_id:item.item_id});
-    applyRunnerStoreState(result);
+    applyRunnerStoreMutation(result);
     runnerGatewayNotice='gatewaySuccess';
   }catch(error){
     runnerGatewayNotice='gatewayError';
@@ -3102,7 +3108,7 @@ async function redeemRunnerDeviceLink(){
   if(runnerLinkStatus)runnerLinkStatus.textContent=gameText('connecting');
   try{
     const data=await runnerApi('redeem_link',{link_code:code});
-    applyRunnerStoreState(data);
+    applyRunnerStoreMutation(data);
     runnerLinkInput.value='';
     runnerLinkCodeBox?.classList.remove('visible');
     if(runnerLinkStatus)runnerLinkStatus.textContent=gameText('linkSuccess');
@@ -3118,7 +3124,7 @@ async function setRunnerProfileBackground(itemId){
   runnerProfileBgChoices?.querySelectorAll('button').forEach(button=>button.disabled=true);
   try{
     const data=await runnerApi('profile_background',{item_id:itemId});
-    applyRunnerStoreState(data);
+    applyRunnerStoreMutation(data);
     const target=runnerStorePanel?.classList.contains('open')?runnerStoreStatus:runnerLinkStatus;
     if(target)target.textContent=gameText('profileBgSaved');
   }catch(e){
@@ -3151,11 +3157,15 @@ function showLegendaryAcquire(itemId){
   runnerLegendaryTimer=setTimeout(()=>{runnerLegendaryAcquire.classList.remove('show');runnerLegendaryAcquire.setAttribute('aria-hidden','true')},1450);
 }
 async function loadRunnerStoreState(){
+  const requestId=++runnerStoreFetchVersion;
+  const observedMutation=runnerStoreMutationVersion;
   try{
     const data=await runnerApi('state');
+    if(requestId!==runnerStoreFetchVersion||observedMutation!==runnerStoreMutationVersion)return;
     applyRunnerStoreState(data);
     if(runnerStoreStatus)runnerStoreStatus.textContent='';
   }catch(e){
+    if(requestId!==runnerStoreFetchVersion||observedMutation!==runnerStoreMutationVersion)return;
     if(runnerStoreStatus)runnerStoreStatus.textContent=gameText('storeError');
   }
 }
@@ -3168,14 +3178,14 @@ async function handleRunnerStoreItem(itemId,owned){
   try{
     if(!owned){
       const bought=await runnerApi('buy',{item_id:itemId});
-      applyRunnerStoreState(bought);
+      applyRunnerStoreMutation(bought);
       if(!bought.already_owned){
         runnerSfx((RUNNER_ITEM_RARITY[itemId]||'common')==='legendary'?'legendary':'purchase');
         if((RUNNER_ITEM_RARITY[itemId]||'common')==='legendary')showLegendaryAcquire(itemId);
       }
     }
     const equipped=await runnerApi('equip',{item_id:itemId});
-    applyRunnerStoreState(equipped);
+    applyRunnerStoreMutation(equipped);
     if(runnerStoreStatus)runnerStoreStatus.textContent='';
   }catch(e){
     if(runnerStoreStatus)runnerStoreStatus.textContent=runnerServerError(e);
@@ -3311,7 +3321,7 @@ async function saveRunnerScore(){
     });
     if(scoreSession!==runnerSessionGeneration||runnerCurrentRunId!==completedRunId)return;
     runnerLastSavedRunId=completedRunId;
-    applyRunnerStoreState(data);
+    applyRunnerStoreMutation(data);
     try{localStorage.setItem('ornivaise-runner-name',name)}catch(e){}
     const achBonus=Number(data.achievement_bonus||0);
     const unlocked=Array.isArray(data.new_achievements)?data.new_achievements:[];
