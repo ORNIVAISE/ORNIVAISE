@@ -13,3 +13,4 @@ jobs:
         run: |
           node tests/runner-v2-cosmetics.test.mjs
           node tests/runner-v2-reflections.test.mjs
+          node tests/runner-v2-portal.test.mjs
