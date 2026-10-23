@@ -16,3 +16,4 @@ jobs:
           node tests/runner-v2-portal.test.mjs
           node tests/runner-v2-playability.test.mjs
           node tests/runner-v2-session.test.mjs
+          node tests/runner-v2-state-order.test.mjs
