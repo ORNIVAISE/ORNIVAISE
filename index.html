@@ -3703,6 +3703,116 @@ function drawRunnerPlanetSurface(ctx,skin,phase){
   ctx.restore();
 }
 
+
+/* Signal Runner V2: illustrated panorama assets + live reflective surfaces.
+   Purely visual; player collision, gravity, economy and obstacle spawn are unchanged. */
+const runnerCinematicWorldThemes={
+  volcanic_cataclysm:'lava',crimson_rift:'rift',frozen_horizon:'frost',
+  aurora_sanctum:'frost',signal_storm:'storm',violet_nebula:'storm',
+  celestial_temple:'rift'
+};
+const runnerWorldPaintings=Object.create(null);
+for(const name of ['lava','frost','storm','rift']){
+  const img=new Image();
+  img.decoding='async';
+  img.src=new URL('assets/runner-worlds/'+name+'.svg',document.baseURI).href;
+  runnerWorldPaintings[name]=img;
+}
+const runnerMirrorCanvas=document.createElement('canvas');
+runnerMirrorCanvas.width=RUNNER_W;
+runnerMirrorCanvas.height=100;
+const runnerMirrorCtx=runnerMirrorCanvas.getContext('2d',{alpha:true});
+let runnerMirrorFrame=0;
+function drawRunnerCinematicBackdrop(ctx,world,stage){
+  const theme=runnerCinematicWorldThemes[world];
+  const image=runnerWorldPaintings[theme];
+  if(!image||!image.complete||!image.naturalWidth)return;
+  ctx.save();
+  ctx.globalAlpha=.55+stage*.05;
+  ctx.drawImage(image,0,0,RUNNER_W,RUNNER_GROUND);
+  ctx.restore();
+}
+function runnerFloorTint(world){
+  if(world==='volcanic_cataclysm'||world==='crimson_rift')return {rgb:'255,107,58',dark:'#100a0c',light:'#36201a'};
+  if(world==='frozen_horizon'||world==='aurora_sanctum')return {rgb:'110,219,246',dark:'#061520',light:'#18435c'};
+  if(world==='signal_storm'||world==='violet_nebula')return {rgb:'153,118,255',dark:'#080b20',light:'#25204b'};
+  if(world==='celestial_temple')return {rgb:'185,143,247',dark:'#0b0b1b',light:'#241c48'};
+  if(world==='abyssal_ocean')return {rgb:'103,223,205',dark:'#061c22',light:'#174a4b'};
+  if(world==='black_sun')return {rgb:'224,172,114',dark:'#0c0b0c',light:'#282018'};
+  return {rgb:'126,178,225',dark:'#07121b',light:'#202b3b'};
+}
+function drawRunnerMirrorGround(ctx,world,distance){
+  const {rgb,dark,light}=runnerFloorTint(world),g=RUNNER_GROUND;
+  const surface=ctx.createLinearGradient(0,g,0,RUNNER_H);
+  surface.addColorStop(0,light);
+  surface.addColorStop(.3,dark);
+  surface.addColorStop(1,'#020508');
+  ctx.save();ctx.fillStyle=surface;
+  ctx.fillRect(0,g,RUNNER_W,RUNNER_H-g);
+  const rim=ctx.createLinearGradient(0,g-5,0,g+14);
+  rim.addColorStop(0,'rgba('+rgb+',0)');
+  rim.addColorStop(.35,'rgba('+rgb+',.18)');
+  rim.addColorStop(1,'rgba('+rgb+',0)');
+  ctx.fillStyle=rim;ctx.fillRect(0,g-5,RUNNER_W,19);
+  // Mirrored world-floor cracks are perspective-stretched, not actual hazards.
+  for(let layer=0;layer<2;layer++){
+    const yBase=g+17+layer*31;
+    const drift=(distance*(layer?.11:.07))%132;
+    ctx.lineWidth=layer?.75:1.1;
+    for(let i=-1;i<10;i++){
+      const x=i*132-drift;
+      const y=yBase+((i*i+layer*7)%11);
+      const segment=65+(i%3)*12;
+      ctx.strokeStyle='rgba('+rgb+','+(layer?.12:.19)+')';
+      ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+segment*.32,y-3);
+      ctx.lineTo(x+segment*.58,y+3);ctx.lineTo(x+segment,y+1);ctx.stroke();
+      if((i+layer)%2===0){
+        ctx.beginPath();ctx.moveTo(x+segment*.58,y+3);
+        ctx.lineTo(x+segment*.68,y+11);ctx.stroke();
+      }
+    }
+  }
+  // Fine horizon highlight like molten obsidian / ice / metallic water.
+  ctx.strokeStyle='rgba('+rgb+',.59)';
+  ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(0,g+.5);ctx.lineTo(RUNNER_W,g+.5);ctx.stroke();
+  ctx.restore();
+}
+function drawRunnerLiveReflection(ctx,world,distance){
+  if(!runnerMirrorCtx||!runnerCanvas)return;
+  const floor=RUNNER_H-RUNNER_GROUND;
+  if(floor<=2)return;
+  const lowCost=typeof window!=='undefined'&&window.innerWidth<=650;
+  // On mobile, copy only every second frame to reduce GPU texture uploads.
+  runnerMirrorFrame++;
+  if(!lowCost||runnerMirrorFrame%2===0){
+    runnerMirrorCtx.clearRect(0,0,RUNNER_W,100);
+    runnerMirrorCtx.drawImage(runnerCanvas,0,RUNNER_GROUND-100,RUNNER_W,100,0,0,RUNNER_W,100);
+  }
+  const {rgb}=runnerFloorTint(world);
+  ctx.save();ctx.beginPath();ctx.rect(0,RUNNER_GROUND+1,RUNNER_W,floor-1);ctx.clip();
+  ctx.globalAlpha=lowCost?.33:.43;
+  ctx.translate(0,2*RUNNER_GROUND+.5);ctx.scale(1,-1);
+  ctx.drawImage(runnerMirrorCanvas,0,RUNNER_GROUND-100,RUNNER_W,100);
+  ctx.restore();
+  // A world-specific light response, fading into the dark foreground.
+  ctx.save();
+  const fade=ctx.createLinearGradient(0,RUNNER_GROUND,0,RUNNER_H);
+  fade.addColorStop(0,'rgba('+rgb+',.035)');
+  fade.addColorStop(.42,'rgba(3,5,12,.24)');
+  fade.addColorStop(1,'rgba(2,3,8,.79)');
+  ctx.fillStyle=fade;ctx.fillRect(0,RUNNER_GROUND+1,RUNNER_W,floor);
+  for(let i=0;i<12;i++){
+    const x=(i*109-distance*.15)%(RUNNER_W+110);
+    const px=(x+RUNNER_W+110)%(RUNNER_W+110)-55;
+    const y=RUNNER_GROUND+6+(i%5)*12;
+    ctx.strokeStyle='rgba('+rgb+','+(.08+(i%3)*.05)+')';
+    ctx.lineWidth=.5+(i%2)*.35;
+    ctx.beginPath();ctx.moveTo(px,y);ctx.lineTo(px+27+(i%4)*11,y);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
+
 function drawRunner(){
   if(!runnerCtx||!runnerCanvas)return;
   const ctx=runnerCtx;
@@ -3743,6 +3853,7 @@ function drawRunner(){
   const bg=ctx.createLinearGradient(0,0,0,RUNNER_H);
   bg.addColorStop(0,p[0]);bg.addColorStop(.68,p[1]);bg.addColorStop(1,p[2]);
   ctx.fillStyle=bg;ctx.fillRect(0,0,RUNNER_W,RUNNER_H);
+  drawRunnerCinematicBackdrop(ctx,runnerStoreState.selected_background,stage);
 
   // Moving nebulae: become stronger as the run progresses.
   ctx.save();
@@ -3971,6 +4082,7 @@ function drawRunner(){
     ctx.restore();
   }
 
+  drawRunnerMirrorGround(ctx,runnerStoreState.selected_background,runnerDistanceValue);
   ctx.strokeStyle=stage===3?'rgba(204,177,226,.24)':'rgba(220,229,239,.16)';ctx.lineWidth=1;
   ctx.beginPath();ctx.moveTo(0,RUNNER_GROUND+.5);ctx.lineTo(RUNNER_W,RUNNER_GROUND+.5);ctx.stroke();
 
@@ -4603,6 +4715,7 @@ function drawRunner(){
   ctx.fillStyle='#f0f4f7';ctx.font='bold 19px Arial';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText('Ø',0,1);
   ctx.restore();
 
+  drawRunnerLiveReflection(ctx,runnerStoreState.selected_background,runnerDistanceValue);
   ctx.save();
   ctx.fillStyle='rgba(210,219,229,.48)';ctx.font='9px Arial';ctx.textAlign='right';
   ctx.fillText('ØN // '+gameText('speed')+' '+Math.round(runnerSpeed),RUNNER_W-18,24);
