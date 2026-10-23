@@ -1726,6 +1726,16 @@ html{scroll-padding-top:80px}
 @keyframes runnerGateWhiteout{0%{opacity:0}75%{opacity:1}100%{opacity:.25}}
 @media(prefers-reduced-motion:reduce){.runner-gateway-shell.is-launching .runner-gateway-signalring{transition:none}.runner-gateway-shell.is-launching .runner-gateway-stage:after{animation:none}}
 
+/* Hero portal floats above the player card, never creating an extra grid column. */
+.hero>.runner-hero-portal{position:absolute;z-index:6;left:50%;bottom:166px;transform:translateX(-50%);min-width:195px;white-space:nowrap;text-align:center}
+.runner-gateway{--gate-rgb:191,112,244}
+.runner-gateway[data-theme="lava"]{--gate-rgb:255,134,63}
+.runner-gateway[data-theme="frost"]{--gate-rgb:134,230,249}
+.runner-gateway[data-theme="storm"]{--gate-rgb:151,128,247}
+.runner-gateway[data-theme="rift"]{--gate-rgb:191,112,244}
+@media(max-width:680px){.hero>.runner-hero-portal{bottom:128px;min-width:0;padding:9px 12px;font-size:9px}}
+@media(max-width:380px){.hero>.runner-hero-portal{bottom:122px}}
+
 </style>
 </head>
 <body data-track-theme="signal001">
@@ -1776,8 +1786,8 @@ html{scroll-padding-top:80px}
       <div class="popular-progress"><div class="signal-line hero-wave" id="heroWave"></div></div>
       <span class="popular-time" data-time-for="signal001">00:00 / 02:43</span>
       <a class="jump-link" href="#releases">СМОТРЕТЬ РЕЛИЗЫ ↓</a>
-      <a class="runner-hero-portal" id="runnerHeroPortal" href="#runner-gateway">Ø // ИГРОВОЙ ПОРТАЛ ↓</a>
     </div>
+    <a class="runner-hero-portal" id="runnerHeroPortal" href="#runner-gateway">Ø // ИГРОВОЙ ПОРТАЛ ↓</a>
   </section>
 
   <section class="section releases-section" id="releases">
@@ -2809,8 +2819,7 @@ function launchRunnerFromGateway(showShop=false){
     runnerGatewayLaunching=false;
     try{
       openEaster();
-      // This visible public entry is intentionally independent of the secret frequency puzzle.
-      unlockSignal();
+      // Public game entrance leaves the secret frequency puzzle untouched.
       openRunner();
       if(showShop){
         runnerStoreRarityFilter='all';
