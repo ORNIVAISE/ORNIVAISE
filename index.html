@@ -1720,6 +1720,12 @@ html{scroll-padding-top:80px}
 @media(max-width:360px){.runner-gateway-buttons{grid-template-columns:1fr}.runner-gateway-intro h2{font-size:45px!important}.runner-gateway-worlds{grid-template-columns:1fr 1fr}.runner-gateway-world{min-height:165px}}
 @media(prefers-reduced-motion:reduce){.runner-gateway-worldart,.runner-gateway-runner,.runner-gateway-signalring,.runner-gateway-led{animation:none!important}.runner-gateway-world,.runner-gateway-buttons button{transition:none!important}}
 
+.runner-gateway-shell.is-launching .runner-gateway-signalring{transform:scale(2.35);opacity:1;transition:transform .33s ease-out,opacity .2s}
+.runner-gateway-shell.is-launching .runner-gateway-scangrid{opacity:.95;transition:opacity .33s}
+.runner-gateway-shell.is-launching .runner-gateway-stage:after{content:"";position:absolute;z-index:7;inset:0;background:radial-gradient(circle at 30% 62%,rgba(var(--gate-rgb),.47),transparent 56%);pointer-events:none;animation:runnerGateWhiteout .33s ease-out forwards}
+@keyframes runnerGateWhiteout{0%{opacity:0}75%{opacity:1}100%{opacity:.25}}
+@media(prefers-reduced-motion:reduce){.runner-gateway-shell.is-launching .runner-gateway-signalring{transition:none}.runner-gateway-shell.is-launching .runner-gateway-stage:after{animation:none}}
+
 </style>
 </head>
 <body data-track-theme="signal001">
@@ -2644,7 +2650,11 @@ function applyRunnerStoreState(data){
   if(p?.selected_obstacle)runnerStoreState.selected_obstacle=p.selected_obstacle;
   if(p?.selected_profile_background)runnerStoreState.selected_profile_background=p.selected_profile_background;
   if(Array.isArray(data?.inventory))runnerStoreState.inventory=data.inventory;
-  if(Array.isArray(data?.items))runnerStoreState.items=data.items;
+  if(Array.isArray(data?.items)){
+    runnerStoreState.items=data.items;
+    runnerGatewaySyncedAt=Date.now();
+    if(!runnerGatewayTouched&&RUNNER_GATEWAY_WORLDS.some(world=>world.id===runnerStoreState.selected_background))runnerGatewaySelected=runnerStoreState.selected_background;
+  }
   if(Array.isArray(data?.achievements))runnerStoreState.achievements=data.achievements;
   if(Number.isFinite(Number(data?.linked_devices)))runnerStoreState.linked_devices=Math.max(1,Number(data.linked_devices));
   if(p)runnerStoreState.profile={
@@ -2661,6 +2671,7 @@ function applyRunnerStoreState(data){
   updateRunnerCredits();
   renderRunnerStore();
   renderRunnerProfile();
+  renderRunnerGateway();
   drawRunner();
 }
 function updateRunnerCredits(){
@@ -2688,6 +2699,177 @@ const RUNNER_V2_UPCOMING_ITEMS=[{"item_id":"glacier_revenant","category":"avatar
 const RUNNER_V2_PREVIEW_MODE=new URLSearchParams(location.search).get('v2preview')==='1';
 let runnerStoreRarityFilter='all';
 
+
+
+/* PORTAL Ø: public-world gallery. All purchases and ownership checks remain server-side. */
+const RUNNER_GATEWAY_WORLDS=[
+  {id:'volcanic_cataclysm',theme:'lava'},
+  {id:'frozen_horizon',theme:'frost'},
+  {id:'signal_storm',theme:'storm'},
+  {id:'crimson_rift',theme:'rift'}
+];
+let runnerGatewaySelected='crimson_rift';
+let runnerGatewayTouched=false;
+let runnerGatewaySyncedAt=0;
+let runnerGatewayPending=false;
+let runnerGatewayLaunching=false;
+let runnerGatewayPreloadStarted=false;
+let runnerGatewayNotice='gatewayNote';
+function runnerGatewayItem(itemId){
+  return runnerStoreState.items.find(item=>item.category==='background'&&item.item_id===itemId);
+}
+function runnerGatewayOwned(item){
+  return !!item&&(Number(item.price)===0||runnerStoreState.inventory.includes(item.item_id));
+}
+function renderRunnerGateway(){
+  const root=document.getElementById('runner-gateway');
+  const shell=document.getElementById('runnerGatewayShell');
+  if(!root||!shell)return;
+  const info=RUNNER_GATEWAY_WORLDS.find(x=>x.id===runnerGatewaySelected)||RUNNER_GATEWAY_WORLDS[3];
+  const lang=document.documentElement.lang==='en'?'en':'ru';
+  const selected=RUNNER_ITEM_META[info.id]?.[lang]||[info.id,''];
+  const ready=runnerGatewaySyncedAt>0;
+  const item=ready?runnerGatewayItem(info.id):null;
+  const owned=ready&&runnerGatewayOwned(item);
+  const equipped=owned&&runnerStoreState.selected_background===info.id;
+  const soon=ready&&!item;
+  const statusKey=!ready?'gatewayPreview':soon?'gatewaySoon':equipped?'gatewayEquipped':owned?'gatewayOwned':'gatewayAvailable';
+  const set=(id,value)=>{const el=document.getElementById(id);if(el)el.textContent=value};
+  root.dataset.theme=info.theme;
+  shell.dataset.theme=info.theme;shell.dataset.world=info.id;
+  set('runnerGatewayEyebrow',gameText('gatewayEyebrow'));
+  set('runnerGatewayHeading',gameText('gatewayHeading'));
+  set('runnerGatewayTagline',gameText('gatewayTagline'));
+  set('runnerGatewayReadout',gameText('gatewayReadout'));
+  set('runnerGatewayWorldLabel',gameText('gatewayWorld')+' 0'+String(RUNNER_GATEWAY_WORLDS.indexOf(info)+1)+' / '+gameText(statusKey));
+  set('runnerGatewayWorldName',selected[0]);
+  set('runnerGatewayWorldDescription',selected[1]);
+  set('runnerGatewayWorldStatus',gameText(statusKey));
+  set('runnerGatewayIndex',String(RUNNER_GATEWAY_WORLDS.indexOf(info)+1));
+  set('runnerGatewayRecordLabel',gameText('gatewayRecord'));
+  const best=ready?Math.max(0,Number(runnerStoreState.profile.best_distance)||0):null;
+  set('runnerGatewayRecord',ready?String(Math.floor(best)).padStart(5,'0'):'—');
+  set('runnerGatewayCredits',ready?String(Math.floor(Math.max(0,runnerStoreState.credits||0))):'—');
+  set('runnerGatewayFooter',gameText('gatewayFoot'));
+  set('runnerGatewayDisclaimer',gameText('gatewayDisclaimer'));
+  set('runnerHeroPortal',gameText('gatewayHeroLink'));
+  set('runnerGatewayStatus',gameText(runnerGatewayNotice));
+  const enter=document.getElementById('runnerGatewayLaunch');
+  if(enter){enter.firstElementChild.textContent=gameText('gatewayLaunch');enter.disabled=runnerGatewayLaunching}
+  const equip=document.getElementById('runnerGatewayEquip');
+  if(equip){
+    equip.textContent=!ready?gameText('gatewayLoading'):soon?gameText('gatewaySoon'):
+      equipped?gameText('gatewayEquipped'):owned?gameText('gatewayEquip'):gameText('gatewayStore');
+    equip.disabled=runnerGatewayPending||runnerGatewayLaunching||!ready||soon||equipped;
+  }
+  const orb=document.getElementById('runnerGatewayOrb');
+  if(orb){
+    const requested=String(runnerStoreState.selected_avatar||'orbit_o');
+    const safe=/^[a-z0-9_]+$/.test(requested)&&RUNNER_ITEM_META[requested]?requested:'orbit_o';
+    orb.className='runner-preview-planet '+safe;
+  }
+  const picker=document.getElementById('runnerGatewayWorlds');
+  if(picker){
+    picker.setAttribute('aria-label',gameText('gatewayAria'));
+    picker.querySelectorAll('button[data-gateway-world]').forEach(button=>{
+      const id=button.dataset.gatewayWorld;
+      const world=RUNNER_GATEWAY_WORLDS.find(w=>w.id===id);
+      if(!world)return;
+      const active=id===info.id;
+      button.classList.toggle('active',active);
+      button.setAttribute('aria-pressed',String(active));
+      const title=button.querySelector('strong');
+      if(title)title.textContent=RUNNER_ITEM_META[id]?.[lang]?.[0]||id;
+      const flag=button.querySelector('em');
+      if(flag){
+        const known=ready?runnerGatewayItem(id):null;
+        flag.textContent=gameText(!ready?'gatewayPreview':!known?'gatewaySoon':
+          runnerStoreState.selected_background===id?'gatewayEquipped':
+          runnerGatewayOwned(known)?'gatewayOwned':'gatewayAvailable');
+      }
+    });
+  }
+}
+function chooseRunnerGatewayWorld(itemId){
+  if(!RUNNER_GATEWAY_WORLDS.some(world=>world.id===itemId))return;
+  runnerGatewaySelected=itemId;
+  runnerGatewayTouched=true;
+  runnerGatewayNotice='gatewayNote';
+  renderRunnerGateway();
+}
+function launchRunnerFromGateway(showShop=false){
+  if(runnerGatewayLaunching||!easterOverlay||!signalRunner)return;
+  runnerGatewayLaunching=true;
+  const shell=document.getElementById('runnerGatewayShell');
+  shell?.classList.add('is-launching');
+  renderRunnerGateway();
+  const reduced=window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  setTimeout(()=>{
+    shell?.classList.remove('is-launching');
+    runnerGatewayLaunching=false;
+    try{
+      openEaster();
+      // This visible public entry is intentionally independent of the secret frequency puzzle.
+      unlockSignal();
+      openRunner();
+      if(showShop){
+        runnerStoreRarityFilter='all';
+        if(!runnerStorePanel?.classList.contains('open'))toggleRunnerStore();
+        setTimeout(()=>runnerStorePanel?.scrollIntoView({behavior:'smooth',block:'start'}),100);
+      }
+    }finally{renderRunnerGateway()}
+  },reduced?0:330);
+}
+async function equipRunnerGatewayWorld(){
+  if(runnerGatewayPending||runnerGatewayLaunching)return;
+  runnerGatewayPending=true;
+  runnerGatewayNotice='gatewayNote';renderRunnerGateway();
+  try{
+    if(!runnerGatewaySyncedAt)await loadRunnerStoreState();
+    const item=runnerGatewayItem(runnerGatewaySelected);
+    if(!runnerGatewaySyncedAt){runnerGatewayNotice='gatewayError';return}
+    if(!item){runnerGatewayNotice='gatewaySoonNote';return}
+    if(!runnerGatewayOwned(item)){
+      runnerGatewayNotice='gatewayShopNote';
+      launchRunnerFromGateway(true);
+      return;
+    }
+    if(runnerStoreState.selected_background===item.item_id)return;
+    // Server confirms ownership and persists the selected world across devices.
+    const result=await runnerApi('equip',{item_id:item.item_id});
+    applyRunnerStoreState(result);
+    runnerGatewayNotice='gatewaySuccess';
+  }catch(error){
+    runnerGatewayNotice='gatewayError';
+    await loadRunnerStoreState().catch(()=>{});
+  }finally{runnerGatewayPending=false;renderRunnerGateway()}
+}
+function initializeRunnerGateway(){
+  const root=document.getElementById('runner-gateway');
+  const picker=document.getElementById('runnerGatewayWorlds');
+  if(!root||!picker)return;
+  picker.addEventListener('click',event=>{
+    const button=event.target.closest('button[data-gateway-world]');
+    if(button)chooseRunnerGatewayWorld(button.dataset.gatewayWorld);
+  });
+  document.getElementById('runnerGatewayLaunch')?.addEventListener('click',()=>launchRunnerFromGateway());
+  document.getElementById('runnerGatewayEquip')?.addEventListener('click',equipRunnerGatewayWorld);
+  renderRunnerGateway();
+  const fetchOnce=()=>{
+    if(runnerGatewaySyncedAt||runnerGatewayPreloadStarted)return;
+    runnerGatewayPreloadStarted=true;
+    loadRunnerStoreState().finally(()=>{runnerGatewayPreloadStarted=false;renderRunnerGateway()});
+  };
+  if('IntersectionObserver' in window){
+    const observer=new IntersectionObserver((entries)=>{
+      if(entries.some(entry=>entry.isIntersecting)){observer.disconnect();fetchOnce()}
+    },{rootMargin:'120px'});
+    observer.observe(root);
+  }else{
+    root.addEventListener('pointerenter',fetchOnce,{once:true});
+    root.addEventListener('focusin',fetchOnce,{once:true});
+  }
+}
 
 /* The same skins power the shop previews and the player loadout showroom. */
 function renderRunnerShowroom(){
@@ -3316,7 +3498,7 @@ function openRunner(){
   document.getElementById('easterTitle').textContent=gameText('runnerTitle');
   resetRunner();
   loadRunnerLeaderboard();
-  loadRunnerStoreState();
+  if(Date.now()-runnerGatewaySyncedAt>15000)loadRunnerStoreState();
   showRunnerOverlay(gameText('runnerTitle'),gameText('jumpHint'),gameText('startRun'));
   setTimeout(()=>runnerCanvas?.focus(),0);
 }
@@ -5159,6 +5341,7 @@ document.addEventListener('keydown',e=>{
 updateRunnerHud();
 syncRunnerSoundButton();
 drawRunner();
+initializeRunnerGateway();
 
 function openEaster(){
   if(!easterOverlay)return;
@@ -5206,6 +5389,7 @@ window.refreshGameLanguage=()=>{
   if(runnerProfileToggle)runnerProfileToggle.textContent=gameText(runnerProfilePanel?.classList.contains('open')?'profileClose':'profile');
   renderRunnerProfile();
   renderRunnerStore();
+  renderRunnerGateway();
   if(runnerNameInput)runnerNameInput.placeholder=gameText('namePlaceholder');
   if(runnerScoreSave)runnerScoreSave.textContent=gameText('saveScore');
   if(signalZoneBadge)signalZoneBadge.textContent=getRunnerStageLabel(runnerStage);
