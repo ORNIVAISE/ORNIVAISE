@@ -144,4 +144,56 @@ function until(game,predicate,max=220){
  game.setObstacles([{x:obstacleX,y:252,w:40,h:40,ceiling:false}]);
  assert.equal(game.forecast().unsafe,false,'opposite-wall hazards cannot trigger landing warning');
 }
-console.log('PASS double-jump, input buffer, reverse gravity, safe coin arcs, magnetic pickup and landing predictions');
+
+{
+ // Pause must preserve game progress and never resume behind an open shop.
+ const pauseSrc=take('function updateRunnerPauseButton(){','function updateRunnerJumpHud(){');
+ const game={count:0,focused:0},shop={opened:false},profile={opened:false};
+ const events=[];
+ const pauseButton={textContent:'',disabled:true,attrs:{},
+    setAttribute(k,v){this.attrs[k]=v}};
+ const mockDocument={hidden:false,getElementById:id=>id==='runnerPauseToggle'?pauseButton:null};
+ const pauseApi=new Function('document','runnerMusic','runnerCanvas','runnerStorePanel',
+    'runnerProfilePanel','gameText','showRunnerOverlay','hideRunnerOverlay',
+    'getRunnerMusicMuted','requestAnimationFrame','cancelAnimationFrame',
+    'performance','runnerLoop',
+    'let runnerRunning=true,runnerPaused=false,runnerGameOver=false,runnerRaf=12,runnerLast=0;'+
+    pauseSrc+
+    ';return {pauseRunner,resumeRunner,toggleRunnerPause,updateRunnerPauseButton,get(){return {runnerPaused,runnerRaf,runnerLast}}};'
+ )(
+   mockDocument,
+   {pause(){events.push('music pause')},play(){events.push('music play');return Promise.resolve()}},
+   {focus(){game.focused++}},
+   {classList:{contains:()=>shop.opened}},
+   {classList:{contains:()=>profile.opened}},
+   key=>key,
+   (...args)=>events.push('overlay:'+args[0]),
+   ()=>events.push('overlay hidden'),
+   ()=>false,
+   ()=>{game.count++;return 90+game.count},
+   id=>events.push('cancel '+id),
+   {now:()=>123456},
+   ()=>{}
+ );
+ assert.equal(pauseApi.pauseRunner(),true);
+ assert.equal(pauseApi.get().runnerPaused,true);
+ assert.ok(events.includes('cancel 12'));
+ assert.equal(pauseButton.textContent,'▶');
+ shop.opened=true;
+ assert.equal(pauseApi.resumeRunner(),false,'cannot resume behind shop');
+ assert.equal(pauseApi.get().runnerPaused,true);
+ shop.opened=false;
+ mockDocument.hidden=true;
+ assert.equal(pauseApi.resumeRunner(),false,'hidden tab must remain paused');
+ mockDocument.hidden=false;
+ assert.equal(pauseApi.resumeRunner(),true);
+ assert.equal(pauseApi.get().runnerPaused,false);
+ assert.equal(pauseApi.get().runnerLast,123456,'clock reset avoids time jump');
+ assert.equal(pauseButton.textContent,'Ⅱ');
+ assert.ok(events.includes('overlay hidden'));
+ assert.ok(events.includes('music play'));
+ assert.equal(game.focused,1);
+ assert.equal(pauseApi.toggleRunnerPause(),true);
+ assert.equal(pauseApi.get().runnerPaused,true);
+}
+console.log('PASS double-jump, safe coins, landing prediction, paused shop and resumable run');
