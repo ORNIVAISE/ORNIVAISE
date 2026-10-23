@@ -1583,6 +1583,68 @@ html{scroll-padding-top:80px}
 @media(max-width:480px){.runner-showroom{padding:11px}.runner-showroom-display{height:205px}.runner-showroom-labels{gap:5px}.runner-showroom-labels>div{padding:8px 6px}.runner-showroom-labels small{font-size:9px}.runner-showroom-labels strong{font-size:10px}.runner-showroom-inner .runner-preview-obstacles{right:14%!important;transform:scale(1.15)!important}.runner-showroom-inner .runner-preview-planet{left:14%!important}}
 @media(prefers-reduced-motion:reduce){.runner-preview-planet.magma_sovereign:after,.runner-preview-planet.astral_leviathan:after,.runner-preview-planet.storm_seraph:after,.runner-preview-planet.glacier_revenant:after,.runner-showroom-inner .runner-preview-planet,.scene-deep_space .runner-vfx-ring,.scene-violet_nebula .runner-vfx-beam,.scene-black_sun .runner-vfx-ring,.scene-signal_storm .runner-vfx-beam,.scene-abyssal_ocean .runner-vfx-ring{animation:none!important}}
 
+
+/* V2 unified cinematic materials: the shop previews share the in-game worlds. */
+.runner-preview-scene.scene-volcanic_cataclysm,
+.runner-preview-scene.scene-magma_sovereign,
+.runner-preview-scene.scene-ash_titan{
+  background:linear-gradient(0deg,rgba(18,7,10,.5),rgba(8,7,12,.12) 60%),url('assets/runner-worlds/lava.svg') center center / cover no-repeat!important;
+}
+.runner-preview-scene.scene-frozen_horizon,
+.runner-preview-scene.scene-aurora_sanctum,
+.runner-preview-scene.scene-frost_spines,
+.runner-preview-scene.scene-glacier_revenant{
+  background:linear-gradient(0deg,rgba(4,12,25,.45),rgba(5,21,32,.15) 65%),url('assets/runner-worlds/frost.svg') center center / cover no-repeat!important;
+}
+.runner-preview-scene.scene-signal_storm,
+.runner-preview-scene.scene-violet_nebula,
+.runner-preview-scene.scene-thunder_sentinels,
+.runner-preview-scene.scene-storm_seraph{
+  background:linear-gradient(0deg,rgba(7,7,23,.46),rgba(12,8,28,.14) 65%),url('assets/runner-worlds/storm.svg') center center / cover no-repeat!important;
+}
+.runner-preview-scene.scene-crimson_rift,
+.runner-preview-scene.scene-celestial_temple,
+.runner-preview-scene.scene-rift_serpents,
+.runner-preview-scene.scene-astral_leviathan{
+  background:linear-gradient(0deg,rgba(9,5,19,.5),rgba(12,6,27,.12) 65%),url('assets/runner-worlds/rift.svg') center center / cover no-repeat!important;
+}
+/* Light-responsive reflective strip under the obstacle preview, preserving hitbox readability. */
+.runner-preview-scene.scene-background:after,
+.runner-preview-scene.scene-obstacle:after,
+.runner-preview-scene.scene-avatar:after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:27%;
+  z-index:2;pointer-events:none;opacity:.64;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.08),rgba(7,10,21,.52) 36%,rgba(4,5,10,.79)),
+    repeating-linear-gradient(174deg,transparent 0 19px,rgba(187,217,255,.045) 20px 22px,transparent 23px 52px);
+}
+.runner-preview-scene.scene-volcanic_cataclysm:after,
+.runner-preview-scene.scene-magma_sovereign:after{
+  background:linear-gradient(180deg,rgba(255,126,43,.33),rgba(54,17,16,.53) 35%,rgba(8,5,9,.82) 100%),
+    repeating-linear-gradient(172deg,transparent 0 18px,rgba(255,147,55,.14) 19px 22px,transparent 23px 51px)!important;
+}
+.runner-preview-scene.scene-aurora_sanctum:after,
+.runner-preview-scene.scene-frozen_horizon:after{
+  background:linear-gradient(180deg,rgba(153,239,255,.32),rgba(15,68,98,.45) 40%,rgba(4,17,31,.85)),
+    repeating-linear-gradient(169deg,transparent 0 25px,rgba(173,243,255,.15) 26px 28px,transparent 29px 50px)!important;
+}
+.runner-preview-scene.scene-signal_storm:after,
+.runner-preview-scene.scene-violet_nebula:after{
+  background:linear-gradient(180deg,rgba(160,117,255,.33),rgba(40,27,92,.42) 45%,rgba(7,6,28,.82)),
+    repeating-linear-gradient(170deg,transparent 0 22px,rgba(165,128,255,.16) 23px 25px,transparent 26px 57px)!important;
+}
+.runner-preview-scene.scene-crimson_rift:after,
+.runner-preview-scene.scene-celestial_temple:after{
+  background:linear-gradient(180deg,rgba(177,89,251,.34),rgba(56,23,93,.42) 45%,rgba(11,5,24,.82)),
+    repeating-linear-gradient(168deg,transparent 0 21px,rgba(197,98,255,.17) 22px 24px,transparent 25px 53px)!important;
+}
+.runner-preview-scene .runner-preview-vfx{z-index:3}
+.runner-preview-scene .runner-preview-planet,
+.runner-preview-scene .runner-preview-obstacles{z-index:4}
+@media(prefers-reduced-motion:reduce){
+  .runner-showroom-inner .runner-preview-planet{animation:none!important}
+}
+
 </style>
 </head>
 <body data-track-theme="signal001">
