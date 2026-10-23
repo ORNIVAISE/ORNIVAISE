@@ -13,7 +13,7 @@ for(const id of ['runnerAbilityHud','runnerAbilityCount','runnerAbilityLabel','r
 assert.match(html,/kind==='double_jump'/);
 assert.match(html,/runnerCoinChain/);
 assert.match(html,/drawRunnerFlowFx\(ctx\)/);
-assert.match(html,/if\(document\.hidden\)\{pauseRunner\(\);return\}/,'do not start unpaused in a hidden tab');
+assert.ok(html.includes("if(document.hidden||runnerStorePanel?.classList.contains('open')||runnerProfilePanel?.classList.contains('open'))"),'do not start active gameplay in a hidden tab or open shop/profile');
 assert.doesNotMatch(html,/runnerCanvas\?\.addEventListener\('keydown'/,'double keyboard listener');
 assert.match(html,/if\(e\.repeat\|\|e\.target\?\.closest\?\./,'repeat-guard');
 function take(a,b){
