@@ -3813,6 +3813,193 @@ function drawRunnerLiveReflection(ctx,world,distance){
   ctx.restore();
 }
 
+
+/* Four silhouette families inspired by the Signal Runner in-game mockups.
+   Every mesh uses the original collision rectangle: no hidden hitbox changes. */
+function drawRunnerPremiumHazard(ctx,skin,o,variant,phase){
+  if(!['orbital_debris','frost_spines','thunder_sentinels','rift_serpents'].includes(skin))return false;
+  const form=(variant+(o.type==='block'?1:0))%4;
+  const rad=Math.PI/180;
+  const light={orbital_debris:'#ff9a47',frost_spines:'#adf1ff',thunder_sentinels:'#a38aff',rift_serpents:'#bb77ff'}[skin];
+  const dark={orbital_debris:'#12080a',frost_spines:'#092135',thunder_sentinels:'#0b1327',rift_serpents:'#090716'}[skin];
+  const pulse=.75+.25*Math.sin(phase*.7);
+  ctx.save();
+  ctx.translate(o.x+o.w*.5,o.y+o.h*.5);
+  ctx.scale(o.w/60,o.h/60);
+  const poly=(coords,fill,stroke='#ced9ee',width=1)=>{
+    ctx.beginPath();ctx.moveTo(coords[0],coords[1]);
+    for(let i=2;i<coords.length;i+=2)ctx.lineTo(coords[i],coords[i+1]);
+    ctx.closePath();ctx.fillStyle=fill;ctx.fill();
+    if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=width;ctx.stroke()}
+  };
+  const core=(x,y,r,color=light)=>{
+    ctx.fillStyle=color;ctx.shadowColor=color;ctx.shadowBlur=12*pulse;
+    ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+  };
+  const particle=(x,y,color=light,size=1.5,alpha=.7)=>{
+    ctx.globalAlpha=alpha;
+    ctx.fillStyle=color;ctx.beginPath();ctx.arc(x,y,size,0,Math.PI*2);ctx.fill();
+    ctx.globalAlpha=1;
+  };
+  // Surface splashes, glowing particles and smoke are VISUAL ONLY.
+  const aura=ctx.createRadialGradient(0,0,5,0,0,44);
+  aura.addColorStop(0,skin==='orbital_debris'?'rgba(255,109,37,.2)':
+    skin==='frost_spines'?'rgba(140,231,251,.13)':
+    skin==='thunder_sentinels'?'rgba(121,149,253,.2)':'rgba(165,91,233,.21)');
+  aura.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=aura;ctx.fillRect(-48,-48,96,96);
+  if(skin==='orbital_debris'){
+    ctx.rotate(Math.sin(phase*.24)*.12);
+    const blaze=ctx.createRadialGradient(-11,-10,1,0,0,31);
+    blaze.addColorStop(0,'#de9060');blaze.addColorStop(.25,'#693a2a');
+    blaze.addColorStop(.65,'#251b1c');blaze.addColorStop(1,dark);
+    if(form===0){
+      ctx.shadowColor='#ff6e2d';ctx.shadowBlur=13;
+      ctx.fillStyle=blaze;ctx.beginPath();ctx.arc(0,0,25,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+      ctx.strokeStyle='#ffb36a';ctx.lineWidth=2.5;
+      ctx.beginPath();ctx.moveTo(-18,-13);ctx.lineTo(-5,-9);ctx.lineTo(-10,1);ctx.lineTo(6,11);
+      ctx.moveTo(12,-20);ctx.lineTo(5,-8);ctx.lineTo(19,-1);ctx.lineTo(12,11);
+      ctx.moveTo(-14,18);ctx.lineTo(-3,12);ctx.lineTo(2,25);ctx.stroke();
+    }else if(form===1){
+      poly([-26,25,-19,-16,-7,-28,0,-14,17,-28,23,-4,14,2,24,24,3,17,-8,29],blaze,'#e16f3c',1.5);
+      ctx.strokeStyle='#ffad66';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(-6,-22);ctx.lineTo(-1,-7);
+      ctx.lineTo(-9,7);ctx.lineTo(4,23);ctx.moveTo(16,-17);ctx.lineTo(6,-4);ctx.lineTo(18,15);ctx.stroke();
+      for(let i=0;i<6;i++)particle(10+Math.cos(i*2.39)*24,Math.sin(i*2.39)*26,'#ffb76c',1.3+i%2,.5);
+    }else if(form===2){
+      ctx.shadowColor='#f97835';ctx.shadowBlur=14;
+      ctx.strokeStyle='#322023';ctx.lineWidth=14;ctx.beginPath();ctx.arc(0,0,19,0,Math.PI*2);ctx.stroke();
+      ctx.shadowBlur=0;ctx.strokeStyle='#ff9d4d';ctx.lineWidth=3;
+      ctx.beginPath();ctx.arc(0,0,20,.45,2.9);ctx.stroke();
+      ctx.beginPath();ctx.arc(0,0,21,3.25,5.85);ctx.stroke();
+      ctx.fillStyle='#030407';ctx.beginPath();ctx.arc(0,0,10,0,Math.PI*2);ctx.fill();
+      core(-10,-19,2,'#ffda93');core(19,8,2,'#ffa35e');
+    }else{
+      for(let i=0;i<5;i++){
+        const a=i*2.399,px=Math.cos(a)*15,py=Math.sin(a)*14;
+        ctx.save();ctx.translate(px,py);ctx.rotate(a);
+        poly([-8,-10,6,-11,12,5,0,10,-7,7],blaze,'#b45a36',1.6);
+        ctx.strokeStyle='#ffb376';ctx.lineWidth=1.7;
+        ctx.beginPath();ctx.moveTo(-3,-9);ctx.lineTo(2,4);ctx.lineTo(9,7);ctx.stroke();ctx.restore();
+      }
+      core(0,0,8,'#f9803d');
+    }
+    for(let i=0;i<10;i++){
+      const a=phase*.16+i*2.399;
+      const x=Math.cos(a)*(24+i%4*3),y=Math.sin(a)*(21+i%5*2);
+      particle(x,y,i%3===0?'#ffd88a':'#fc7836',.9+i%3*.35,.23+i%3*.18);
+    }
+  }else if(skin==='frost_spines'){
+    const ice=ctx.createLinearGradient(-25,-30,25,30);
+    ice.addColorStop(0,'#d7ffff');ice.addColorStop(.28,'#7bcee9');
+    ice.addColorStop(.63,'#205a81');ice.addColorStop(1,dark);
+    ctx.shadowColor='rgba(129,225,250,.55)';ctx.shadowBlur=12;
+    if(form===0){
+      for(const [x,w,h] of [[-17,19,53],[1,20,62],[18,14,45]]){
+        poly([x-w*.5,28,x-w*.3,28-h*.48,x,28-h,x+w*.25,28-h*.32,x+w*.5,28],
+          ice,'rgba(205,251,255,.92)',1.5);
+      }
+    }else if(form===1){
+      // Ridge is lower only when the actual collision rectangle is broad.
+      const high=o.type==='block'?45:59;
+      for(let i=0;i<6;i++){
+        const x=-29+i*11,h=high*(.45+((i*3)%5)*.13);
+        poly([x-3,28,x+5,28-h,x+13,28],ice,'rgba(222,251,255,.83)',1.3);
+      }
+    }else if(form===2){
+      poly([-16,28,-9,-2,-2,-30,5,-22,13,8,17,28],ice,'#e7ffff',2);
+      ctx.strokeStyle='rgba(224,253,255,.6)';ctx.lineWidth=1.3;ctx.beginPath();ctx.moveTo(-2,-26);
+      ctx.lineTo(-3,22);ctx.lineTo(13,28);ctx.stroke();
+    }else{
+      for(const [x,y,w,h] of [[-14,4,17,42],[10,0,18,53],[-1,15,22,38]]){
+        poly([x-w*.5,28,x-7,28-h*.55,x,y-h*.48,x+w*.5,28],
+          ice,'#a0ecff',1.5);
+      }
+      for(let i=0;i<4;i++){
+        const x=-25+i*15,y=-19+i%2*11;poly([x-2,y+5,x,y-5,x+5,y+3],ice,'#cefcff',.9);
+      }
+    }
+    ctx.shadowBlur=0;
+    ctx.strokeStyle='rgba(241,255,255,.5)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(-18,20);ctx.lineTo(-9,9);ctx.lineTo(-5,22);
+    ctx.moveTo(7,-11);ctx.lineTo(10,13);ctx.lineTo(19,25);ctx.stroke();
+    for(let i=0;i<7;i++)particle((i*17%55)-27,-10+Math.sin(i*2.5+phase*.2)*22,
+      '#dcf9ff',i%3===0?1.9:1.15,.27+i%3*.13);
+  }else if(skin==='thunder_sentinels'){
+    ctx.rotate(Math.sin(phase*.27)*.036);
+    const armor=ctx.createLinearGradient(-26,-30,25,29);
+    armor.addColorStop(0,'#5d6688');armor.addColorStop(.3,'#252d51');
+    armor.addColorStop(.66,'#121b35');armor.addColorStop(1,dark);
+    ctx.shadowColor='#9f78ff';ctx.shadowBlur=11*pulse;
+    if(form===0){
+      poly([-12,30,-23,14,-17,-25,0,-30,17,-25,23,14,12,30],armor,'#9d8cff',1.8);
+      ctx.strokeStyle='#a9c9ff';ctx.lineWidth=1.6;
+      ctx.beginPath();ctx.moveTo(0,-29);ctx.lineTo(0,-7);ctx.moveTo(0,7);ctx.lineTo(0,29);ctx.stroke();
+    }else if(form===1){
+      ctx.strokeStyle='#5862a1';ctx.lineWidth=9;ctx.beginPath();ctx.arc(0,0,23,0,Math.PI*2);ctx.stroke();
+      ctx.strokeStyle='#b3aaff';ctx.lineWidth=1.8;ctx.beginPath();ctx.arc(0,0,24,0,Math.PI*2);ctx.stroke();
+      for(let i=0;i<5;i++){const a=phase*.31+i*2*Math.PI/5,x=Math.cos(a)*24,y=Math.sin(a)*24;
+        ctx.save();ctx.translate(x,y);ctx.rotate(a);
+        poly([-5,-7,6,-8,9,4,-5,7],armor,'#9b98eb',1);ctx.restore();}
+    }else if(form===2){
+      poly([-28,-26,-10,-23,-8,25,-22,30],armor,'#8d8fe5',1.5);
+      poly([10,-23,28,-26,22,30,8,25],armor,'#8d8fe5',1.5);
+      ctx.strokeStyle='rgba(148,231,255,.66)';ctx.lineWidth=2;ctx.beginPath();
+      ctx.moveTo(-9,-13);ctx.lineTo(-1,-5);ctx.lineTo(9,-13);
+      ctx.moveTo(-8,15);ctx.lineTo(0,7);ctx.lineTo(8,15);ctx.stroke();
+    }else{
+      poly([-30,-6,-21,-19,7,-9,29,-27,15,2,25,23,4,11,-19,23],armor,'#b6aaff',1.8);
+      ctx.strokeStyle='rgba(167,167,255,.7)';ctx.lineWidth=2.2;
+      ctx.beginPath();ctx.arc(0,0,26,-.8,1.8);ctx.stroke();
+    }
+    ctx.shadowBlur=0;
+    core(0,0,9,'#846aff');core(0,0,4.2,'#f1ebff');
+    for(let i=0;i<5;i++){
+      const a=phase*.55+i*2.2,x=Math.cos(a)*28,y=Math.sin(a)*27;
+      ctx.strokeStyle=i%2?'#7ad9ff':'#b594ff';
+      ctx.lineWidth=1;ctx.beginPath();ctx.moveTo(x,y);
+      ctx.lineTo(x+Math.cos(a+.5)*5,y-8);ctx.lineTo(x+8*Math.cos(a+1),y+5);ctx.stroke();
+    }
+  }else if(skin==='rift_serpents'){
+    ctx.shadowColor='#9a50ec';ctx.shadowBlur=13;
+    ctx.lineCap='round';ctx.lineJoin='round';
+    const wave=Math.sin(phase*.46)*4;
+    if(form===0){
+      ctx.strokeStyle='#23102f';ctx.lineWidth=13;
+      ctx.beginPath();ctx.moveTo(-28,24);ctx.bezierCurveTo(-6,7,-18,-28,13+wave,-21);
+      ctx.bezierCurveTo(22,-18,26,-6,23,2);ctx.stroke();
+      ctx.strokeStyle='#9852e8';ctx.lineWidth=2.1;ctx.stroke();
+      core(19+wave*.3,-19,4);
+      poly([14,-20,26,-23,29,-14,22,-6,18,-12],dark,'#ce92ff',1.6);
+    }else if(form===1){
+      for(let i=0;i<6;i++){
+        const a=i*2.399,rr=8+i%3*7;ctx.save();
+        ctx.translate(Math.cos(a)*rr,Math.sin(a)*rr);ctx.rotate(a+phase*.05);
+        poly([-6,-11,9,-8,13,8,-5,11],dark,'#a56afe',1.7);ctx.restore();
+      }
+      core(0,0,9);core(0,0,4,'#f0b5ff');
+    }else if(form===2){
+      ctx.strokeStyle='#261037';ctx.lineWidth=11;ctx.beginPath();ctx.arc(0,0,22,-.3,5.65);ctx.stroke();
+      ctx.strokeStyle='#9e53fc';ctx.lineWidth=2.7;ctx.beginPath();ctx.arc(0,0,22,-.3,5.65);ctx.stroke();
+      core(22,-6,5);
+      ctx.fillStyle='#010008';ctx.beginPath();ctx.arc(0,0,13,0,Math.PI*2);ctx.fill();
+      poly([14,-12,27,-11,25,-2,16,3],dark,'#d0a6ff',1.4);
+    }else{
+      for(let i=0;i<3;i++){
+        const x=(i-1)*14,top=-27+(i%2)*11;
+        ctx.strokeStyle='#250f36';ctx.lineWidth=9;ctx.beginPath();
+        ctx.moveTo(x*.6,26);ctx.bezierCurveTo(x-9,1,x+wave,top+15,x+3,top);ctx.stroke();
+        ctx.strokeStyle='#aa62ee';ctx.lineWidth=1.8;ctx.stroke();
+        core(x+3,top,3.3,'#e4acff');
+      }
+    }
+    ctx.shadowBlur=0;
+    for(let i=0;i<7;i++)particle((i*13%52)-26,Math.sin(i*2.3+phase*.22)*25,
+      '#ca91ff',i%3===0?1.8:1.1,.3+i%3*.12);
+  }
+  ctx.restore();
+  return true;
+}
+
 function drawRunner(){
   if(!runnerCtx||!runnerCanvas)return;
   const ctx=runnerCtx;
@@ -4163,7 +4350,9 @@ function drawRunner(){
 
 
     drawRunnerObstacleSignature(ctx,skin,o,phase,stage);
-    if(skin==='frost_spines'){
+    if(drawRunnerPremiumHazard(ctx,skin,o,variant,phase)){
+      // All four themed silhouettes are drawn inside the existing hitbox.
+    }else if(skin==='frost_spines'){
       const icy=ctx.createLinearGradient(o.x,o.y,o.x+o.w,o.y+o.h);
       icy.addColorStop(0,'rgba(225,251,255,.9)');icy.addColorStop(.52,'rgba(89,176,205,.5)');icy.addColorStop(1,'rgba(22,69,112,.55)');
       ctx.fillStyle=icy;ctx.strokeStyle='rgba(211,248,255,.82)';ctx.lineWidth=1;
