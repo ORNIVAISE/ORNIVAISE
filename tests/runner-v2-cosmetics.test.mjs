@@ -27,7 +27,7 @@ assert.match(seed,/false\)\s*(?:,|\nON CONFLICT)/,'new items staged inactive');
 assert.match(html,/runnerProfileBgPending/,'profile purchase guard');
 assert.match(html,/prefers-reduced-motion:reduce/,'accessibility');
 const worldStart=html.indexOf('function drawRunnerSpectacle(');
-const worldEnd=html.indexOf('function drawRunner(){',worldStart);
+const worldEnd=html.indexOf('/* Signal Runner V2: illustrated panorama assets',worldStart);
 const helpers=new Function('ctx','RUNNER_W','RUNNER_GROUND','RUNNER_H',html.slice(worldStart,worldEnd)+';return {drawRunnerSpectacle,drawRunnerAvatarCinematic,drawRunnerWorldAtmosphere,drawRunnerObstacleSignature,drawRunnerPlanetSurface};');
 let calls=0;
 const gradient=()=>({addColorStop(){}});
