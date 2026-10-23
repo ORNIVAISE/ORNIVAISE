@@ -31,7 +31,7 @@ const fixture=[
  'let runnerJumpsUsed=0,runnerJumpBuffer=0,runnerJumpPulse=0,runnerLandingPulse=0;',
  'let runnerCoinChain=0,runnerCoinChainTimer=0,runnerCoinFlash=0;',
  'const runnerCoinEffects=[];',
- 'let runnerRunning=true,runnerGameOver=false;',
+ 'let runnerRunning=true,runnerGameOver=false,runnerPaused=false;',
  'let runnerDistanceValue=0,runnerSignalCount=0,runnerSpeed=300,runnerSpawn=999,runnerOrbSpawn=999;',
  'let runnerObstacles=[],runnerOrbs=[],runnerDust=[],runnerSecret=false,runnerStage=0,runnerStageTimer=0,runnerEventTimer=0;',
  'let runnerGravity=1,runnerGravityEvent=false,runnerGravityEnd=Infinity,runnerNextGravity=Infinity,runnerPortalFx=0;',
