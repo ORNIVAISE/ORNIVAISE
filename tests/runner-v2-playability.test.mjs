@@ -23,6 +23,7 @@ function take(a,b){
 const jumpFns=take('function updateRunnerJumpHud(){','async function startRunner(){');
 const spawnFns=take('function spawnRunnerObstacle(){','function gameOverRunner(){');
 const update=take('function updateRunner(dt){','/* Cinematic V2 backgrounds.');
+const forecast=take('function getRunnerLandingForecast(){','function drawRunnerLandingHint(ctx){');
 const fixture=[
  'const RUNNER_W=960,RUNNER_H=360,RUNNER_GROUND=292,RUNNER_CEILING=58;',
  'const RUNNER_MAX_JUMPS=2,RUNNER_JUMP_BUFFER=.12;',
@@ -45,13 +46,15 @@ const fixture=[
  'const updateRunnerGravityTransition=()=>false;',
  'const gameOverRunner=()=>{runnerRunning=false;runnerGameOver=true};',
  'const startRunner=()=>{};',
- jumpFns,spawnFns,update,
+ jumpFns,spawnFns,update,forecast,
  'return {',
- ' jump:runnerJumpAction,tick:updateRunner,spawn:spawnRunnerOrb,',
+ ' jump:runnerJumpAction,tick:updateRunner,spawn:spawnRunnerOrb,forecast:getRunnerLandingForecast,',
  ' setSpeed:v=>{runnerSpeed=v;runnerDistanceValue=(v-300)/.072},',
  ' setGravity:g=>{runnerGravity=g;runnerPlayer.y=g===1?RUNNER_GROUND-runnerPlayer.h:RUNNER_CEILING;runnerPlayer.vy=0;runnerPlayer.onGround=true;runnerJumpsUsed=0},',
  ' addObstacle:x=>{runnerObstacles.push({x,y:RUNNER_GROUND-40,w:30,h:40,type:"spire",variant:0})},',
  ' clearObstacles:()=>{runnerObstacles=[]},',
+ ' setObstacles:v=>{runnerObstacles=v},',
+ ' setAirborne:(y,vy)=>{runnerPlayer.y=y;runnerPlayer.vy=vy;runnerPlayer.onGround=false;runnerJumpsUsed=1},',
  ' setOrb:o=>{runnerOrbs=[o]},',
  ' get:()=>({y:runnerPlayer.y,vy:runnerPlayer.vy,onGround:runnerPlayer.onGround,used:runnerJumpsUsed,',
  ' buffer:runnerJumpBuffer,orbs:runnerOrbs.map(o=>({...o})),obstacles:runnerObstacles.map(o=>({...o})),',
@@ -121,4 +124,24 @@ function until(game,predicate,max=220){
  assert.equal(game.get().orbs.length,0);
  assert.equal(game.get().chain,1);
 }
-console.log('PASS double-jump, input buffer, reverse gravity, safe coin arcs, fast hazards, magnetic pickup');
+
+{
+ const game=simulate();assert.equal(game.forecast(),null,'no warning when grounded');
+ game.setAirborne(200,200);
+ const first=game.forecast();assert.ok(first&&first.time>0);
+ const obstacleX=game.get().speed*first.time+105;
+ game.setObstacles([{x:obstacleX,y:252,w:40,h:40,ceiling:false}]);
+ assert.equal(game.forecast().unsafe,true,'warn when an obstacle will cross the landing');
+ game.setObstacles([{x:800,y:252,w:40,h:40,ceiling:false}]);
+ assert.equal(game.forecast().unsafe,false,'do not warn about distant hazard');
+}
+{
+ const game=simulate();game.setGravity(-1);game.setAirborne(100,-250);
+ const first=game.forecast();assert.ok(first&&first.time>0);
+ const obstacleX=game.get().speed*first.time+105;
+ game.setObstacles([{x:obstacleX,y:58,w:40,h:40,ceiling:true}]);
+ assert.equal(game.forecast().unsafe,true,'landing forecast works with gravity reversed');
+ game.setObstacles([{x:obstacleX,y:252,w:40,h:40,ceiling:false}]);
+ assert.equal(game.forecast().unsafe,false,'opposite-wall hazards cannot trigger landing warning');
+}
+console.log('PASS double-jump, input buffer, reverse gravity, safe coin arcs, magnetic pickup and landing predictions');
