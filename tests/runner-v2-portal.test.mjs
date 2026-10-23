@@ -62,7 +62,7 @@ const state={
 };
 let opens=0,enters=0,shops=0,apiCalls=0;const timers=[];
 const ctor=new Function('document','runnerStoreState','RUNNER_ITEM_META','gameText','window',
-'easterOverlay','signalRunner','runnerStorePanel','runnerApi','applyRunnerStoreState',
+'easterOverlay','signalRunner','runnerStorePanel','runnerApi','applyRunnerStoreMutation',
 'loadRunnerStoreState','openEaster','openRunner','toggleRunnerStore','setTimeout',
 'runnerServerError','runnerStoreRarityFilter',
 code+';return {renderRunnerGateway,chooseRunnerGatewayWorld,equipRunnerGatewayWorld,launchRunnerFromGateway,setSynced(value){runnerGatewaySyncedAt=value}};');

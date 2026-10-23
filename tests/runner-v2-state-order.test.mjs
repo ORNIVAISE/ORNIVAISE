@@ -32,9 +32,8 @@ function delay(){
 }
 function setup(){
  const pending=[],result={world:'deep_space',credits:0,items:[]},status={textContent:'unchanged'};
- let requests=0;
  const create=new Function('result','pending','status',
-  "const runnerStoreStatus=status,gameText=k=>k;"+
+  "let requests=0;const runnerStoreStatus=status,gameText=k=>k;"+
   "const runnerApi=()=>{requests++;const d=pending.shift();return d.promise};"+
   "function applyRunnerStoreState(data){result.world=data.player.selected_background;result.credits=data.player.credits;result.items=data.items||[];}"+
   mutationHelper+stateLoad+
