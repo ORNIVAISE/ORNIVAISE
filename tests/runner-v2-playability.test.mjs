@@ -103,7 +103,7 @@ function until(game,predicate,max=220){
  assert.equal(game.spawn(),true);
  const st=game.get();
  assert.equal(st.orbs.length,2,'paired safe orbs');
- assert.ok(st.spawnGap>=.89,'landing time after coin protected');
+ assert.ok(st.spawnGap>=1.18,'double-jump landing time after coin protected');
  assert.ok(st.orbs[0].y<250,'base coin still requires jump');
  assert.ok(st.orbs[1].y<st.orbs[0].y,'second coin higher');
 }
@@ -111,7 +111,7 @@ function until(game,predicate,max=220){
  const game=simulate();game.setSpeed(680);game.addObstacle(880);
  assert.equal(game.spawn(),false,'high-speed gap also checked');
  game.clearObstacles();game.addObstacle(530);
- assert.equal(game.spawn(),true);assert.ok(game.get().spawnGap>=.89);
+ assert.equal(game.spawn(),true);assert.ok(game.get().spawnGap>=1.18);
 }
 {
  const game=simulate();

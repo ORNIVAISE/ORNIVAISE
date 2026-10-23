@@ -3678,7 +3678,7 @@ function spawnRunnerOrb(){
     pulse:Math.random()*Math.PI*2,kind:'normal',value:1
   });
   // At all speeds the player has time to make a complete jump and touch down.
-  runnerSpawn=Math.max(runnerSpawn,.89);
+  runnerSpawn=Math.max(runnerSpawn,1.18);
   return true;
 }
 function rectHit(a,b,pad=4){
@@ -4554,6 +4554,13 @@ function drawRunnerFlowFx(ctx){
       }
     }
     ctx.globalAlpha=1;
+  }
+  if(runnerCoinFlash>0){
+    const glow=ctx.createRadialGradient(x,y,5,x,y,74);
+    glow.addColorStop(0,'rgba(237,213,255,'+(.12*runnerCoinFlash)+')');
+    glow.addColorStop(1,'rgba(120,90,220,0)');
+    ctx.fillStyle=glow;
+    ctx.fillRect(x-76,y-76,152,152);
   }
   if(runnerLandingPulse>0){
     const surface=runnerGravity===1?RUNNER_GROUND:RUNNER_CEILING;
