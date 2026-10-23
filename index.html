@@ -1996,6 +1996,10 @@ html{scroll-padding-top:80px}
         </div>
         <div class="runner-canvas-wrap" id="runnerCanvasWrap">
           <canvas id="signalRunnerCanvas" width="960" height="360" tabindex="0" aria-label="SIGNAL RUNNER. Нажми пробел или коснись экрана, чтобы прыгнуть."></canvas>
+          <div class="runner-ability-hud" id="runnerAbilityHud" data-remaining="2" aria-label="Осталось прыжков: 2">
+            <div><small id="runnerAbilityLabel">ДВОЙНОЙ ПРЫЖОК</small><strong id="runnerAbilityCount">2/2</strong></div>
+            <div class="runner-ability-charges" aria-hidden="true"><i class="runner-ability-charge"></i><i class="runner-ability-charge"></i></div>
+          </div>
           <div class="signal-zone-badge" id="signalZoneBadge">НЕИЗВЕСТНАЯ ПЕРЕДАЧА</div>
           <div class="runner-legendary-acquire" id="runnerLegendaryAcquire" aria-hidden="true">
             <div class="runner-legendary-acquire-inner"><small>ØN // LEGENDARY SIGNAL</small><strong id="runnerLegendaryName">—</strong><span id="runnerLegendaryText">ПРЕДМЕТ ПОЛУЧЕН</span></div>
@@ -2166,8 +2170,8 @@ const gameI18n={
     startRunner:'ЗАПУСТИТЬ СИГНАЛЬНЫЙ ЗАБЕГ',distance:'ДИСТАНЦИЯ',signals:'СИГНАЛЫ',best:'РЕКОРД',
     runnerAria:'СИГНАЛЬНЫЙ ЗАБЕГ. Нажми пробел или коснись экрана, чтобы прыгнуть.',
     unknownTransmission:'НЕИЗВЕСТНАЯ ПЕРЕДАЧА',runProtocol:'ØN // ПРОТОКОЛ ЗАПУСКА',
-    runnerTitle:'СИГНАЛЬНЫЙ ЗАБЕГ',jumpHint:'ПРОБЕЛ / ТАП — ПРЫЖОК',startRun:'НАЧАТЬ ЗАБЕГ',
-    controls:'ПРОБЕЛ / ТАП — ПРЫЖОК · ESC — ВЫХОД',jump:'ПРЫЖОК',backTuner:'НАЗАД К ПРИЁМНИКУ',
+    runnerTitle:'СИГНАЛЬНЫЙ ЗАБЕГ',jumpHint:'ПРОБЕЛ / ТАП — ПРЫЖОК · ПОВТОР — ВТОРОЙ ПРЫЖОК',startRun:'НАЧАТЬ ЗАБЕГ',jumpCharges:'ПРЫЖКИ',coinChain:'СЕРИЯ Ø',
+    controls:'ПРОБЕЛ / ТАП — ПРЫЖОК ×2 · ESC — ВЫХОД',jump:'ПРЫЖОК ×2',backTuner:'НАЗАД К ПРИЁМНИКУ',
     tuneAgain:'НАСТРОИТЬ СНОВА',close:'ЗАКРЫТЬ',tunerAria:'Настройка частоты сигнала',hotspotAria:'Скрытый сигнал ØN / 2026',
     weak:'СЛАБЫЙ СИГНАЛ',weakHint:'ИСТОЧНИК ОБНАРУЖЕН // ПРОДОЛЖАЙ НАСТРОЙКУ',
     detected:'СИГНАЛ ОБНАРУЖЕН',detectedHint:'НЕСУЩАЯ НАЙДЕНА // СУЗЬ ДИАПАЗОН',
@@ -2184,8 +2188,8 @@ const gameI18n={
     startRunner:'START SIGNAL RUNNER',distance:'DISTANCE',signals:'SIGNALS',best:'BEST',
     runnerAria:'SIGNAL RUNNER. Press Space or tap the screen to jump.',
     unknownTransmission:'UNKNOWN TRANSMISSION',runProtocol:'ØN // RUN PROTOCOL',
-    runnerTitle:'SIGNAL RUNNER',jumpHint:'SPACE / TAP — JUMP',startRun:'START RUN',
-    controls:'SPACE / TAP — JUMP · ESC — EXIT',jump:'JUMP',backTuner:'BACK TO TUNER',
+    runnerTitle:'SIGNAL RUNNER',jumpHint:'SPACE / TAP — JUMP · TAP AGAIN — DOUBLE JUMP',startRun:'START RUN',jumpCharges:'JUMPS',coinChain:'Ø CHAIN',
+    controls:'SPACE / TAP — DOUBLE JUMP · ESC — EXIT',jump:'JUMP ×2',backTuner:'BACK TO TUNER',
     tuneAgain:'TUNE AGAIN',close:'CLOSE',tunerAria:'Signal frequency tuning',hotspotAria:'Hidden signal ØN / 2026',
     weak:'WEAK SIGNAL',weakHint:'SOURCE DETECTED // KEEP TUNING',
     detected:'SIGNAL DETECTED',detectedHint:'CARRIER PRESENT // NARROW THE BAND',
@@ -2244,6 +2248,7 @@ function applyGameLanguage(lang){
   set('.runner-overlay small','runProtocol');
   set('.runner-controls > span','controls');
   set('#runnerJump','jump');
+  if(typeof updateRunnerJumpHud==='function')updateRunnerJumpHud();
   set('#runnerBack','backTuner');
   set('#signalReplay','tuneAgain');
   set('#easterClose','close');
@@ -3286,6 +3291,10 @@ let runnerBossActive=false,runnerBossType=0,runnerBossEnd=0,runnerNextBoss=0,run
 let runnerModifier='none';
 let runnerGhostBest=[],runnerGhostCurrent=[];
 const runnerPlayer={x:104,y:RUNNER_GROUND-42,w:42,h:42,vy:0,onGround:true};
+const RUNNER_MAX_JUMPS=2,RUNNER_JUMP_BUFFER=.12;
+let runnerJumpsUsed=0,runnerJumpBuffer=0,runnerJumpPulse=0,runnerLandingPulse=0;
+let runnerCoinChain=0,runnerCoinChainTimer=0,runnerCoinFlash=0;
+const runnerCoinEffects=[];
 
 let runnerSfxCtx=null;
 let runnerRecordCelebrated=false;
@@ -3303,6 +3312,7 @@ function runnerSfx(kind){
       o.connect(g);g.connect(master);o.start(now+delay);o.stop(now+delay+dur+.02);
     };
     if(kind==='jump'){tone(185,340,.13,'triangle',.025);tone(95,160,.17,'sine',.012,.025)}
+    else if(kind==='double_jump'){tone(270,580,.18,'triangle',.029);tone(440,920,.2,'sine',.022,.055);tone(95,210,.16,'sine',.012)}
     else if(kind==='collect'){tone(440,630,.105,'sine',.019);tone(660,760,.085,'sine',.011,.055)}
     else if(kind==='violet'){tone(420,700,.2,'sine',.028);tone(610,960,.22,'triangle',.014,.055)}
     else if(kind==='gold'){tone(560,930,.21,'sine',.035);tone(840,1420,.22,'sine',.023,.075);tone(1120,1600,.24,'triangle',.013,.13)}
@@ -3430,6 +3440,8 @@ function startRunnerGravityTransition(direction){
   runnerOrbs=[];
   runnerPlayer.vy=0;
   runnerPlayer.onGround=false;
+  runnerJumpsUsed=RUNNER_MAX_JUMPS;runnerJumpBuffer=0;
+  updateRunnerJumpHud();
   announceRunnerEvent(gameText(direction===-1?'gravityShift':'gravityReturn'),2.1);
 }
 function updateRunnerGravityTransition(dt){
@@ -3448,6 +3460,7 @@ function updateRunnerGravityTransition(dt){
     runnerPlayer.y=runnerGravity===1?RUNNER_GROUND-runnerPlayer.h:RUNNER_CEILING;
     runnerPlayer.vy=0;
     runnerPlayer.onGround=true;
+    runnerJumpsUsed=0;runnerJumpBuffer=0;updateRunnerJumpHud();
     runnerPortalFx=.45;
   }
   return true;
@@ -3494,9 +3507,12 @@ function resetRunner(){
   runnerBossActive=false;runnerBossType=0;runnerBossEnd=0;runnerNextBoss=1750+Math.random()*900;
   runnerModifier='none';runnerRecordCelebrated=false;
   runnerGhostCurrent=[];loadRunnerGhost();
+  runnerJumpsUsed=0;runnerJumpBuffer=0;runnerJumpPulse=0;runnerLandingPulse=0;
+  runnerCoinChain=0;runnerCoinChainTimer=0;runnerCoinFlash=0;runnerCoinEffects.length=0;
   signalZoneBadge?.classList.remove('visible');
   Object.assign(runnerPlayer,{x:104,y:RUNNER_GROUND-42,vy:0,onGround:true});
   updateRunnerHud();
+  updateRunnerJumpHud();
   drawRunner();
 }
 function openRunner(){
@@ -3522,21 +3538,56 @@ function closeRunner(){
   document.getElementById('easterTitle').textContent=gameText('decryptTitle');
   signalZoneBadge?.classList.remove('visible');
 }
+function updateRunnerJumpHud(){
+  const root=document.getElementById('runnerAbilityHud');
+  if(!root)return;
+  const left=Math.max(0,RUNNER_MAX_JUMPS-runnerJumpsUsed);
+  const ready=!!runnerRunning&&!runnerPortalTransition.active;
+  const en=document.documentElement.lang==='en';
+  root.dataset.remaining=String(left);
+  root.setAttribute('aria-label',(en?'Jumps available: ':'Осталось прыжков: ')+left);
+  const label=document.getElementById('runnerAbilityLabel');
+  if(label)label.textContent=gameText('jumpCharges');
+  const count=document.getElementById('runnerAbilityCount');
+  if(count)count.textContent=left+'/'+RUNNER_MAX_JUMPS;
+  const marks=root.querySelectorAll('.runner-ability-charge');
+  marks.forEach((node,i)=>node.classList.toggle('spent',i>=left));
+  root.classList.toggle('active',ready);
+}
+function performRunnerJump(){
+  if(!runnerRunning||runnerPortalTransition.active||runnerJumpsUsed>=RUNNER_MAX_JUMPS)return false;
+  const second=runnerJumpsUsed>0;
+  const jumpPower=(runnerModifier==='low_gravity'?585:640)*(second?.78:1);
+  runnerPlayer.vy=-jumpPower*runnerGravity;
+  runnerPlayer.onGround=false;
+  runnerJumpsUsed++;
+  runnerJumpBuffer=0;
+  runnerJumpPulse=second?1:.4;
+  runnerSfx(second?'double_jump':'jump');
+  const surfaceY=runnerGravity===1?RUNNER_GROUND-4:RUNNER_CEILING+4;
+  const dustVy=runnerGravity===1?-1:1;
+  for(let i=0;i<(second?12:7);i++){
+    runnerDust.push({
+      x:runnerPlayer.x+runnerPlayer.w/2,
+      y:second?runnerPlayer.y+runnerPlayer.h/2:surfaceY,
+      vx:-55-Math.random()*(second?140:100),
+      vy:dustVy*(30+Math.random()*115),
+      gravity:runnerGravity,
+      kind:second?'second_jump':'jump',
+      life:.26+Math.random()*.3
+    });
+  }
+  updateRunnerJumpHud();
+  return true;
+}
 function runnerJumpAction(){
   if(!signalRunner?.classList.contains('open'))return;
   if(!runnerRunning){
     if(runnerGameOver)startRunner();
     return;
   }
-  if(runnerPlayer.onGround&&!runnerPortalTransition.active){
-    const jumpPower=runnerModifier==='low_gravity'?585:640;
-    runnerPlayer.vy=-jumpPower*runnerGravity;
-    runnerSfx('jump');
-    runnerPlayer.onGround=false;
-    const surfaceY=runnerGravity===1?RUNNER_GROUND-4:RUNNER_CEILING+4;
-    const dustVy=runnerGravity===1?(-20-Math.random()*55):(20+Math.random()*55);
-    for(let i=0;i<7;i++)runnerDust.push({x:runnerPlayer.x+20,y:surfaceY,vx:-60-Math.random()*90,vy:dustVy,gravity:runnerGravity,life:.4+Math.random()*.25});
-  }
+  if(runnerPortalTransition.active)return;
+  if(!performRunnerJump()&&runnerJumpsUsed>=RUNNER_MAX_JUMPS)runnerJumpBuffer=RUNNER_JUMP_BUFFER;
 }
 async function startRunner(){
   resetRunner();
@@ -3574,15 +3625,36 @@ function spawnRunnerObstacle(){
   }
 }
 function spawnRunnerOrb(){
-  const high=Math.random()<.35;
+  // A collectible path may only start in a gap sufficiently far from existing
+  // hazards. The next hazard spawn is delayed so the player can land safely.
+  const startX=RUNNER_W+24;
+  const safeBefore=runnerSpeed*.48+42;
+  if(runnerObstacles.some(o=>Math.abs(o.x+o.w/2-startX)<safeBefore)){
+    return false;
+  }
   const surge=runnerModifier==='signal_surge';
+  const high=Math.random()<.34;
   const rare=Math.random();
   let kind='normal',value=1;
   if(rare<(surge?.07:.035)){kind='gold';value=7}
   else if(rare<(surge?.22:.11)){kind='violet';value=3}
-  const offset=high?118:76;
-  const y=runnerGravity===1?RUNNER_GROUND-offset:RUNNER_CEILING+offset;
-  runnerOrbs.push({x:RUNNER_W+24,y,r:kind==='gold'?13:kind==='violet'?12:11,pulse:Math.random()*Math.PI*2,kind,value});
+  const firstOffset=high?132:99;
+  const secondOffset=high?152:123;
+  const toY=offset=>runnerGravity===1?RUNNER_GROUND-offset:RUNNER_CEILING+offset;
+  runnerOrbs.push({
+    x:startX,y:toY(firstOffset),
+    r:kind==='gold'?13:kind==='violet'?12:11,
+    pulse:Math.random()*Math.PI*2,kind,value
+  });
+  // A second normal Ø slightly behind the first creates a readable mini-arc.
+  // Still no paid boost: all values pass existing server-side finish validation.
+  runnerOrbs.push({
+    x:startX+58,y:toY(secondOffset),r:11,
+    pulse:Math.random()*Math.PI*2,kind:'normal',value:1
+  });
+  // At all speeds the player has time to make a complete jump and touch down.
+  runnerSpawn=Math.max(runnerSpawn,.89);
+  return true;
 }
 function rectHit(a,b,pad=4){
   return a.x+pad<b.x+b.w-pad&&a.x+a.w-pad>b.x+pad&&a.y+pad<b.y+b.h-pad&&a.y+a.h-pad>b.y+pad;
@@ -3646,15 +3718,41 @@ function updateRunner(dt){
     runnerNextBoss=runnerDistanceValue+2200+Math.random()*1200;
   }
 
+  runnerJumpPulse=Math.max(0,runnerJumpPulse-dt*2.6);
+  runnerLandingPulse=Math.max(0,runnerLandingPulse-dt*3.1);
+  runnerCoinFlash=Math.max(0,runnerCoinFlash-dt*2.2);
+  runnerCoinChainTimer=Math.max(0,runnerCoinChainTimer-dt);
+  if(runnerCoinChainTimer===0)runnerCoinChain=0;
+  for(const effect of runnerCoinEffects)effect.life-=dt;
+  for(let i=runnerCoinEffects.length-1;i>=0;i--)if(runnerCoinEffects[i].life<=0)runnerCoinEffects.splice(i,1);
+  runnerJumpBuffer=Math.max(0,runnerJumpBuffer-dt);
   const portalActive=updateRunnerGravityTransition(dt);
   if(!portalActive){
     const gravityStrength=runnerModifier==='low_gravity'?1460:1780;
     runnerPlayer.vy+=gravityStrength*runnerGravity*dt;
     runnerPlayer.y+=runnerPlayer.vy*dt;
+    let landed=false;
     if(runnerGravity===1&&runnerPlayer.y>=RUNNER_GROUND-runnerPlayer.h){
+      landed=!runnerPlayer.onGround;
       runnerPlayer.y=RUNNER_GROUND-runnerPlayer.h;runnerPlayer.vy=0;runnerPlayer.onGround=true;
     }else if(runnerGravity===-1&&runnerPlayer.y<=RUNNER_CEILING){
+      landed=!runnerPlayer.onGround;
       runnerPlayer.y=RUNNER_CEILING;runnerPlayer.vy=0;runnerPlayer.onGround=true;
+    }else{
+      // Second jump may reach the opposite wall. Clamp to visible play space.
+      const high=RUNNER_CEILING+9,low=RUNNER_GROUND-runnerPlayer.h-9;
+      if(runnerGravity===1&&runnerPlayer.y<high){
+        runnerPlayer.y=high;if(runnerPlayer.vy<0)runnerPlayer.vy=0;
+      }else if(runnerGravity===-1&&runnerPlayer.y>low){
+        runnerPlayer.y=low;if(runnerPlayer.vy>0)runnerPlayer.vy=0;
+      }
+    }
+    if(landed){
+      runnerJumpsUsed=0;
+      runnerLandingPulse=1;
+      updateRunnerJumpHud();
+      // A late tap shortly before touching down becomes the next jump.
+      if(runnerJumpBuffer>0)performRunnerJump();
     }
 
     runnerSpawn-=dt;
@@ -3664,8 +3762,8 @@ function updateRunner(dt){
     }
     runnerOrbSpawn-=dt;
     if(runnerOrbSpawn<=0){
-      if(Math.random()<.72)spawnRunnerOrb();
-      runnerOrbSpawn=1.25+Math.random()*2.1;
+      const spawned=spawnRunnerOrb();
+      runnerOrbSpawn=spawned?1.18+Math.random()*1.45:.3;
     }
   }
 
@@ -3678,15 +3776,19 @@ function updateRunner(dt){
 
   const p={x:runnerPlayer.x,y:runnerPlayer.y,w:runnerPlayer.w,h:runnerPlayer.h};
   if(!runnerPortalTransition.active){
-    for(const o of runnerObstacles){if(rectHit(p,o,5)){gameOverRunner();return}}
+    for(const o of runnerObstacles){if(rectHit(p,o,7)){gameOverRunner();return}}
   }
 
   runnerOrbs=runnerPortalTransition.active?[]:runnerOrbs.filter(o=>{
     const cx=Math.max(p.x,Math.min(o.x,p.x+p.w));
     const cy=Math.max(p.y,Math.min(o.y,p.y+p.h));
     const dx=o.x-cx,dy=o.y-cy;
-    if(dx*dx+dy*dy<o.r*o.r){
+    const pickupRadius=o.r+11;
+    if(dx*dx+dy*dy<pickupRadius*pickupRadius){
       runnerSignalCount+=o.value||1;
+      runnerCoinChain=runnerCoinChainTimer>0?Math.min(9,runnerCoinChain+1):1;
+      runnerCoinChainTimer=2.7;runnerCoinFlash=1;
+      runnerCoinEffects.push({x:o.x,y:o.y,life:.45,kind:o.kind||'normal'});
       const burst=o.kind==='gold'?14:o.kind==='violet'?11:9;
       for(let i=0;i<burst;i++)runnerDust.push({x:o.x,y:o.y,vx:-80+Math.random()*160,vy:(runnerGravity===1?-1:1)*(30+Math.random()*130),gravity:runnerGravity,kind:o.kind||'normal',life:.35+Math.random()*.35});
       if(o.kind==='gold'){announceRunnerEvent(gameText('rareGold'),1.15);runnerSfx('gold')}
@@ -5339,12 +5441,13 @@ runnerStoreContent?.addEventListener('click',e=>{
 runnerSoundToggle?.addEventListener('click',()=>setRunnerMusicMuted(!getRunnerMusicMuted()));
 runnerJump?.addEventListener('click',runnerJumpAction);
 runnerCanvas?.addEventListener('pointerdown',e=>{e.preventDefault();runnerJumpAction()});
-runnerCanvas?.addEventListener('keydown',e=>{
-  if(e.code==='Space'||e.code==='ArrowUp'){e.preventDefault();runnerJumpAction()}
-});
+// Keyboard jumps are handled once on document: canvas keydown bubbles here.
 document.addEventListener('keydown',e=>{
   if(!signalRunner?.classList.contains('open'))return;
-  if(e.code==='Space'||e.code==='ArrowUp'){e.preventDefault();runnerJumpAction()}
+  if(e.code==='Space'||e.code==='ArrowUp'){
+    if(e.repeat||e.target?.closest?.('button,input,textarea,select,[contenteditable]'))return;
+    e.preventDefault();runnerJumpAction();
+  }
   if(e.key==='Escape'){e.preventDefault();closeRunner();signalTuner?.focus()}
 });
 updateRunnerHud();
@@ -5399,6 +5502,7 @@ window.refreshGameLanguage=()=>{
   renderRunnerProfile();
   renderRunnerStore();
   renderRunnerGateway();
+  updateRunnerJumpHud();
   if(runnerNameInput)runnerNameInput.placeholder=gameText('namePlaceholder');
   if(runnerScoreSave)runnerScoreSave.textContent=gameText('saveScore');
   if(signalZoneBadge)signalZoneBadge.textContent=getRunnerStageLabel(runnerStage);
