@@ -10,4 +10,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Check visuals and catalog contracts
-        run: node tests/runner-v2-cosmetics.test.mjs
+        run: |
+          node tests/runner-v2-cosmetics.test.mjs
+          node tests/runner-v2-reflections.test.mjs
