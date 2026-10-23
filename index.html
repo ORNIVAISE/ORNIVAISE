@@ -3684,6 +3684,7 @@ async function startRunner(){
   runnerModifier=modifierRoll<.18?'low_gravity':modifierRoll<.42?'signal_surge':'none';
   runnerRunning=true;
   updateRunnerPauseButton();
+  if(document.hidden){pauseRunner();return}
   startRunnerMusic();
   hideRunnerOverlay();
   if(runnerModifier==='low_gravity')announceRunnerEvent(gameText('modifierLowGravity'),1.9);
