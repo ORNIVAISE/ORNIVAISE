@@ -2195,7 +2195,7 @@ const gameI18n={
     startRunner:'ЗАПУСТИТЬ СИГНАЛЬНЫЙ ЗАБЕГ',distance:'ДИСТАНЦИЯ',signals:'СИГНАЛЫ',best:'РЕКОРД',
     runnerAria:'СИГНАЛЬНЫЙ ЗАБЕГ. Нажми пробел или коснись экрана, чтобы прыгнуть.',
     unknownTransmission:'НЕИЗВЕСТНАЯ ПЕРЕДАЧА',runProtocol:'ØN // ПРОТОКОЛ ЗАПУСКА',
-    runnerTitle:'СИГНАЛЬНЫЙ ЗАБЕГ',jumpHint:'ПРОБЕЛ / ТАП — ПРЫЖОК · ПОВТОР — ВТОРОЙ ПРЫЖОК',startRun:'НАЧАТЬ ЗАБЕГ',jumpCharges:'ПРЫЖКИ',coinChain:'СЕРИЯ Ø',
+    runnerTitle:'СИГНАЛЬНЫЙ ЗАБЕГ',jumpHint:'ПРОБЕЛ / ТАП — ПРЫЖОК · ПОВТОР — ВТОРОЙ ПРЫЖОК',startRun:'НАЧАТЬ ЗАБЕГ',jumpCharges:'ПРЫЖКИ',coinChain:'СЕРИЯ Ø',landingRisk:'ВТОРОЙ ПРЫЖОК!',
     controls:'ПРОБЕЛ / ТАП — ПРЫЖОК ×2 · ESC — ВЫХОД',jump:'ПРЫЖОК ×2',backTuner:'НАЗАД К ПРИЁМНИКУ',
     tuneAgain:'НАСТРОИТЬ СНОВА',close:'ЗАКРЫТЬ',tunerAria:'Настройка частоты сигнала',hotspotAria:'Скрытый сигнал ØN / 2026',
     weak:'СЛАБЫЙ СИГНАЛ',weakHint:'ИСТОЧНИК ОБНАРУЖЕН // ПРОДОЛЖАЙ НАСТРОЙКУ',
@@ -2213,7 +2213,7 @@ const gameI18n={
     startRunner:'START SIGNAL RUNNER',distance:'DISTANCE',signals:'SIGNALS',best:'BEST',
     runnerAria:'SIGNAL RUNNER. Press Space or tap the screen to jump.',
     unknownTransmission:'UNKNOWN TRANSMISSION',runProtocol:'ØN // RUN PROTOCOL',
-    runnerTitle:'SIGNAL RUNNER',jumpHint:'SPACE / TAP — JUMP · TAP AGAIN — DOUBLE JUMP',startRun:'START RUN',jumpCharges:'JUMPS',coinChain:'Ø CHAIN',
+    runnerTitle:'SIGNAL RUNNER',jumpHint:'SPACE / TAP — JUMP · TAP AGAIN — DOUBLE JUMP',startRun:'START RUN',jumpCharges:'JUMPS',coinChain:'Ø CHAIN',landingRisk:'DOUBLE JUMP!',
     controls:'SPACE / TAP — DOUBLE JUMP · ESC — EXIT',jump:'JUMP ×2',backTuner:'BACK TO TUNER',
     tuneAgain:'TUNE AGAIN',close:'CLOSE',tunerAria:'Signal frequency tuning',hotspotAria:'Hidden signal ØN / 2026',
     weak:'WEAK SIGNAL',weakHint:'SOURCE DETECTED // KEEP TUNING',
@@ -4521,6 +4521,57 @@ function drawRunnerPremiumHazard(ctx,skin,o,variant,phase){
 }
 
 
+
+/* Landing forecast uses the same kinematics and hitbox as updateRunner.
+   It is advisory only: a second jump or speed change can alter the result. */
+function getRunnerLandingForecast(){
+  if(!runnerRunning||runnerPlayer.onGround||runnerPortalTransition.active)return null;
+  const acceleration=runnerModifier==='low_gravity'?1460:1780;
+  const floorY=runnerGravity===1?RUNNER_GROUND-runnerPlayer.h:RUNNER_CEILING;
+  const remaining=Math.max(0,(floorY-runnerPlayer.y)*runnerGravity);
+  const toward=runnerPlayer.vy*runnerGravity;
+  const time=Math.max(0,(Math.sqrt(toward*toward+2*acceleration*remaining)-toward)/acceleration);
+  if(time<.02||time>2.2)return null;
+  const projected={x:runnerPlayer.x,y:floorY,w:runnerPlayer.w,h:runnerPlayer.h};
+  const unsafe=runnerObstacles.some(obstacle=>{
+    if(!!obstacle.ceiling!==(runnerGravity===-1))return false;
+    const future={x:obstacle.x-runnerSpeed*time,y:obstacle.y,w:obstacle.w,h:obstacle.h};
+    return rectHit(projected,future,7);
+  });
+  return {time,unsafe,x:runnerPlayer.x+runnerPlayer.w/2,
+    y:runnerGravity===1?RUNNER_GROUND:RUNNER_CEILING};
+}
+function drawRunnerLandingHint(ctx){
+  const prediction=getRunnerLandingForecast();
+  if(!prediction)return;
+  const reduced=typeof window!=='undefined'&&window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+  const alpha=prediction.unsafe?.62:.29;
+  const danger=prediction.unsafe;
+  ctx.save();
+  ctx.globalAlpha=alpha;
+  ctx.strokeStyle=danger?'#ffae79':'#96dfe6';
+  ctx.lineWidth=danger?2:1.2;
+  ctx.beginPath();
+  ctx.ellipse(prediction.x,prediction.y,25,5,0,0,Math.PI*2);
+  ctx.stroke();
+  ctx.globalAlpha=alpha*.43;
+  ctx.fillStyle=danger?'#ff925d':'#9bede8';
+  ctx.beginPath();ctx.ellipse(prediction.x,prediction.y,22,3,0,0,Math.PI*2);ctx.fill();
+  ctx.globalAlpha=1;
+  if(danger&&runnerJumpsUsed<RUNNER_MAX_JUMPS){
+    const label=gameText('landingRisk');
+    const textY=runnerGravity===1?Math.max(RUNNER_CEILING+22,runnerPlayer.y-15):
+      Math.min(RUNNER_GROUND-17,runnerPlayer.y+runnerPlayer.h+22);
+    ctx.textAlign='left';
+    ctx.textBaseline='middle';
+    ctx.font='bold 11px Arial';
+    ctx.fillStyle='rgba(255,208,159,'+(reduced?.75:.95)+')';
+    ctx.shadowColor='rgba(255,121,76,.45)';ctx.shadowBlur=reduced?0:8;
+    ctx.fillText(label,prediction.x+35,textY);
+  }
+  ctx.restore();
+}
+
 /* SIGNAL RUNNER V2: small visual cues follow real physics.
    No camera shake, no collision changes, no earned-score multipliers. */
 function drawRunnerFlowFx(ctx){
@@ -5491,6 +5542,7 @@ function drawRunner(){
   ctx.restore();
 
   drawRunnerFlowFx(ctx);
+  drawRunnerLandingHint(ctx);
   drawRunnerLiveReflection(ctx,runnerStoreState.selected_background,runnerDistanceValue);
   ctx.save();
   ctx.fillStyle='rgba(210,219,229,.48)';ctx.font='9px Arial';ctx.textAlign='right';
