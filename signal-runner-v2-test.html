@@ -6361,6 +6361,7 @@ applyGameLanguage(document.documentElement.lang==='en'?'en':'ru');
  <label>Планета <select id="runnerV2Planet"></select></label>
  <label>Препятствия <select id="runnerV2Hazard"></select></label>
  <label>Форма ловушки <select id="runnerV2Form"></select></label>
+ <label>Тип испытания <select id="runnerV2Pattern"><option value="auto">AUTO · СМЕШАННЫЕ</option><option value="pair">ПАРНЫЕ ШИПЫ</option><option value="overhead">ВЕРХНИЕ ЛОВУШКИ</option><option value="hover">ДВИЖУЩАЯСЯ ПИЛА</option></select></label>
  <canvas id="runnerV2FormCanvas" width="600" height="190" style="display:block;width:100%;max-height:160px;background:#050c14;border:1px solid #244453;border-radius:10px;margin:10px 0" aria-label="Рисунок выбранной формы препятствия"></canvas>
  <p>Выбери отдельную форму шипов или AUTO для случайной генерации. Форма влияет на столкновения и сложность. Все 10 миров, 14 планет и 11 типов препятствий доступны здесь для визуальной проверки. Выбор тестового облика не открывает товар и не меняет покупки на сайте.</p>
  <p>Забеги, Ø-кредиты и профиль сохраняются только в браузере тестовой страницы. Привязка устройств отключена. Цены внутри магазина — условные тестовые.</p>
@@ -6486,6 +6487,11 @@ function runnerPreviewSelect(category,value){
  const key={background:'selected_background',avatar:'selected_avatar',obstacle:'selected_obstacle'}[category];
  runnerPreviewData[key]=value;runnerPreviewStore();
  applyRunnerStoreState(runnerPreviewSnapshot());drawRunner();
+}
+const runnerV2PatternSelect=document.getElementById('runnerV2Pattern');
+if(runnerV2PatternSelect){
+ runnerV2PatternSelect.value='auto';
+ runnerV2PatternSelect.addEventListener('change',()=>{window.__runnerV2ForcePattern=runnerV2PatternSelect.value});
 }
 const runnerV2FormSelect=document.getElementById('runnerV2Form');
 const runnerV2FormNames={
