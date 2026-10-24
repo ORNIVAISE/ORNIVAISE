@@ -131,9 +131,18 @@ try{
   await page.locator('#runnerV2TestClose').click();
   assert.equal(await page.locator('#runnerV2World').inputValue(),'volcanic_cataclysm');
   await page.screenshot({path:'artifacts/runner-preview/'+conf.name+'-custom-world.png'});
+  await page.locator('#runnerV2TestSettings').click();
+  assert.equal(await page.locator('#runnerV2Boss option').count(),3,'All three boss types selectable');
+  await page.selectOption('#runnerV2Boss','1');
+  await page.locator('#runnerV2BossStart').click();
+  assert.equal(await page.locator('#runnerBossMission').getAttribute('data-state'),'battle','Boss mission active');
+  assert.match(await page.locator('#runnerBossMissionText').textContent(),/ЗМЕЙ РАЗЛОМА|RIFT SERPENT/,'Selected boss on the mission bar');
+  assert.equal(await page.evaluate(()=>runnerBossActive&&runnerBossType===1),true,'Real playable boss battle started');
+  assert.equal(await page.locator('#runnerV2TestDrawer').evaluate(el=>el.classList.contains('open')),false,'Tester closes when battle starts');
+  await page.screenshot({path:'artifacts/runner-preview/'+conf.name+'-boss-battle.png'});
   assert.deepEqual(supabaseRequests,[],'Sandbox must NEVER contact the production Supabase');
   assert.deepEqual(errors,[],'No uncaught browser errors');
-  console.log(conf.name+': PASS game + jump + pause + store + profile + 35 previews + eight geometry forms + guide auto-pause + no backend calls');
+  console.log(conf.name+': PASS game + jump + pause + store + profile + 35 previews + eight geometry forms + guide auto-pause + three-wave boss + no backend calls');
   await context.close();
  }
 }finally{await browser.close()}
