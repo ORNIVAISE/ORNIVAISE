@@ -18,7 +18,7 @@ const code= [
  "const events=[],announceRunnerEvent=(msg,t)=>events.push({msg,t});",
  "const gameText=x=>x,rectHit=(a,b,p=4)=>a.x+p<b.x+b.w-p&&a.x+a.w-p>b.x+p&&a.y+p<b.y+b.h-p&&a.y+a.h-p>b.y+p;",
  take('/* V2 obstacle morphology','function spawnRunnerOrb(){'),
- "return {start:startRunnerBossEvent,tick:updateRunnerBossEvent,spawn:spawnRunnerBossWave,mission:updateRunnerBossMission,",
+ "return {start:startRunnerBossEvent,tick:updateRunnerBossEvent,spawn:spawnRunnerBossWave,mission:updateRunnerBossMission,cue:runnerBossCue,",
  "setGravity:v=>{runnerGravity=v},setDistance:v=>{runnerDistanceValue=v},setPortal:v=>{runnerPortalTransition.active=v},",
  "move:dt=>{for(const o of runnerObstacles)o.x-=runnerSpeed*dt;runnerObstacles=runnerObstacles.filter(o=>o.x+o.w>-30)},",
  "get:()=>({active:runnerBossActive,type:runnerBossType,clock:runnerBossClock,index:runnerBossWaveIndex,wins:runnerBossWins,",
@@ -39,12 +39,25 @@ for(let boss=0;boss<3;boss++){
  let o=g.get().obstacles.at(-1);
  assert.equal(o.bossAttack,true);
  assert.ok(o.x>=960,'attack must travel visibly from right edge');
- assert.equal(o.form, ['saw','twins','monolith'][boss]);
- assert.equal(o.ceiling,boss===1,'serpent first strike is opposite-wall');
+ const attackMap=[
+  [{form:'ridge',action:'jump',h:31,ceiling:false},{form:'twins',action:'stay',h:48,ceiling:true},{form:'saw',action:'jump',h:46,ceiling:false}],
+  [{form:'twins',action:'stay',h:48,ceiling:true},{form:'trident',action:'jump',h:46,ceiling:false},{form:'ridge',action:'stay',h:34,ceiling:true}],
+  [{form:'slab',action:'jump',h:34,ceiling:false},{form:'monolith',action:'double',h:128,ceiling:false},{form:'twins',action:'jump',h:46,ceiling:false}]
+ ];
+ const verify=(o,i)=>{
+  assert.equal(o.form,attackMap[boss][i].form,'wave form corresponds to advertised attack');
+  assert.equal(o.bossAction,attackMap[boss][i].action,'wave has unambiguous player action');
+  assert.equal(o.ceiling,attackMap[boss][i].ceiling,'wave spawns on correct surface');
+  assert.equal(o.h,attackMap[boss][i].h,'wave height matches jump requirement');
+ };
+ verify(o,0);
+ assert.equal(g.cue().attack.action,attackMap[boss][0].action,'boss cue matches first live attack');
  g.move(1.6);
  g.tick(3.17);assert.equal(g.get().index,2);
+ verify(g.get().obstacles.at(-1),1);
  g.move(3.17);
  g.tick(3.14);assert.equal(g.get().index,3);
+ verify(g.get().obstacles.at(-1),2);
  assert.equal(g.get().missionProgress,'3/3 ВОЛНЫ');
  g.move(3.4);
  g.tick(3.81);
@@ -68,7 +81,13 @@ assert.match(html,/if\(!runnerBossActive\)\{\s*runnerSpawn-=dt;/,'random obstacl
 assert.match(html,/runnerObstacles\.forEach\(o=>\{o\.x-=runnerSpeed\*dt;runnerMovingHazard\(o,dt\)\}\)/);
 assert.match(html,/drawRunnerBossAttackFx\(ctx,o,phase\)/);
 assert.match(html,/id="runnerBossMission"/);
+assert.match(html,/id="runnerBossBannerAction"/);
+assert.match(html,/id="runnerBossBannerAttack"/);
+assert.match(html,/id="runnerBossBannerEta"/);
+assert.match(html,/RUNNER_BOSS_ACTIONS/);
+assert.match(html,/drawRunnerBossPresence\(ctx\)/);
+
 const sandbox=fs.readFileSync(new URL('../signal-runner-v2-test.html',import.meta.url),'utf8');
 assert.match(sandbox,/id="runnerV2BossStart"/);
 assert.match(sandbox,/startRunnerBossEvent\(type\)/);
-console.log('PASS three bosses, 3 timed waves, telegraphs, pause-safe state, inverted gravity, missions and no real rewards');
+console.log('PASS 9 explicitly labeled boss attacks, correct jump/stay/double hazards, arrival countdowns, gravity, rewards isolation');
