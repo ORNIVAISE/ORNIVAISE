@@ -145,7 +145,7 @@ try{
     'Boss name/banner must be prominent on mobile and desktop: '+JSON.stringify(bossDisplay));
   assert.match(bossDisplay.label||'',/ЗМЕЙ РАЗЛОМА|RIFT SERPENT/,'Boss name displayed prominently');
   assert.equal(await page.locator('#runnerBossBannerWave').textContent(),'ВОЛНА 0 / 3','Wave count starts at zero');
-  assert.match(await page.locator('#runnerBossBannerAttack').textContent(),/КЛЫКИ СВЕРХУ|CEILING FANGS/,
+  assert.match(await page.locator('#runnerBossBannerAttack').textContent(),/КЛЫКИ ИЗ РАЗЛОМА|RIFT FANGS/,
     'Boss first attack is named explicitly');
   assert.match(await page.locator('#runnerBossBannerAction').textContent(),/НЕ ПРЫГАЙ|STAY LOW/,
     'Explicit instruction tells player to stay on the safe lane');
