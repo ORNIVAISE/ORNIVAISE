@@ -136,9 +136,20 @@ try{
   await page.selectOption('#runnerV2Boss','1');
   await page.locator('#runnerV2BossStart').click();
   assert.equal(await page.locator('#runnerBossMission').getAttribute('data-state'),'battle','Boss mission active');
+  await page.locator('#runnerBossBanner').waitFor({state:'visible'});
+  const bossDisplay=await page.locator('#runnerBossBanner').evaluate(el=>{
+    const rect=el.getBoundingClientRect(),name=el.querySelector('#runnerBossBannerName');
+    return {w:rect.width,h:rect.height,label:name?.textContent,visible:getComputedStyle(el).display};
+  });
+  assert.ok(bossDisplay.w>=200&&bossDisplay.h>=38,
+    'Boss name/banner must be prominent on mobile and desktop: '+JSON.stringify(bossDisplay));
+  assert.match(bossDisplay.label||'',/ЗМЕЙ РАЗЛОМА|RIFT SERPENT/,'Boss name displayed prominently');
+  assert.equal(await page.locator('#runnerBossBannerWave').textContent(),'ВОЛНА 0 / 3','Wave count starts at zero');
+
   assert.match(await page.locator('#runnerBossMissionText').textContent(),/ЗМЕЙ РАЗЛОМА|RIFT SERPENT/,'Selected boss on the mission bar');
   assert.equal(await page.evaluate(()=>runnerBossActive&&runnerBossType===1),true,'Real playable boss battle started');
   assert.equal(await page.locator('#runnerV2TestDrawer').evaluate(el=>el.classList.contains('open')),false,'Tester closes when battle starts');
+  await page.waitForTimeout(650);
   await page.screenshot({path:'artifacts/runner-preview/'+conf.name+'-boss-battle.png'});
   assert.deepEqual(supabaseRequests,[],'Sandbox must NEVER contact the production Supabase');
   assert.deepEqual(errors,[],'No uncaught browser errors');
