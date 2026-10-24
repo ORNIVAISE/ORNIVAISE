@@ -40,7 +40,7 @@ function setupStart(){
   "runnerProfilePanel={classList:{contains:()=>profile.open}},document=doc;"+
   "const runnerApi=async action=>{requests.push(action);return await events.shift().promise};"+
   "const resetRunner=()=>{runnerSessionGeneration++;runnerStartPending=false;runnerCurrentRunId='';runnerRunning=false;runnerGameOver=false;runnerPaused=false};"+
-  "const hideRunnerScoreForm=()=>{},updateRunnerPauseButton=()=>{};"+
+  "const hideRunnerScoreForm=()=>{},updateRunnerPauseButton=()=>{},setRunnerGuideVisibility=()=>{};"+
   "const gameText=k=>k,showRunnerOverlay=(a,b,c)=>{button.textContent=c;button.message=b};"+
   "const pauseRunner=()=>{runnerPaused=true;return true};"+
   "const startRunnerMusic=()=>{},hideRunnerOverlay=()=>{};"+
