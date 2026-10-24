@@ -1821,6 +1821,16 @@ body.runner-v2-testing .easter-overlay{top:48px!important;padding:0!important}
 body.runner-v2-testing .easter-panel.signal-game{max-height:calc(100dvh - 50px)!important}
 #runnerV2TestDrawer{top:50px}
 }
+/* Pause is an actual control BELOW the canvas, never over scores, pickups or HUD. */
+.runner-control-buttons .runner-pause-toggle{
+  position:static!important;inset:auto!important;z-index:auto;
+  flex:0 0 44px;width:44px;height:42px;min-width:44px;min-height:42px;
+  border-radius:10px;font-size:19px;touch-action:manipulation;
+}
+@media(max-width:700px){
+  .runner-control-buttons .runner-pause-toggle{width:44px;height:44px;flex-basis:44px}
+  .runner-control-buttons{align-items:center}
+}
 </style>
 </head>
 <body data-track-theme="signal001">
@@ -2081,7 +2091,6 @@ body.runner-v2-testing .easter-panel.signal-game{max-height:calc(100dvh - 50px)!
         </div>
         <div class="runner-canvas-wrap" id="runnerCanvasWrap">
           <canvas id="signalRunnerCanvas" width="960" height="360" tabindex="0" aria-label="SIGNAL RUNNER. Нажми пробел или коснись экрана, чтобы прыгнуть."></canvas>
-          <button id="runnerPauseToggle" class="runner-pause-toggle" type="button" aria-label="ПАУЗА" title="ПАУЗА" disabled>Ⅱ</button>
           <div class="runner-ability-hud" id="runnerAbilityHud" data-remaining="2" aria-label="Осталось прыжков: 2">
             <div><small id="runnerAbilityLabel">ДВОЙНОЙ ПРЫЖОК</small><strong id="runnerAbilityCount">2/2</strong></div>
             <div class="runner-ability-charges" aria-hidden="true"><i class="runner-ability-charge"></i><i class="runner-ability-charge"></i></div>
@@ -2100,6 +2109,7 @@ body.runner-v2-testing .easter-panel.signal-game{max-height:calc(100dvh - 50px)!
         <div class="runner-controls">
           <span>ПРОБЕЛ / ТАП — ПРЫЖОК · ESC — ВЫХОД</span>
           <div class="runner-control-buttons">
+            <button id="runnerPauseToggle" class="runner-pause-toggle" type="button" aria-label="ПАУЗА" title="ПАУЗА" disabled>Ⅱ</button>
             <button class="runner-sound" id="runnerSoundToggle" type="button" aria-label="Выключить музыку игры" title="Выключить музыку игры" aria-pressed="false">
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <g class="sound-on"><path d="M4 10v4h4l5 4V6L8 10H4z"/><path d="M16 9c1.4 1.5 1.4 4.5 0 6"/><path d="M18.5 6.5c3 3.2 3 7.8 0 11"/></g>
@@ -3839,7 +3849,81 @@ function runnerObstacleHit(player,o,pad=7){
   if(triangles.length)return triangles.some(poly=>runnerPolygonRectHit(poly,player,pad));
   return true;
 }
+/* Hazard encounters: clear jumpable pairs, ceiling variants and oscillating saws.
+   Never use moving traps during the calm intro or without enough recovery lane. */
+function runnerPatternRequest(){
+  return typeof window!=='undefined'&&['pair','overhead','hover'].includes(window.__runnerV2ForcePattern)
+    ?window.__runnerV2ForcePattern:'auto';
+}
+function runnerObstacleProjected(o,time){
+  const projected={...o,x:o.x-runnerSpeed*time};
+  if(o.motion==='hover')projected.y=o.baseY+
+    Math.sin(((o.motionT||0)+time)*o.motionSpeed+o.phase)*o.motionAmp;
+  return projected;
+}
+function runnerObstaclePattern(selected,forced){
+  const requested=runnerPatternRequest();
+  if(requested!=='auto')return requested;
+  if(forced||runnerStage<1)return 'single';
+  const r=Math.random();
+  if(r<Math.min(.19,.10+runnerStage*.035))return 'pair';
+  if(r<Math.min(.33,.22+runnerStage*.035))return 'overhead';
+  if(r<.42&&runnerStage>=2)return 'hover';
+  return 'single';
+}
+function runnerMovingHazard(o,dt){
+  if(o.motion!=='hover')return;
+  o.motionT=(o.motionT||0)+dt;
+  o.y=o.baseY+Math.sin(o.motionT*o.motionSpeed+o.phase)*o.motionAmp;
+}
 function spawnRunnerObstacle(){
+  const stage=runnerStage;
+  const forced=typeof window!=='undefined'?window.__runnerV2ForceObstacleForm:null;
+  const available=RUNNER_OBSTACLE_FORMS.filter(form=>form.minStage<=stage);
+  const approved=runnerObstacleForm(forced);
+  const pool=approved?[approved]:available;
+  const total=pool.reduce((sum,f)=>sum+f.weight,0);
+  let roll=Math.random()*total,selected=pool[0];
+  for(const entry of pool){roll-=entry.weight;if(roll<0){selected=entry;break}}
+  const requested=runnerObstaclePattern(selected,!!approved);
+  if(requested==='hover')selected=runnerObstacleForm('saw');
+  if(requested==='pair'&&!['needle','twins','shard'].includes(selected.id))selected=runnerObstacleForm('twins');
+  if(requested==='overhead'&&!['needle','twins','trident'].includes(selected.id))selected=runnerObstacleForm('twins');
+  const w=Math.round(selected.width[0]+Math.random()*(selected.width[1]-selected.width[0]));
+  const h=Math.round(selected.height[0]+Math.random()*(selected.height[1]-selected.height[0]));
+  const startX=RUNNER_W+24;
+  const pair=requested==='pair',gap=pair?Math.round(58+Math.random()*31):0;
+  const second=pair?runnerObstacleForm(Math.random()<.5?'needle':'twins'):null;
+  const w2=second?Math.round(second.width[0]+Math.random()*(second.width[1]-second.width[0])):0;
+  const fullWidth=w+gap+w2;
+  // Shield both ends of the coin arc AND the previous recovery lane from overlap.
+  const coinClearance=runnerSpeed*.62+Math.max(60,fullWidth*.65);
+  if(runnerOrbs.some(orb=>Math.abs(orb.x-(startX+fullWidth*.5))<coinClearance))return false;
+  if(runnerObstacles.some(ob=>ob.x+ob.w>startX-Math.max(138,runnerSpeed*.48)))return false;
+  // Opposite-wall hazards leave the gravity-side track clear for ordinary jumps.
+  const ceiling=requested==='overhead'?runnerGravity===1:runnerGravity===-1;
+  const y=ceiling?RUNNER_CEILING:RUNNER_GROUND-h;
+  const variant=Math.floor(Math.random()*3),phase=Math.random()*Math.PI*2;
+  const first={x:startX,y,w,h,type:selected.type,form:selected.id,variant,phase,ceiling,
+    encounter:requested,groupSpan:fullWidth};
+  if(requested==='hover'){
+    // 48px circular saw, 14px oscillation near ground/ceiling.
+    // Only one moving hazard in a formation; predictable movement, no surprise teleports.
+    first.motion='hover';first.motionSpeed=2;first.motionAmp=14;first.motionT=0;
+    first.baseY=ceiling?RUNNER_CEILING+13:RUNNER_GROUND-h-13;
+    first.y=first.baseY+Math.sin(first.phase)*first.motionAmp;
+  }
+  runnerObstacles.push(first);
+  if(pair){
+    const secondCeiling=runnerGravity===-1;
+    const x2=startX+w+gap,h2=Math.min(55,Math.round(second.height[0]+Math.random()*12));
+    runnerObstacles.push({x:x2,y:secondCeiling?RUNNER_CEILING:RUNNER_GROUND-h2,
+      w:w2,h:h2,type:second.type,form:second.id,variant:(variant+1)%3,
+      phase:phase+1.3,ceiling:secondCeiling,encounter:'pair',groupSpan:fullWidth});
+  }
+  return true;
+}
+
   const stage=runnerStage;
   const forced=typeof window!=='undefined'?window.__runnerV2ForceObstacleForm:null;
   const available=RUNNER_OBSTACLE_FORMS.filter(form=>form.minStage<=stage);
@@ -3999,7 +4083,8 @@ function updateRunner(dt){
       const spawned=spawnRunnerObstacle();
       // A wide obstacle needs more landing space; retry shortly if the Ø arc is occupied.
       const latest=runnerObstacles[runnerObstacles.length-1];
-      runnerSpawn=spawned?Math.max(.78,((latest?.w||50)+Math.max(148,runnerSpeed*.46))/runnerSpeed)+Math.random()*.36:.19;
+      const span=latest?.groupSpan||latest?.w||50;
+      runnerSpawn=spawned?Math.max(.87,(span+Math.max(165,runnerSpeed*.53))/runnerSpeed)+Math.random()*.42:.19;
     }
     runnerOrbSpawn-=dt;
     if(runnerOrbSpawn<=0){
@@ -4008,7 +4093,7 @@ function updateRunner(dt){
     }
   }
 
-  runnerObstacles.forEach(o=>o.x-=runnerSpeed*dt);
+  runnerObstacles.forEach(o=>{o.x-=runnerSpeed*dt;runnerMovingHazard(o,dt)});
   runnerOrbs.forEach(o=>{o.x-=runnerSpeed*dt;o.pulse+=dt*5});
   runnerDust.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=280*(p.gravity||1)*dt;p.life-=dt});
   if(runnerPortalFx>0)runnerPortalFx=Math.max(0,runnerPortalFx-dt*.9);
@@ -4739,6 +4824,24 @@ function drawRunnerPremiumHazard(ctx,skin,o,variant,phase){
 
 
 /* V2 obstacle silhouettes. A skin changes material/glow, not its safe collision geometry. */
+/* Telegraphs are visual only. Real hit boxes are updated and checked in updateRunner. */
+function drawRunnerTrapTelegraph(ctx,o,phase){
+  if(o.motion!=='hover'&&o.encounter!=='overhead')return;
+  ctx.save();
+  const accent=o.motion==='hover'?'rgba(243,182,102,.65)':'rgba(132,228,241,.48)';
+  ctx.strokeStyle=accent;ctx.lineWidth=1.2;ctx.setLineDash([4,7]);
+  if(o.motion==='hover'){
+    const cx=o.x+o.w/2;
+    ctx.beginPath();ctx.moveTo(cx,o.baseY-o.motionAmp-8);
+    ctx.lineTo(cx,o.baseY+o.h+o.motionAmp+8);ctx.stroke();
+    ctx.setLineDash([]);ctx.globalAlpha=.32+.17*Math.sin(phase*2);
+    ctx.strokeStyle='#f6ad65';ctx.beginPath();ctx.arc(cx,o.y+o.h/2,Math.max(o.w,o.h)*.61,0,Math.PI*2);ctx.stroke();
+  }else{
+    const laneY=o.ceiling?o.y+o.h+14:o.y-14;
+    ctx.beginPath();ctx.moveTo(o.x-10,laneY);ctx.lineTo(o.x+o.w+10,laneY);ctx.stroke();
+  }
+  ctx.restore();
+}
 function drawRunnerObstacleGeometry(ctx,o,skin,phase){
   if(!runnerObstacleForm(o.form))return false;
   const ice=['frost_spines','crystal_shards'].includes(skin);
@@ -4820,7 +4923,7 @@ function getRunnerLandingForecast(){
   const projected={x:runnerPlayer.x,y:floorY,w:runnerPlayer.w,h:runnerPlayer.h};
   const unsafe=runnerObstacles.some(obstacle=>{
     if(!!obstacle.ceiling!==(runnerGravity===-1))return false;
-    const future={...obstacle,x:obstacle.x-runnerSpeed*time};
+    const future=runnerObstacleProjected(obstacle,time);
     return runnerObstacleHit(projected,future,7);
   });
   return {time,unsafe,x:runnerPlayer.x+runnerPlayer.w/2,
@@ -5270,6 +5373,7 @@ function drawRunner(){
     }
 
 
+    drawRunnerTrapTelegraph(ctx,o,phase);
     drawRunnerObstacleSignature(ctx,skin,o,phase,stage);
     if(drawRunnerObstacleGeometry(ctx,o,skin,phase)){
       // Real silhouette matches the V2 collision shape.
