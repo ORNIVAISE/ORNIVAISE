@@ -25,6 +25,7 @@ try{
   assert.equal(await page.locator('#runnerV2World option').count(),10,'All 10 world choices');
   assert.equal(await page.locator('#runnerV2Planet option').count(),14,'All 14 planet choices');
   assert.equal(await page.locator('#runnerV2Hazard option').count(),11,'All 11 obstacle choices');
+  assert.equal(await page.locator('#runnerV2Form option').count(),9,'Eight geometry forms plus AUTO');
   await page.screenshot({path:'artifacts/runner-preview/'+conf.name+'-game.png'});
   await page.locator('#runnerOverlayButton').click();
   await page.waitForFunction(()=>!document.querySelector('#runnerPauseToggle')?.disabled,{timeout:12000});
@@ -46,12 +47,15 @@ try{
   await page.selectOption('#runnerV2World','volcanic_cataclysm');
   await page.selectOption('#runnerV2Planet','astral_leviathan');
   await page.selectOption('#runnerV2Hazard','rift_serpents');
+  await page.selectOption('#runnerV2Form','ridge');
+  assert.equal(await page.evaluate(()=>window.__runnerV2ForceObstacleForm),'ridge');
+  await page.screenshot({path:'artifacts/runner-preview/'+conf.name+'-obstacle-inspector.png'});
   await page.locator('#runnerV2TestClose').click();
   assert.equal(await page.locator('#runnerV2World').inputValue(),'volcanic_cataclysm');
   await page.screenshot({path:'artifacts/runner-preview/'+conf.name+'-custom-world.png'});
   assert.deepEqual(supabaseRequests,[],'Sandbox must NEVER contact the production Supabase');
   assert.deepEqual(errors,[],'No uncaught browser errors');
-  console.log(conf.name+': PASS game + jump + pause + store + profile + 35 previews + selection + no backend calls');
+  console.log(conf.name+': PASS game + jump + pause + store + profile + 35 previews + eight geometry forms + no backend calls');
   await context.close();
  }
 }finally{await browser.close()}
