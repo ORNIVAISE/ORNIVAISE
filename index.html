@@ -1817,6 +1817,13 @@ html{scroll-padding-top:80px}
 .runner-guide-step{display:grid;grid-template-columns:42px 1fr;column-gap:10px;padding:9px}
 .runner-guide-symbol{grid-row:span 2;margin:0}.runner-guide-step h3{align-self:end}.runner-guide-step p{align-self:start}
 .runner-guide-button{min-height:44px;flex-basis:44px}}
+
+/* Readable hazard cue sits BELOW the canvas, never covers the scores or player. */
+.runner-controls .runner-hazard-hint{min-width:125px;flex:1;color:#95b9c7;
+  font:700 clamp(9px,1.15vw,12px)/1.45 system-ui,sans-serif;letter-spacing:.08em;transition:color .18s}
+.runner-controls .runner-hazard-hint.warning{color:#ffce8f;text-shadow:0 0 9px rgba(254,174,88,.19)}
+.runner-controls .runner-hazard-hint.danger{color:#ffd0b6;text-shadow:0 0 9px rgba(251,117,80,.25)}
+@media(max-width:700px){.runner-controls .runner-hazard-hint{width:100%;text-align:center;min-height:17px;font-size:10px}}
 </style>
 </head>
 <body data-track-theme="signal001">
@@ -2093,7 +2100,7 @@ html{scroll-padding-top:80px}
           </div>
         </div>
         <div class="runner-controls">
-          <span>ПРОБЕЛ / ТАП — ПРЫЖОК · ESC — ВЫХОД</span>
+          <span id="runnerHazardHint" class="runner-hazard-hint" role="status" aria-live="off">ПРОБЕЛ / ТАП — ПРЫЖОК ×2 · ? — ПОДСКАЗКИ</span>
           <div class="runner-control-buttons">
             <button id="runnerPauseToggle" class="runner-pause-toggle" type="button" aria-label="ПАУЗА" title="ПАУЗА" disabled>Ⅱ</button>
             <button id="runnerGuideToggle" class="runner-guide-button" type="button" aria-label="Как играть" aria-expanded="false" aria-controls="runnerGuidePanel" title="Как играть">?</button>
@@ -3635,6 +3642,7 @@ function resetRunner(){
   runnerDistanceValue=0;runnerSignalCount=0;runnerSpeed=300;
   runnerSpawn=.95;runnerOrbSpawn=1.9;
   runnerObstacles=[];runnerOrbs=[];runnerDust=[];
+  updateRunnerHazardHint();
   runnerSecret=false;runnerStage=0;runnerStageTimer=0;runnerEventTimer=0;
   runnerGravity=1;runnerGravityEvent=false;runnerGravityEnd=0;runnerNextGravity=850+Math.random()*650;runnerPortalFx=0;
   runnerPortalTransition={active:false,t:0,duration:.92,target:1,fromGravity:1,switched:false};
@@ -3903,6 +3911,36 @@ function runnerObstaclePattern(selected,forced){
   if(r<.42&&runnerStage>=2)return 'hover';
   return 'single';
 }
+/* Fair-play preview warning: only looks ahead, never changes collisions or spawn odds.
+   Opposite-wall hazards are signposted, but not treated as immediate ground danger. */
+function updateRunnerHazardHint(){
+  const node=document.getElementById('runnerHazardHint');
+  if(!node)return;
+  const en=document.documentElement.lang==='en';
+  const idle=en?'SPACE / TAP — DOUBLE JUMP · ? — HELP':'ПРОБЕЛ / ТАП — ДВОЙНОЙ ПРЫЖОК · ? — ПОМОЩЬ';
+  let next=idle,level='';
+  if(runnerRunning&&!runnerGameOver&&!runnerPortalTransition.active){
+    const range=runnerSpeed*1.1;
+    const playerFront=runnerPlayer.x+runnerPlayer.w;
+    const upcoming=runnerObstacles
+      .filter(o=>o.x+o.w>=playerFront&&o.x-playerFront<range)
+      .sort((a,b)=>a.x-b.x)[0];
+    if(upcoming){
+      const overhead=!!upcoming.ceiling!==(runnerGravity===-1);
+      const name=overhead?(en?'UPPER SPIKES':'ВЕРХНИЕ ШИПЫ'):
+        upcoming.motion==='hover'?(en?'MOVING SAW':'ДВИЖУЩАЯСЯ ПИЛА'):
+        upcoming.encounter==='pair'?(en?'DOUBLE SPIKES':'ПАРНЫЕ ШИПЫ'):
+        upcoming.form==='monolith'?(en?'TALL MONOLITH':'ВЫСОКИЙ МОНОЛИТ'):
+        upcoming.form==='ridge'?(en?'WIDE SPIKES':'ШИРОКИЕ ШИПЫ'):
+        (en?'OBSTACLE':'ПРЕПЯТСТВИЕ');
+      next=(en?'AHEAD: ':'ВПЕРЕДИ: ')+name;
+      level=overhead?'warning':upcoming.x-playerFront<runnerSpeed*.45?'danger':'warning';
+    }
+  }
+  if(node.textContent!==next)node.textContent=next;
+  node.classList.toggle('warning',level==='warning');
+  node.classList.toggle('danger',level==='danger');
+}
 function runnerMovingHazard(o,dt){
   if(o.motion!=='hover')return;
   o.motionT=(o.motionT||0)+dt;
@@ -4094,6 +4132,7 @@ function updateRunner(dt){
   }
 
   runnerObstacles.forEach(o=>{o.x-=runnerSpeed*dt;runnerMovingHazard(o,dt)});
+  updateRunnerHazardHint();
   runnerOrbs.forEach(o=>{o.x-=runnerSpeed*dt;o.pulse+=dt*5});
   runnerDust.forEach(p=>{p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=280*(p.gravity||1)*dt;p.life-=dt});
   if(runnerPortalFx>0)runnerPortalFx=Math.max(0,runnerPortalFx-dt*.9);
@@ -6093,6 +6132,7 @@ window.refreshGameLanguage=()=>{
   updateRunnerJumpHud();
   updateRunnerPauseButton();
   applyRunnerGuideLanguage();
+  updateRunnerHazardHint();
   if(runnerNameInput)runnerNameInput.placeholder=gameText('namePlaceholder');
   if(runnerScoreSave)runnerScoreSave.textContent=gameText('saveScore');
   if(signalZoneBadge)signalZoneBadge.textContent=getRunnerStageLabel(runnerStage);
