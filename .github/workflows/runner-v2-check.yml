@@ -17,3 +17,28 @@ jobs:
           node tests/runner-v2-playability.test.mjs
           node tests/runner-v2-session.test.mjs
           node tests/runner-v2-state-order.test.mjs
+
+  browser-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Chromium smoke tools
+        run: |
+          npm install --no-save playwright
+          npx playwright install --with-deps chromium
+      - name: Test real V2 interface at desktop and phone sizes
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/signal-runner-preview-http.log 2>&1 &
+          node tests/runner-v2-browser-smoke.mjs
+      - name: Upload visual evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: signal-runner-v2-browser-preview
+          path: artifacts/runner-preview/
+          if-no-files-found: ignore
+          retention-days: 7
