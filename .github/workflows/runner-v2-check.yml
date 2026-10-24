@@ -34,6 +34,12 @@ jobs:
         run: |
           python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/signal-runner-preview-http.log 2>&1 &
           node tests/runner-v2-browser-smoke.mjs
+      - name: Verify independently hosted public preview on desktop and phone
+        run: |
+          PREVIEW_URL="https://ornivaise.github.io/northline-detailing-demo/signal-runner-v2-test.html"
+          curl -fsSL --retry 12 --retry-delay 6 --retry-all-errors "$PREVIEW_URL" -o /tmp/signal-runner-public-preview.html
+          grep -q 'id="runnerV2TestBar"' /tmp/signal-runner-public-preview.html
+          RUNNER_TEST_URL="$PREVIEW_URL" node tests/runner-v2-browser-smoke.mjs
       - name: Upload visual evidence
         if: always()
         uses: actions/upload-artifact@v4
