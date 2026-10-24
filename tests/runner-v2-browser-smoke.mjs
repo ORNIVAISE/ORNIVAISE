@@ -145,6 +145,20 @@ try{
     'Boss name/banner must be prominent on mobile and desktop: '+JSON.stringify(bossDisplay));
   assert.match(bossDisplay.label||'',/ЗМЕЙ РАЗЛОМА|RIFT SERPENT/,'Boss name displayed prominently');
   assert.equal(await page.locator('#runnerBossBannerWave').textContent(),'ВОЛНА 0 / 3','Wave count starts at zero');
+  assert.match(await page.locator('#runnerBossBannerAttack').textContent(),/КЛЫКИ СВЕРХУ|CEILING FANGS/,
+    'Boss first attack is named explicitly');
+  assert.match(await page.locator('#runnerBossBannerAction').textContent(),/НЕ ПРЫГАЙ|STAY LOW/,
+    'Explicit instruction tells player to stay on the safe lane');
+  assert.equal(await page.locator('#runnerBossBanner').getAttribute('data-action'),'stay',
+    'Boss warning is styled by its actual action');
+  assert.match(await page.locator('#runnerBossBannerEta').textContent(),/ОПАСНОСТЬ ЧЕРЕЗ|DANGER IN/,
+    'Visible countdown to the incoming attack');
+  const cueVisible=await page.locator('#runnerBossBannerAction').evaluate(el=>{
+    const rect=el.getBoundingClientRect(),css=getComputedStyle(el);
+    return rect.width>65&&rect.height>10&&css.display!=='none';
+  });
+  assert.ok(cueVisible,'Readable action cue exists on desktop and phone');
+
 
   assert.match(await page.locator('#runnerBossMissionText').textContent(),/ЗМЕЙ РАЗЛОМА|RIFT SERPENT/,'Selected boss on the mission bar');
   assert.equal(await page.evaluate(()=>runnerBossActive&&runnerBossType===1),true,'Real playable boss battle started');
