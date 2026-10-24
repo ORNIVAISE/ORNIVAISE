@@ -48,6 +48,32 @@ try{
   assert.equal(await page.locator('.runner-shop-card').count(),35,'23 demo catalog entries + 12 unreleased previews');
   assert.equal(await page.locator('.runner-shop-card.preview-only').count(),12,'All new products stay preview only');
   assert.equal(await page.locator('.runner-shop-card.preview-only button[data-item]:not([disabled])').count(),0,'No preview item can be purchased');
+  // Regression: the shop scene used to override absolute positioning with relative,
+  // collapsing every image to a 0px-high black surface despite valid markup.
+  for(const idx of [0,3,9,13,14,20,23,24,31,34]){
+    const card=page.locator('.runner-shop-card').nth(idx);
+    await card.scrollIntoViewIfNeeded();
+    const image=await card.evaluate(el=>{
+      const holder=el.querySelector('.runner-shop-preview');
+      const scene=holder?.querySelector('.runner-preview-scene');
+      const subject=scene?.querySelector('.runner-preview-planet,.runner-preview-background-planet,.runner-preview-obstacles');
+      if(!holder||!scene||!subject)return {missing:true};
+      const a=holder.getBoundingClientRect(),b=scene.getBoundingClientRect(),c=subject.getBoundingClientRect();
+      return {
+        position:getComputedStyle(scene).position,
+        width:b.width,height:b.height,frameWidth:a.width,frameHeight:a.height,
+        subjectWidth:c.width,subjectHeight:c.height,
+        background:getComputedStyle(scene).backgroundImage
+      };
+    });
+    assert.equal(image.missing,undefined,'Shop card '+idx+' contains scene and its visible subject');
+    assert.equal(image.position,'absolute','Shop card '+idx+' scene must fill its image frame');
+    assert.ok(image.width>=image.frameWidth*.9&&image.height>=image.frameHeight*.9,
+      'Shop card '+idx+' preview fills the frame, not a black 0px strip: '+JSON.stringify(image));
+    assert.ok(image.subjectWidth>10&&image.subjectHeight>10,'Shop card '+idx+' has visible skin graphics');
+    assert.ok(image.background!=='none','Shop card '+idx+' has a themed scene background');
+  }
+  await page.locator('.runner-shop-card').first().scrollIntoViewIfNeeded();
   await page.screenshot({path:'artifacts/runner-preview/'+conf.name+'-store.png'});
   await page.locator('#runnerStoreToggle').click();
   await page.locator('#runnerProfileToggle').click();
