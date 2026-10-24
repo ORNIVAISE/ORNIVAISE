@@ -22,7 +22,7 @@ function take(a,b){
   return html.slice(start,end);
 }
 const jumpFns=take('function updateRunnerJumpHud(){','async function startRunner(){');
-const spawnFns=take('function spawnRunnerObstacle(){','function gameOverRunner(){');
+const spawnFns=take('/* V2 obstacle morphology','function gameOverRunner(){');
 const update=take('function updateRunner(dt){','/* Cinematic V2 backgrounds.');
 const forecast=take('function getRunnerLandingForecast(){','function drawRunnerLandingHint(ctx){');
 const fixture=[
