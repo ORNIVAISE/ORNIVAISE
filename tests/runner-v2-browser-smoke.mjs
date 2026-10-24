@@ -34,10 +34,33 @@ try{
     return p.top>=c.bottom-2 && (p.top>=h.bottom||p.left>=h.right);
   });
   assert.equal(pauseFits,true,'Pause is beneath playfield, not over scores or the canvas');
+  assert.equal(await page.locator('#runnerGuidePanel').count(),1,'In-flow game guide is present');
+  assert.equal(await page.locator('#runnerGuidePanel').getAttribute('hidden'),'','Guide is hidden at rest');
+  await page.locator('#runnerGuideToggle').click();
+  await page.waitForSelector('#runnerGuidePanel:not([hidden])');
+  assert.equal(await page.locator('.runner-guide-step').count(),3,'Three beginner instructions');
+  assert.equal(await page.locator('#runnerGuideToggle').getAttribute('aria-expanded'),'true');
+  await page.screenshot({path:'artifacts/runner-preview/'+conf.name+'-guide.png'});
+  await page.locator('#runnerGuideClose').click();
+  assert.equal(await page.locator('#runnerGuidePanel').isHidden(),true,'Guide closes');
   await page.screenshot({path:'artifacts/runner-preview/'+conf.name+'-game.png'});
   await page.locator('#runnerOverlayButton').click();
   await page.waitForFunction(()=>!document.querySelector('#runnerPauseToggle')?.disabled,{timeout:12000});
   await page.waitForFunction(()=>Number(document.querySelector('#runnerDistance')?.textContent||0)>0,{timeout:12000});
+  await page.locator('#runnerGuideToggle').click();
+  await page.waitForSelector('#runnerGuidePanel:not([hidden])');
+  assert.equal(await page.locator('#runnerPauseToggle').getAttribute('aria-pressed'),'true',
+    'Opening guide during a run automatically pauses gameplay');
+  const guidePausedDistance=await page.locator('#runnerDistance').textContent();
+  await page.waitForTimeout(160);
+  assert.equal(await page.locator('#runnerDistance').textContent(),guidePausedDistance,
+    'No score advance while reading guide');
+  await page.locator('#runnerGuideClose').click();
+  assert.equal(await page.locator('#runnerPauseToggle').getAttribute('aria-pressed'),'true',
+    'Closing guide requires player to resume explicitly');
+  await page.locator('#runnerPauseToggle').click();
+  assert.equal(await page.locator('#runnerPauseToggle').getAttribute('aria-pressed'),'false',
+    'Resume works after guide');
   await page.locator('#runnerPauseToggle').click();
   assert.equal(await page.locator('#runnerPauseToggle').getAttribute('aria-pressed'),'true','Pause works');
   const stillDistance=await page.locator('#runnerDistance').textContent();
@@ -97,7 +120,7 @@ try{
   await page.screenshot({path:'artifacts/runner-preview/'+conf.name+'-custom-world.png'});
   assert.deepEqual(supabaseRequests,[],'Sandbox must NEVER contact the production Supabase');
   assert.deepEqual(errors,[],'No uncaught browser errors');
-  console.log(conf.name+': PASS game + jump + pause + store + profile + 35 previews + eight geometry forms + no backend calls');
+  console.log(conf.name+': PASS game + jump + pause + store + profile + 35 previews + eight geometry forms + guide auto-pause + no backend calls');
   await context.close();
  }
 }finally{await browser.close()}
