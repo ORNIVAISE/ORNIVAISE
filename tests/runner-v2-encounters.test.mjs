@@ -7,6 +7,7 @@ const code=[
  'const RUNNER_W=960,RUNNER_H=360,RUNNER_GROUND=292,RUNNER_CEILING=58;',
  'let runnerSpeed=460,runnerStage=2,runnerGravity=1,runnerObstacles=[],runnerOrbs=[];',
  'const window={__runnerV2ForceObstacleForm:"",__runnerV2ForcePattern:"auto"};',
+ 'const rectHit=(a,b,pad=4)=>a.x+pad<b.x+b.w-pad&&a.x+a.w-pad>b.x+pad&&a.y+pad<b.y+b.h-pad&&a.y+a.h-pad>b.y+pad;',
  take('/* V2 obstacle morphology','function spawnRunnerOrb(){'),
  'return {spawnRunnerObstacle,runnerMovingHazard,runnerObstacleProjected,runnerObstacleHit,',
  'setPattern:v=>{window.__runnerV2ForcePattern=v},setStage:v=>{runnerStage=v},',
