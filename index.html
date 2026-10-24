@@ -1468,7 +1468,8 @@ html{scroll-padding-top:80px}
 .runner-shop-profile-hint{display:block;min-height:0!important;margin-top:10px;color:#a8b2bd;font-size:11px!important}
 .runner-shop-profile-action{margin-top:8px!important;min-height:40px!important;width:100%;background:rgba(136,105,209,.13)!important;color:#dcd5f9!important;border-color:rgba(166,146,225,.42)!important}
 .runner-shop-card.preview-only{opacity:.8}
-.runner-preview-scene{isolation:isolate;overflow:hidden;position:relative}
+/* Full-frame scene: relative positioning collapses to 0px height when children are absolute. */
+.runner-preview-scene{isolation:isolate;overflow:hidden;position:absolute;inset:0;width:100%;height:100%;min-height:100%}
 .runner-preview-vfx{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:1}
 .runner-preview-ground{z-index:3}.runner-preview-planet,.runner-preview-obstacles{z-index:4}
 .scene-avatar .runner-preview-planet{width:56px;height:56px}.scene-avatar .runner-preview-planet:after{font-size:21px}
