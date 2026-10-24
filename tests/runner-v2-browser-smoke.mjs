@@ -26,12 +26,23 @@ try{
   assert.equal(await page.locator('#runnerV2Planet option').count(),14,'All 14 planet choices');
   assert.equal(await page.locator('#runnerV2Hazard option').count(),11,'All 11 obstacle choices');
   assert.equal(await page.locator('#runnerV2Form option').count(),9,'Eight geometry forms plus AUTO');
+  assert.equal(await page.locator('#runnerV2Pattern option').count(),4,'Four encounter scenarios');
+  const pauseFits=await page.evaluate(()=>{
+    const p=document.getElementById('runnerPauseToggle').getBoundingClientRect();
+    const c=document.getElementById('signalRunnerCanvas').getBoundingClientRect();
+    const h=document.querySelector('.runner-hud').getBoundingClientRect();
+    return p.top>=c.bottom-2 && (p.top>=h.bottom||p.left>=h.right);
+  });
+  assert.equal(pauseFits,true,'Pause is beneath playfield, not over scores or the canvas');
   await page.screenshot({path:'artifacts/runner-preview/'+conf.name+'-game.png'});
   await page.locator('#runnerOverlayButton').click();
   await page.waitForFunction(()=>!document.querySelector('#runnerPauseToggle')?.disabled,{timeout:12000});
   await page.waitForFunction(()=>Number(document.querySelector('#runnerDistance')?.textContent||0)>0,{timeout:12000});
   await page.locator('#runnerPauseToggle').click();
   assert.equal(await page.locator('#runnerPauseToggle').getAttribute('aria-pressed'),'true','Pause works');
+  const stillDistance=await page.locator('#runnerDistance').textContent();
+  await page.waitForTimeout(220);
+  assert.equal(await page.locator('#runnerDistance').textContent(),stillDistance,'Pause freezes the actual game clock');
   await page.locator('#runnerStoreToggle').click();
   await page.waitForSelector('#runnerStorePanel.open');
   assert.equal(await page.locator('.runner-shop-card').count(),35,'23 demo catalog entries + 12 unreleased previews');
@@ -48,6 +59,11 @@ try{
   await page.selectOption('#runnerV2Planet','astral_leviathan');
   await page.selectOption('#runnerV2Hazard','rift_serpents');
   await page.selectOption('#runnerV2Form','ridge');
+  await page.selectOption('#runnerV2Pattern','hover');
+  assert.equal(await page.evaluate(()=>window.__runnerV2ForcePattern),'hover');
+  await page.selectOption('#runnerV2Pattern','pair');
+  assert.equal(await page.evaluate(()=>window.__runnerV2ForcePattern),'pair');
+  await page.selectOption('#runnerV2Pattern','auto');
   assert.equal(await page.evaluate(()=>window.__runnerV2ForceObstacleForm),'ridge');
   await page.screenshot({path:'artifacts/runner-preview/'+conf.name+'-obstacle-inspector.png'});
   await page.locator('#runnerV2TestClose').click();
