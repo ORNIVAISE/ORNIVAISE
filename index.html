@@ -1784,6 +1784,39 @@ html{scroll-padding-top:80px}
   .runner-control-buttons .runner-pause-toggle{width:44px;height:44px;flex-basis:44px}
   .runner-control-buttons{align-items:center}
 }
+
+/* SIGNAL RUNNER V2 / in-flow help. Never covers score HUD or gameplay canvas. */
+.runner-guide-button{
+  display:grid;place-items:center;flex:0 0 42px;width:42px;min-height:42px;
+  border:1px solid rgba(130,208,228,.42);border-radius:10px;
+  background:linear-gradient(145deg,rgba(26,49,67,.84),rgba(8,16,29,.88));
+  color:#c6eef5;font:800 18px/1 system-ui,sans-serif;cursor:pointer;
+  touch-action:manipulation;
+}
+.runner-guide-button:hover,.runner-guide-button[aria-expanded="true"]{
+  background:#163241;border-color:#9cecf3;color:#fff;
+}
+.runner-guide-button:focus-visible,.runner-guide-close:focus-visible{outline:2px solid #9cecf3;outline-offset:3px}
+.runner-guide[hidden]{display:none!important}
+.runner-guide{padding:16px;border-top:1px solid rgba(160,215,227,.22);
+  background:linear-gradient(125deg,rgba(7,20,34,.98),rgba(17,12,34,.96));color:#d8e9f1}
+.runner-guide-header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.runner-guide-header strong{font-size:clamp(12px,1.5vw,16px);letter-spacing:.11em}
+.runner-guide-close{padding:9px 12px;border:1px solid rgba(202,222,238,.3);
+  border-radius:8px;background:rgba(255,255,255,.04);color:#e6eef6;font:700 11px system-ui,sans-serif;cursor:pointer}
+.runner-guide-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.runner-guide-step{padding:12px;border:1px solid rgba(160,204,232,.18);
+  border-radius:10px;background:rgba(255,255,255,.025)}
+.runner-guide-symbol{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;
+  background:rgba(89,168,198,.12);border:1px solid rgba(145,220,241,.34);color:#b6f3f6;
+  font:800 18px system-ui,sans-serif;margin-bottom:10px}
+.runner-guide-step h3{font:700 clamp(11px,1.4vw,14px)/1.3 system-ui,sans-serif;color:#e9f7fa;margin:0 0 7px}
+.runner-guide-step p{font:400 clamp(11px,1.3vw,13px)/1.55 system-ui,sans-serif;color:#aebfcc;margin:0}
+.runner-guide-note{font:400 12px/1.6 system-ui,sans-serif;color:#adc3d1;margin:12px 0 0}
+@media(max-width:700px){.runner-guide{padding:12px}.runner-guide-steps{grid-template-columns:1fr;gap:7px}
+.runner-guide-step{display:grid;grid-template-columns:42px 1fr;column-gap:10px;padding:9px}
+.runner-guide-symbol{grid-row:span 2;margin:0}.runner-guide-step h3{align-self:end}.runner-guide-step p{align-self:start}
+.runner-guide-button{min-height:44px;flex-basis:44px}}
 </style>
 </head>
 <body data-track-theme="signal001">
@@ -2063,6 +2096,7 @@ html{scroll-padding-top:80px}
           <span>ПРОБЕЛ / ТАП — ПРЫЖОК · ESC — ВЫХОД</span>
           <div class="runner-control-buttons">
             <button id="runnerPauseToggle" class="runner-pause-toggle" type="button" aria-label="ПАУЗА" title="ПАУЗА" disabled>Ⅱ</button>
+            <button id="runnerGuideToggle" class="runner-guide-button" type="button" aria-label="Как играть" aria-expanded="false" aria-controls="runnerGuidePanel" title="Как играть">?</button>
             <button class="runner-sound" id="runnerSoundToggle" type="button" aria-label="Выключить музыку игры" title="Выключить музыку игры" aria-pressed="false">
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <g class="sound-on"><path d="M4 10v4h4l5 4V6L8 10H4z"/><path d="M16 9c1.4 1.5 1.4 4.5 0 6"/><path d="M18.5 6.5c3 3.2 3 7.8 0 11"/></g>
@@ -2076,6 +2110,31 @@ html{scroll-padding-top:80px}
           </div>
         </div>
 
+
+        <section class="runner-guide" id="runnerGuidePanel" aria-labelledby="runnerGuideHeading" hidden>
+          <div class="runner-guide-header">
+            <strong id="runnerGuideHeading">ØN // КАК ИГРАТЬ</strong>
+            <button type="button" class="runner-guide-close" id="runnerGuideClose" aria-label="Закрыть инструкцию">ЗАКРЫТЬ</button>
+          </div>
+          <div class="runner-guide-steps">
+            <div class="runner-guide-step">
+              <span class="runner-guide-symbol" aria-hidden="true">↑</span>
+              <h3 id="runnerGuideStep1">ПРЫЖОК</h3>
+              <p id="runnerGuideText1">Пробел, ↑ или касание экрана — один прыжок.</p>
+            </div>
+            <div class="runner-guide-step">
+              <span class="runner-guide-symbol" aria-hidden="true">↑↑</span>
+              <h3 id="runnerGuideStep2">ВТОРОЙ ПРЫЖОК</h3>
+              <p id="runnerGuideText2">Нажми повторно в воздухе. Заряды восстанавливаются после приземления.</p>
+            </div>
+            <div class="runner-guide-step">
+              <span class="runner-guide-symbol" aria-hidden="true">Ø</span>
+              <h3 id="runnerGuideStep3">СИГНАЛЫ И ЛОВУШКИ</h3>
+              <p id="runnerGuideText3">Собирай Ø, обходи шипы и пилы. При паузе время и опасности останавливаются.</p>
+            </div>
+          </div>
+          <p class="runner-guide-note" id="runnerGuideNote">Если открыл инструкцию во время забега, он поставлен на паузу. Чтобы продолжить, нажми ▶.</p>
+        </section>
 
         <div class="runner-store-panel" id="runnerStorePanel">
           <div class="runner-store-head">
@@ -3598,6 +3657,7 @@ function openRunner(){
   signalRunner.setAttribute('aria-hidden','false');
   document.getElementById('easterTitle').textContent=gameText('runnerTitle');
   resetRunner();
+  setRunnerGuideVisibility(false);
   loadRunnerLeaderboard();
   if(Date.now()-runnerGatewaySyncedAt>15000)loadRunnerStoreState();
   showRunnerOverlay(gameText('runnerTitle'),gameText('jumpHint'),gameText('startRun'));
@@ -3618,6 +3678,7 @@ function closeRunner(){
   if(runnerProfileToggle)runnerProfileToggle.textContent=gameText('profile');
   signalRunner?.classList.remove('open');
   signalRunner?.setAttribute('aria-hidden','true');
+  setRunnerGuideVisibility(false);
   signalGame?.classList.remove('runner-mode');
   document.getElementById('easterTitle').textContent=gameText('decryptTitle');
   signalZoneBadge?.classList.remove('visible');
@@ -3717,6 +3778,7 @@ async function startRunner(){
   runnerStartPending=true;
   runnerLastSavedRunId='';
   hideRunnerScoreForm();
+  setRunnerGuideVisibility(false);
   if(runnerOverlayButton){
     runnerOverlayButton.disabled=true;
     runnerOverlayButton.textContent=gameText('connecting');
@@ -5886,6 +5948,48 @@ function drawRunner(){
   ctx.restore();
 }
 runnerScoreForm?.addEventListener('submit',e=>{e.preventDefault();saveRunnerScore()});
+/* Optional in-flow controls guide. Opening it never leaves hazards running off-screen. */
+function setRunnerGuideVisibility(open){
+  const panel=document.getElementById('runnerGuidePanel'),toggle=document.getElementById('runnerGuideToggle');
+  if(!panel||!toggle)return;
+  if(open&&runnerRunning&&!runnerPaused)pauseRunner();
+  panel.hidden=!open;
+  toggle.setAttribute('aria-expanded',String(open));
+  if(open)applyRunnerGuideLanguage();
+}
+function applyRunnerGuideLanguage(){
+  const en=document.documentElement.lang==='en';
+  const t=en?{
+    heading:'ØN // HOW TO PLAY',close:'CLOSE',
+    step1:'JUMP',text1:'Space, ↑ or tap the game screen to jump.',
+    step2:'SECOND JUMP',text2:'Tap again midair. Your jumps recharge when you land.',
+    step3:'SIGNALS & TRAPS',text3:'Collect Ø. Avoid spikes and saws. Pause freezes the run and hazards.',
+    note:'Opening this guide during a run pauses the game. Press ▶ to continue.'
+  }:{
+    heading:'ØN // КАК ИГРАТЬ',close:'ЗАКРЫТЬ',
+    step1:'ПРЫЖОК',text1:'Пробел, ↑ или касание экрана — один прыжок.',
+    step2:'ВТОРОЙ ПРЫЖОК',text2:'Нажми повторно в воздухе. Заряды восстанавливаются после приземления.',
+    step3:'СИГНАЛЫ И ЛОВУШКИ',text3:'Собирай Ø, обходи шипы и пилы. При паузе время и опасности останавливаются.',
+    note:'Если открыл инструкцию во время забега, он поставлен на паузу. Чтобы продолжить, нажми ▶.'
+  };
+  for(const [id,v] of [
+    ['runnerGuideHeading',t.heading],['runnerGuideClose',t.close],
+    ['runnerGuideStep1',t.step1],['runnerGuideText1',t.text1],
+    ['runnerGuideStep2',t.step2],['runnerGuideText2',t.text2],
+    ['runnerGuideStep3',t.step3],['runnerGuideText3',t.text3],
+    ['runnerGuideNote',t.note]
+  ]){const node=document.getElementById(id);if(node)node.textContent=v}
+  const close=document.getElementById('runnerGuideClose');
+  if(close)close.setAttribute('aria-label',t.close);
+  const toggle=document.getElementById('runnerGuideToggle');
+  if(toggle)toggle.setAttribute('aria-label',en?'How to play':'Как играть');
+}
+document.getElementById('runnerGuideToggle')?.addEventListener('click',()=>{
+  const panel=document.getElementById('runnerGuidePanel');
+  if(panel)setRunnerGuideVisibility(panel.hidden);
+});
+document.getElementById('runnerGuideClose')?.addEventListener('click',()=>setRunnerGuideVisibility(false));
+
 runnerOverlayButton?.addEventListener('click',()=>runnerPaused?resumeRunner():startRunner());
 signalRunnerStart?.addEventListener('click',openRunner);
 runnerBack?.addEventListener('click',()=>{closeRunner();signalTuner?.focus()});
@@ -5988,6 +6092,7 @@ window.refreshGameLanguage=()=>{
   renderRunnerGateway();
   updateRunnerJumpHud();
   updateRunnerPauseButton();
+  applyRunnerGuideLanguage();
   if(runnerNameInput)runnerNameInput.placeholder=gameText('namePlaceholder');
   if(runnerScoreSave)runnerScoreSave.textContent=gameText('saveScore');
   if(signalZoneBadge)signalZoneBadge.textContent=getRunnerStageLabel(runnerStage);
