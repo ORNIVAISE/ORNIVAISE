@@ -1854,6 +1854,18 @@ html{scroll-padding-top:80px}
 @media(max-width:700px){.runner-boss-banner{min-height:47px;padding:8px 11px;gap:6px}
 .runner-boss-banner strong{font-size:13px}.runner-boss-banner small{font-size:9px}
 .runner-boss-banner-wave{font-size:10px;padding:7px 8px}}
+/* Boss action UI: clear instructions outside the canvas */
+.runner-boss-banner-attack{display:block;margin-top:5px;font:800 clamp(12px,1.6vw,16px)/1.35 system-ui,sans-serif;color:#f4ebff;letter-spacing:.045em}
+.runner-boss-banner-control{display:flex;flex-direction:column;align-items:flex-end;text-align:right;gap:5px}
+.runner-boss-banner-control strong{display:block;font:900 clamp(13px,1.65vw,18px)/1.3 system-ui,sans-serif;white-space:normal}
+.runner-boss-banner-eta{font:700 11px/1.3 system-ui,sans-serif;letter-spacing:.05em;color:#cbd7e8}
+.runner-boss-banner[data-action="jump"] .runner-boss-banner-control strong{color:#ffde93}
+.runner-boss-banner[data-action="double"] .runner-boss-banner-control strong{color:#ffac71}
+.runner-boss-banner[data-action="stay"] .runner-boss-banner-control strong{color:#a9f4f7}
+.runner-boss-banner[data-action="double"]{border-color:rgba(255,163,85,.65);box-shadow:inset 0 0 20px rgba(221,105,57,.14)}
+.runner-boss-banner[data-action="stay"]{border-color:rgba(117,235,237,.6);box-shadow:inset 0 0 20px rgba(91,204,208,.11)}
+@media(max-width:700px){.runner-boss-banner{align-items:flex-start}.runner-boss-banner-attack{font-size:11px}
+.runner-boss-banner-control strong{font-size:11px}.runner-boss-banner-eta{font-size:9px}}
 </style>
 </head>
 <body data-track-theme="signal001">
@@ -2114,8 +2126,13 @@ html{scroll-padding-top:80px}
         </div>
         <div id="runnerBossBanner" class="runner-boss-banner" data-type="0" role="status" aria-live="polite" hidden>
           <div><small id="runnerBossBannerKicker">⚠ ØN // БОСС ПРИБЛИЖАЕТСЯ</small>
-          <strong id="runnerBossBannerName">ОКО БЕЗДНЫ</strong></div>
-          <span class="runner-boss-banner-wave" id="runnerBossBannerWave">ВОЛНА 0 / 3</span>
+          <strong id="runnerBossBannerName">ОКО БЕЗДНЫ</strong>
+          <span class="runner-boss-banner-attack" id="runnerBossBannerAttack">ГРЕБЕНЬ ШИПОВ</span></div>
+          <div class="runner-boss-banner-control">
+           <span class="runner-boss-banner-wave" id="runnerBossBannerWave">ВОЛНА 0 / 3</span>
+           <strong id="runnerBossBannerAction">↑ ПРЫГАЙ</strong>
+           <span class="runner-boss-banner-eta" id="runnerBossBannerEta">ОПАСНОСТЬ ЧЕРЕЗ 2 С</span>
+          </div>
         </div>
         <div class="runner-canvas-wrap" id="runnerCanvasWrap">
           <canvas id="signalRunnerCanvas" width="960" height="360" tabindex="0" aria-label="SIGNAL RUNNER. Нажми пробел или коснись экрана, чтобы прыгнуть."></canvas>
@@ -3980,17 +3997,10 @@ function updateRunnerHazardHint(){
     }
   }
   if(runnerBossActive&&!runnerGameOver){
-    const title=runnerBossLabel();
-    if(!runnerObstacles.some(o=>o.bossAttack&&o.x+o.w>runnerPlayer.x)){
-      const t=RUNNER_BOSS_WAVE_TIMES[runnerBossWaveIndex]??11.2;
-      next=(en?'BOSS: ':'БОСС: ')+title+
-        (runnerBossWaveIndex<3?(en?' · NEXT STRIKE IN ':' · УДАР ЧЕРЕЗ ')+Math.max(0,Math.ceil(t-runnerBossClock))+(en?'S':'С'):
-         (en?' · SURVIVE!':' · ДЕРЖИСЬ!'));
-      level='warning';
-    }else{
-      next=(en?'BOSS: ':'БОСС: ')+title+' · '+Math.min(3,runnerBossWaveIndex)+'/3';
-      level='danger';
-    }
+    const cue=runnerBossCue(),lang=en?'en':'ru';
+    next=cue?(en?'BOSS ATTACK: ':'АТАКА БОССА: ')+RUNNER_BOSS_ACTIONS[cue.attack.action][lang]:
+      (en?'BOSS IS RETREATING':'БОСС ОТСТУПАЕТ');
+    level=cue&&cue.eta<1.2?'danger':'warning';
   }
   if(node.textContent!==next)node.textContent=next;
   node.classList.toggle('warning',level==='warning');
@@ -4042,10 +4052,40 @@ function spawnRunnerObstacle(){
 /* SIGNAL RUNNER V2 — boss encounters. All attacks reuse real obstacle collision
    geometry, and clocks advance only in updateRunner (pause-safe). No server bonuses. */
 const RUNNER_BOSS_DEFS=[
- {ru:'ОКО БЕЗДНЫ',en:'ABYSS EYE',color:'#d9a5ff',forms:['saw','ridge','twins']},
- {ru:'ЗМЕЙ РАЗЛОМА',en:'RIFT SERPENT',color:'#89eaf0',forms:['twins','saw','trident']},
- {ru:'СТРАЖ МОНОЛИТА',en:'MONOLITH GUARD',color:'#ffb77d',forms:['monolith','twins','saw']}
+ {ru:'ОКО БЕЗДНЫ',en:'ABYSS EYE',color:'#d9a5ff',attacks:[
+ {form:'ridge',action:'jump',ru:'ГРЕБЕНЬ ШИПОВ',en:'SPIKE RIDGE',height:31},
+ {form:'twins',action:'stay',ru:'ШИПЫ СВЕРХУ',en:'CEILING SPIKES',height:48},
+ {form:'saw',action:'jump',ru:'ЭНЕРГОПИЛА',en:'ENERGY SAW',height:46}]},
+ {ru:'ЗМЕЙ РАЗЛОМА',en:'RIFT SERPENT',color:'#89eaf0',attacks:[
+ {form:'twins',action:'stay',ru:'КЛЫКИ СВЕРХУ',en:'CEILING FANGS',height:48},
+ {form:'trident',action:'jump',ru:'НИЖНИЕ КЛЫКИ',en:'GROUND FANGS',height:46},
+ {form:'ridge',action:'stay',ru:'ХВОСТ СВЕРХУ',en:'CEILING TAIL',height:34}]},
+ {ru:'СТРАЖ МОНОЛИТА',en:'MONOLITH GUARD',color:'#ffb77d',attacks:[
+ {form:'slab',action:'jump',ru:'КАМЕННАЯ ПЛИТА',en:'STONE SLAB',height:34},
+ {form:'monolith',action:'double',ru:'ВЫСОКАЯ СТЕНА',en:'TALL WALL',height:128},
+ {form:'twins',action:'jump',ru:'КАМЕННЫЕ ОСКОЛКИ',en:'STONE SHARDS',height:46}]}
 ];
+const RUNNER_BOSS_ACTIONS={
+ jump:{ru:'↑ ПРЫГАЙ',en:'↑ JUMP'},
+ double:{ru:'↑↑ ДВОЙНОЙ ПРЫЖОК',en:'↑↑ DOUBLE JUMP'},
+ stay:{ru:'↓ НЕ ПРЫГАЙ',en:'↓ STAY LOW'}
+};
+function runnerBossAttackInfo(type,index){
+ const def=RUNNER_BOSS_DEFS[type]||RUNNER_BOSS_DEFS[0];
+ return def.attacks[Math.max(0,Math.min(2,index))];
+}
+function runnerBossCue(){
+ if(!runnerBossActive)return null;
+ const front=runnerPlayer.x+runnerPlayer.w;
+ const live=runnerObstacles.filter(o=>o.bossAttack&&o.x+o.w>=front-10).sort((a,b)=>a.x-b.x)[0];
+ if(live)return{index:live.bossWave-1,attack:runnerBossAttackInfo(runnerBossType,live.bossWave-1),
+   eta:Math.max(0,(live.x-front)/runnerSpeed),onScreen:live.x<RUNNER_W};
+ if(runnerBossWaveIndex<3)return{index:runnerBossWaveIndex,
+  attack:runnerBossAttackInfo(runnerBossType,runnerBossWaveIndex),
+  eta:Math.max(0,RUNNER_BOSS_WAVE_TIMES[runnerBossWaveIndex]-runnerBossClock+(RUNNER_W-front)/runnerSpeed),
+  onScreen:false};
+ return null;
+}
 const RUNNER_BOSS_WAVE_TIMES=[1.25,4.4,7.55];
 function runnerBossLabel(type=runnerBossType){
  const entry=RUNNER_BOSS_DEFS[type]||RUNNER_BOSS_DEFS[0];
@@ -4068,6 +4108,23 @@ function updateRunnerBossMission(){
    const kicker=document.getElementById('runnerBossBannerKicker');
    if(name)name.textContent=runnerBossLabel();
    if(waves)waves.textContent=(en?'WAVE ':'ВОЛНА ')+Math.min(3,runnerBossWaveIndex)+' / 3';
+   const cue=runnerBossCue(),lang=en?'en':'ru';
+   const attackNode=document.getElementById('runnerBossBannerAttack');
+   const actionNode=document.getElementById('runnerBossBannerAction');
+   const etaNode=document.getElementById('runnerBossBannerEta');
+   const set=(el,value)=>{if(el&&el.textContent!==value)el.textContent=value};
+   if(cue){
+     set(attackNode,cue.attack[lang]);
+     set(actionNode,RUNNER_BOSS_ACTIONS[cue.attack.action][lang]);
+     set(etaNode,(en?'DANGER IN ':'ОПАСНОСТЬ ЧЕРЕЗ ')+
+       Math.max(0,Math.ceil(cue.eta*10)/10).toFixed(1)+(en?'S':' С'));
+     banner.dataset.action=cue.attack.action;
+   }else{
+     set(attackNode,en?'FINAL WAVE CLEARED':'ПОСЛЕДНЯЯ ВОЛНА');
+     set(actionNode,en?'SURVIVE':'ПРОДЕРЖИСЬ');
+     set(etaNode,en?'BOSS RETREATING':'БОСС ОТСТУПАЕТ');
+     banner.dataset.action='done';
+   }
    if(kicker)kicker.textContent=en?'⚠ ØN // BOSS ENCOUNTER':'⚠ ØN // ВСТРЕЧА С БОССОМ';
   }
  }
@@ -4092,20 +4149,19 @@ function startRunnerBossEvent(forcedType=null){
 }
 function spawnRunnerBossWave(index){
  if(!runnerBossActive||index<0||index>=3)return false;
- const def=RUNNER_BOSS_DEFS[runnerBossType],id=def.forms[index];
- const form=runnerObstacleForm(id);if(!form)return false;
- const w=Math.round((form.width[0]+form.width[1])/2),h=Math.round((form.height[0]+form.height[1])/2);
- // Second wave of the rift serpent hangs from the ceiling: a safe low lane.
- const alternate=runnerBossType===1&&index===0;
- const ceiling=alternate?runnerGravity===1:runnerGravity===-1;
+ const attack=runnerBossAttackInfo(runnerBossType,index),form=runnerObstacleForm(attack.form);
+ if(!form)return false;
+ const w=Math.round((form.width[0]+form.width[1])/2),h=attack.height;
+ const ceiling=attack.action==='stay'?runnerGravity===1:runnerGravity===-1;
  const x=RUNNER_W+28,phase=(runnerBossType+1)*.8+index*.71;
- const o={x,y:ceiling?RUNNER_CEILING:RUNNER_GROUND-h,
-  w,h,type:form.type,form:id,variant:index%3,phase,ceiling,
-  encounter:'boss',bossAttack:true,bossType:runnerBossType,bossWave:index+1,groupSpan:w};
- if(id==='saw'){
-  o.motion='hover';o.motionSpeed=2.15;o.motionAmp=12;o.motionT=0;
-  o.baseY=ceiling?RUNNER_CEILING+12:RUNNER_GROUND-h-12;
-  o.y=o.baseY+Math.sin(o.phase)*o.motionAmp;
+ const o={x,y:ceiling?RUNNER_CEILING:RUNNER_GROUND-h,w,h,
+   type:form.type,form:attack.form,variant:index%3,phase,ceiling,
+   encounter:'boss',bossAttack:true,bossType:runnerBossType,bossWave:index+1,
+   bossAction:attack.action,groupSpan:w};
+ if(attack.form==='saw'){
+   o.motion='hover';o.motionSpeed=1.4;o.motionAmp=5;o.motionT=0;
+   o.baseY=ceiling?RUNNER_CEILING+6:RUNNER_GROUND-h-6;
+   o.y=o.baseY+Math.sin(o.phase)*o.motionAmp;
  }
  runnerObstacles.push(o);
  return true;
@@ -4113,6 +4169,7 @@ function spawnRunnerBossWave(index){
 function updateRunnerBossEvent(dt){
  if(!runnerBossActive)return;
  runnerBossClock+=dt;
+ updateRunnerBossMission();
  while(runnerBossWaveIndex<3&&runnerBossClock>=RUNNER_BOSS_WAVE_TIMES[runnerBossWaveIndex]){
   spawnRunnerBossWave(runnerBossWaveIndex);
   runnerBossWaveIndex++;
@@ -4238,8 +4295,9 @@ function drawRunnerBossAttackFx(ctx,o,phase){
  ctx.lineWidth=2;ctx.shadowBlur=14;ctx.shadowColor=edge;
  ctx.globalAlpha=.46+.22*Math.sin(phase*2.3);
  ctx.strokeRect(o.x-4,o.y-5,o.w+8,o.h+10);
- ctx.globalAlpha=.72;ctx.font='bold 12px Arial';ctx.textAlign='center';
- ctx.fillText('ØN · '+o.bossWave,o.x+o.w/2,o.y-12);
+ ctx.globalAlpha=.92;ctx.font='bold 15px Arial';ctx.textAlign='center';
+ const mark=o.bossAction==='double'?'↑↑':o.bossAction==='stay'?'↓':'↑';
+ ctx.fillText(mark,o.x+o.w/2,o.ceiling?o.y+o.h+23:o.y-14);
  ctx.restore();
 }
 function spawnRunnerOrb(){
@@ -5633,18 +5691,17 @@ function drawRunner(){
 
     runnerObstacles.forEach(o=>{
     ctx.save();
-    const skin=runnerStoreState.selected_obstacle;
+    const skin=o.bossAttack?(['rift_serpents','thunder_sentinels','inferno_obelisks'][o.bossType]||'signal_spires'):runnerStoreState.selected_obstacle;
     const hot=stage>=2;
     const variant=o.variant||0;
     const phase=(o.phase||0)+runnerDistanceValue*.035;
+    drawRunnerBossAttackFx(ctx,o,phase);
     if(o.ceiling){
       ctx.translate(0,2*o.y+o.h);
       ctx.scale(1,-1);
     }
 
-
     drawRunnerTrapTelegraph(ctx,o,phase);
-    drawRunnerBossAttackFx(ctx,o,phase);
     drawRunnerObstacleSignature(ctx,skin,o,phase,stage);
     if(drawRunnerObstacleGeometry(ctx,o,skin,phase)){
       // Real silhouette matches the V2 collision shape.
