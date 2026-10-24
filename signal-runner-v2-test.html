@@ -3778,16 +3778,89 @@ async function startRunner(){
   runnerRaf=requestAnimationFrame(runnerLoop);
   runnerCanvas?.focus();
 }
-function spawnRunnerObstacle(){
-  const roll=Math.random();
-  const ceiling=runnerGravity===-1;
-  if(roll<.72){
-    const h=34+Math.random()*45,w=20+Math.random()*18;
-    runnerObstacles.push({x:RUNNER_W+24,y:ceiling?RUNNER_CEILING:RUNNER_GROUND-h,w,h,type:'spire',variant:Math.floor(Math.random()*3),phase:Math.random()*Math.PI*2,ceiling});
-  }else{
-    const h=28+Math.random()*16,w=42+Math.random()*26;
-    runnerObstacles.push({x:RUNNER_W+24,y:ceiling?RUNNER_CEILING:RUNNER_GROUND-h,w,h,type:'block',variant:Math.floor(Math.random()*3),phase:Math.random()*Math.PI*2,ceiling});
+/* V2 obstacle morphology — eight genuinely different silhouettes.
+   The renderer AND collision share the same shape definitions. */
+const RUNNER_OBSTACLE_FORMS=[
+  {id:'needle',type:'spire',minStage:0,weight:14,width:[21,31],height:[43,69]},
+  {id:'twins',type:'spire',minStage:0,weight:12,width:[43,60],height:[32,53]},
+  {id:'slab',type:'block',minStage:0,weight:12,width:[51,81],height:[22,35]},
+  {id:'trident',type:'spire',minStage:1,weight:13,width:[62,83],height:[34,53]},
+  {id:'shard',type:'spire',minStage:1,weight:11,width:[33,53],height:[50,74]},
+  {id:'ridge',type:'spire',minStage:2,weight:8,width:[88,113],height:[24,41]},
+  {id:'monolith',type:'block',minStage:2,weight:9,width:[35,51],height:[62,86]},
+  {id:'saw',type:'block',minStage:2,weight:7,width:[44,56],height:[44,56]}
+];
+function runnerObstacleForm(id){return RUNNER_OBSTACLE_FORMS.find(f=>f.id===id)}
+function runnerObstacleShapes(o){
+  const id=o.form||'';
+  if(!['needle','twins','trident','ridge','shard'].includes(id))return [];
+  const count={needle:1,twins:2,trident:3,ridge:5,shard:1}[id];
+  const base=o.ceiling?o.y:o.y+o.h;
+  const tipIsUp=!o.ceiling;
+  const result=[];
+  for(let i=0;i<count;i++){
+    const step=o.w/count, left=o.x+step*i;
+    const topScale=id==='ridge'?.68+(.32*((i*3+1)%5)/4):id==='trident'?.82+(i===1?.18:0):1;
+    const tip=base+(tipIsUp?-1:1)*o.h*topScale;
+    const shift=id==='shard'?step*.16:step*(i%2?.045:-.035);
+    result.push([[left+2,base],[left+step*.5+shift,tip],[left+step-2,base]]);
   }
+  return result;
+}
+function runnerPolygonRectHit(vertices,box,pad){
+  const left=box.x+pad,right=box.x+box.w-pad,top=box.y+pad,bottom=box.y+box.h-pad;
+  if(right<=left||bottom<=top)return false;
+  const rect=[[left,top],[right,top],[right,bottom],[left,bottom]];
+  const axes=[[1,0],[0,1]];
+  for(let i=0;i<vertices.length;i++){
+    const a=vertices[i],b=vertices[(i+1)%vertices.length];
+    axes.push([a[1]-b[1],b[0]-a[0]]);
+  }
+  for(const [nx,ny] of axes){
+    let amin=Infinity,amax=-Infinity,bmin=Infinity,bmax=-Infinity;
+    for(const [x,y] of vertices){const d=nx*x+ny*y;amin=Math.min(amin,d);amax=Math.max(amax,d)}
+    for(const [x,y] of rect){const d=nx*x+ny*y;bmin=Math.min(bmin,d);bmax=Math.max(bmax,d)}
+    if(amax<=bmin||bmax<=amin)return false;
+  }
+  return true;
+}
+function runnerObstacleHit(player,o,pad=7){
+  if(!rectHit(player,o,pad))return false;
+  if(o.form==='saw'){
+    const r=Math.min(o.w,o.h)*.43;
+    const left=player.x+pad,right=player.x+player.w-pad;
+    const top=player.y+pad,bottom=player.y+player.h-pad;
+    const cx=o.x+o.w*.5,cy=o.y+o.h*.5;
+    const dx=cx-Math.max(left,Math.min(cx,right));
+    const dy=cy-Math.max(top,Math.min(cy,bottom));
+    return dx*dx+dy*dy<r*r;
+  }
+  const triangles=runnerObstacleShapes(o);
+  if(triangles.length)return triangles.some(poly=>runnerPolygonRectHit(poly,player,pad));
+  return true;
+}
+function spawnRunnerObstacle(){
+  const stage=runnerStage;
+  const forced=typeof window!=='undefined'?window.__runnerV2ForceObstacleForm:null;
+  const available=RUNNER_OBSTACLE_FORMS.filter(form=>form.minStage<=stage);
+  const approved=runnerObstacleForm(forced);
+  const pool=approved?[approved]:available;
+  const total=pool.reduce((sum,f)=>sum+f.weight,0);
+  let roll=Math.random()*total,selected=pool[0];
+  for(const entry of pool){roll-=entry.weight;if(roll<0){selected=entry;break}}
+  const w=Math.round(selected.width[0]+Math.random()*(selected.width[1]-selected.width[0]));
+  const h=Math.round(selected.height[0]+Math.random()*(selected.height[1]-selected.height[0]));
+  const startX=RUNNER_W+24;
+  // Protect the full Ø pickup arc, not just the coin center.
+  const coinClearance=runnerSpeed*.62+Math.max(60,w*.65);
+  if(runnerOrbs.some(orb=>Math.abs(orb.x-(startX+w*.5))<coinClearance))return false;
+  // Protect a landing lane after the preceding broad / tall obstacle.
+  if(runnerObstacles.some(ob=>ob.x+ob.w>startX-Math.max(138,runnerSpeed*.45)))return false;
+  const ceiling=runnerGravity===-1;
+  runnerObstacles.push({x:startX,y:ceiling?RUNNER_CEILING:RUNNER_GROUND-h,w,h,
+    type:selected.type,form:selected.id,variant:Math.floor(Math.random()*3),
+    phase:Math.random()*Math.PI*2,ceiling});
+  return true;
 }
 function spawnRunnerOrb(){
   // A collectible path may only start in a gap sufficiently far from existing
@@ -3923,8 +3996,10 @@ function updateRunner(dt){
 
     runnerSpawn-=dt;
     if(runnerSpawn<=0){
-      spawnRunnerObstacle();
-      runnerSpawn=Math.max(.58,1.48-runnerSpeed*.00105)+Math.random()*.46;
+      const spawned=spawnRunnerObstacle();
+      // A wide obstacle needs more landing space; retry shortly if the Ø arc is occupied.
+      const latest=runnerObstacles[runnerObstacles.length-1];
+      runnerSpawn=spawned?Math.max(.78,((latest?.w||50)+Math.max(148,runnerSpeed*.46))/runnerSpeed)+Math.random()*.36:.19;
     }
     runnerOrbSpawn-=dt;
     if(runnerOrbSpawn<=0){
@@ -3942,7 +4017,7 @@ function updateRunner(dt){
 
   const p={x:runnerPlayer.x,y:runnerPlayer.y,w:runnerPlayer.w,h:runnerPlayer.h};
   if(!runnerPortalTransition.active){
-    for(const o of runnerObstacles){if(rectHit(p,o,7)){gameOverRunner();return}}
+    for(const o of runnerObstacles){if(runnerObstacleHit(p,o,7)){gameOverRunner();return}}
   }
 
   runnerOrbs=runnerPortalTransition.active?[]:runnerOrbs.filter(o=>{
@@ -4663,6 +4738,75 @@ function drawRunnerPremiumHazard(ctx,skin,o,variant,phase){
 
 
 
+/* V2 obstacle silhouettes. A skin changes material/glow, not its safe collision geometry. */
+function drawRunnerObstacleGeometry(ctx,o,skin,phase){
+  if(!runnerObstacleForm(o.form))return false;
+  const ice=['frost_spines','crystal_shards'].includes(skin);
+  const fire=['inferno_obelisks','orbital_debris'].includes(skin);
+  const electric=['thunder_sentinels','mecha_drones','signal_spires'].includes(skin);
+  const toxic=['glitch_slimes'].includes(skin);
+  const violet=['rift_serpents','spirit_masks','moon_familiars'].includes(skin);
+  const edge=ice?'#b8f6ff':fire?'#ffaf69':electric?'#82f4ef':toxic?'#a7ffb1':violet?'#dbacff':'#c7ddec';
+  const core=ice?'#1c6784':fire?'#7b2835':electric?'#12636c':toxic?'#206950':violet?'#48316c':'#2a435e';
+  const body=ice?'#0c2c4e':fire?'#26131b':electric?'#0b2335':toxic?'#132d23':violet?'#160e30':'#101b2e';
+  const x=o.x,y=o.y,w=o.w,h=o.h,bottom=y+h;
+  ctx.save();
+  const grad=ctx.createLinearGradient(x,y,x+w*.7,bottom);
+  grad.addColorStop(0,core);grad.addColorStop(.56,body);grad.addColorStop(1,'#050914');
+  ctx.fillStyle=grad;ctx.strokeStyle=edge;ctx.lineWidth=1.35;
+  ctx.shadowColor=edge;ctx.shadowBlur=5+Math.sin(phase)*2;
+  if(['needle','twins','trident','ridge','shard'].includes(o.form)){
+    const shapes=runnerObstacleShapes({...o,ceiling:false});
+    // Drawing is in floor orientation; the enclosing canvas mirrors ceiling hazards.
+    for(let i=0;i<shapes.length;i++){
+      const poly=shapes[i];
+      ctx.beginPath();ctx.moveTo(poly[0][0],poly[0][1]);
+      for(let p=1;p<poly.length;p++)ctx.lineTo(poly[p][0],poly[p][1]);
+      ctx.closePath();ctx.fill();ctx.stroke();
+      const mid=poly[1][0],high=poly[1][1];
+      ctx.shadowBlur=0;ctx.strokeStyle='rgba(232,250,255,.41)';ctx.lineWidth=.9;
+      ctx.beginPath();ctx.moveTo(mid,high+3);ctx.lineTo(poly[0][0]+(mid-poly[0][0])*.58,bottom-3);ctx.stroke();
+      ctx.shadowBlur=5;ctx.strokeStyle=edge;ctx.lineWidth=1.35;
+    }
+    if(o.form==='shard'){
+      ctx.beginPath();ctx.moveTo(x+2,bottom-3);ctx.lineTo(x+w*.26,y+h*.61);
+      ctx.lineTo(x+w*.78,y+h*.41);ctx.lineTo(x+w-2,bottom-3);
+      ctx.strokeStyle=edge;ctx.globalAlpha=.52;ctx.stroke();ctx.globalAlpha=1;
+    }
+  }else if(o.form==='saw'){
+    const cx=x+w*.5,cy=y+h*.5,r=Math.min(w,h)*.43;
+    ctx.save();ctx.translate(cx,cy);ctx.rotate(phase*.27);
+    for(let i=0;i<12;i++){
+      const a=i*Math.PI/6,b=a+.2;
+      ctx.beginPath();ctx.moveTo(Math.cos(a)*r*.71,Math.sin(a)*r*.71);
+      ctx.lineTo(Math.cos(a+.13)*r,Math.sin(a+.13)*r);
+      ctx.lineTo(Math.cos(b)*r*.73,Math.sin(b)*r*.73);
+      ctx.closePath();ctx.fill();ctx.stroke();
+    }
+    ctx.beginPath();ctx.arc(0,0,r*.72,0,Math.PI*2);ctx.fill();ctx.stroke();
+    ctx.shadowBlur=0;ctx.strokeStyle=edge;ctx.lineWidth=2.6;
+    ctx.beginPath();ctx.arc(0,0,r*.47,0,Math.PI*2);ctx.stroke();
+    ctx.fillStyle='#050a13';ctx.beginPath();ctx.arc(0,0,r*.19,0,Math.PI*2);ctx.fill();
+    ctx.restore();
+  }else if(o.form==='monolith'){
+    ctx.beginPath();ctx.moveTo(x+5,bottom);ctx.lineTo(x+2,y+9);ctx.lineTo(x+w*.32,y);
+    ctx.lineTo(x+w-7,y+3);ctx.lineTo(x+w-2,bottom);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.shadowBlur=0;ctx.strokeStyle=edge;ctx.globalAlpha=.56;ctx.lineWidth=1.8;
+    ctx.beginPath();ctx.moveTo(x+w*.31,y+9);ctx.lineTo(x+w*.54,y+h*.34);
+    ctx.lineTo(x+w*.4,y+h*.58);ctx.lineTo(x+w*.64,bottom-9);ctx.stroke();ctx.globalAlpha=1;
+  }else{
+    ctx.beginPath();ctx.roundRect(x+1,y+1,w-2,h-2,Math.min(5,h*.18));ctx.fill();ctx.stroke();
+    ctx.shadowBlur=0;ctx.strokeStyle=edge;ctx.globalAlpha=.45;ctx.lineWidth=1;
+    for(let i=1;i<4;i++){
+      const xx=x+(w/4)*i;
+      ctx.beginPath();ctx.moveTo(xx,y+3);ctx.lineTo(xx-4,bottom-3);ctx.stroke();
+    }
+    ctx.globalAlpha=1;
+  }
+  ctx.restore();
+  return true;
+}
+
 /* Landing forecast uses the same kinematics and hitbox as updateRunner.
    It is advisory only: a second jump or speed change can alter the result. */
 function getRunnerLandingForecast(){
@@ -4676,8 +4820,8 @@ function getRunnerLandingForecast(){
   const projected={x:runnerPlayer.x,y:floorY,w:runnerPlayer.w,h:runnerPlayer.h};
   const unsafe=runnerObstacles.some(obstacle=>{
     if(!!obstacle.ceiling!==(runnerGravity===-1))return false;
-    const future={x:obstacle.x-runnerSpeed*time,y:obstacle.y,w:obstacle.w,h:obstacle.h};
-    return rectHit(projected,future,7);
+    const future={...obstacle,x:obstacle.x-runnerSpeed*time};
+    return runnerObstacleHit(projected,future,7);
   });
   return {time,unsafe,x:runnerPlayer.x+runnerPlayer.w/2,
     y:runnerGravity===1?RUNNER_GROUND:RUNNER_CEILING};
@@ -5127,7 +5271,9 @@ function drawRunner(){
 
 
     drawRunnerObstacleSignature(ctx,skin,o,phase,stage);
-    if(drawRunnerPremiumHazard(ctx,skin,o,variant,phase)){
+    if(drawRunnerObstacleGeometry(ctx,o,skin,phase)){
+      // Real silhouette matches the V2 collision shape.
+    }else if(drawRunnerPremiumHazard(ctx,skin,o,variant,phase)){
       // All four themed silhouettes are drawn inside the existing hitbox.
     }else if(skin==='frost_spines'){
       const icy=ctx.createLinearGradient(o.x,o.y,o.x+o.w,o.y+o.h);
@@ -6142,7 +6288,9 @@ applyGameLanguage(document.documentElement.lang==='en'?'en':'ru');
  <label>Мир / фон <select id="runnerV2World"></select></label>
  <label>Планета <select id="runnerV2Planet"></select></label>
  <label>Препятствия <select id="runnerV2Hazard"></select></label>
- <p>Все 10 миров, 14 планет и 11 типов препятствий доступны здесь для визуальной проверки. Выбор тестового облика не открывает товар и не меняет покупки на сайте.</p>
+ <label>Форма ловушки <select id="runnerV2Form"></select></label>
+ <canvas id="runnerV2FormCanvas" width="600" height="190" style="display:block;width:100%;max-height:160px;background:#050c14;border:1px solid #244453;border-radius:10px;margin:10px 0" aria-label="Рисунок выбранной формы препятствия"></canvas>
+ <p>Выбери отдельную форму шипов или AUTO для случайной генерации. Форма влияет на столкновения и сложность. Все 10 миров, 14 планет и 11 типов препятствий доступны здесь для визуальной проверки. Выбор тестового облика не открывает товар и не меняет покупки на сайте.</p>
  <p>Забеги, Ø-кредиты и профиль сохраняются только в браузере тестовой страницы. Привязка устройств отключена. Цены внутри магазина — условные тестовые.</p>
  <div class="test-actions"><button type="button" id="runnerV2TestReset">СБРОСИТЬ ДЕМО</button><button type="button" id="runnerV2TestClose">ЗАКРЫТЬ</button></div>
 </div>
@@ -6266,6 +6414,46 @@ function runnerPreviewSelect(category,value){
  const key={background:'selected_background',avatar:'selected_avatar',obstacle:'selected_obstacle'}[category];
  runnerPreviewData[key]=value;runnerPreviewStore();
  applyRunnerStoreState(runnerPreviewSnapshot());drawRunner();
+}
+const runnerV2FormSelect=document.getElementById('runnerV2Form');
+const runnerV2FormNames={
+ needle:'01 · ОДИНОЧНЫЙ ШИП',twins:'02 · ДВОЙНЫЕ ШИПЫ',slab:'03 · НИЗКАЯ ПЛИТА',
+ trident:'04 · ТРОЙНЫЕ ШИПЫ',shard:'05 · ОСТРЫЙ КРИСТАЛЛ',
+ ridge:'06 · ШИРОКИЙ ГРЕБЕНЬ',monolith:'07 · ВЫСОКИЙ МОНОЛИТ',saw:'08 · ВРАЩАЮЩАЯСЯ ПИЛА'
+};
+function runnerPreviewFormDisplay(){
+ const canvas=document.getElementById('runnerV2FormCanvas'),ctx=canvas?.getContext('2d');
+ if(!ctx)return;
+ const chosen=runnerObstacleForm(runnerV2FormSelect.value)||RUNNER_OBSTACLE_FORMS[0];
+ const form=chosen,skin=runnerPreviewData.selected_obstacle||'signal_spires';
+ ctx.clearRect(0,0,600,190);
+ const shade=ctx.createLinearGradient(0,0,600,190);
+ shade.addColorStop(0,'#070f1c');shade.addColorStop(.65,'#0b1e31');shade.addColorStop(1,'#080916');
+ ctx.fillStyle=shade;ctx.fillRect(0,0,600,190);
+ ctx.strokeStyle='rgba(133,206,227,.17)';ctx.lineWidth=1;
+ for(let i=0;i<13;i++){const px=i*52;ctx.beginPath();ctx.moveTo(px,0);ctx.lineTo(px,190);ctx.stroke()}
+ ctx.save();ctx.scale(1.7,1.7);
+ const w=(form.width[0]+form.width[1])*.5,h=(form.height[0]+form.height[1])*.5;
+ const o={x:176-w*.5,y:100-h,w,h,type:form.type,form:form.id,ceiling:false,variant:0};
+ drawRunnerObstacleGeometry(ctx,o,skin,6);
+ ctx.strokeStyle='rgba(108,237,226,.7)';ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(0,101);ctx.lineTo(350,101);ctx.stroke();ctx.restore();
+ ctx.fillStyle='#d7f7fa';ctx.font='bold 17px Arial';ctx.fillText(runnerV2FormNames[form.id],18,28);
+ ctx.fillStyle='#94acb7';ctx.font='13px Arial';
+ ctx.fillText('ШИРИНА '+Math.round(w)+' PX    ВЫСОТА '+Math.round(h)+' PX',18,53);
+}
+if(runnerV2FormSelect){
+ const option=document.createElement('option');option.value='';option.textContent='AUTO · СЛУЧАЙНЫЕ';runnerV2FormSelect.appendChild(option);
+ for(const form of RUNNER_OBSTACLE_FORMS){
+  const el=document.createElement('option');el.value=form.id;el.textContent=runnerV2FormNames[form.id];
+  runnerV2FormSelect.appendChild(el);
+ }
+ runnerV2FormSelect.addEventListener('change',event=>{
+  window.__runnerV2ForceObstacleForm=event.target.value;
+  runnerPreviewFormDisplay();
+ });
+ document.getElementById('runnerV2Hazard')?.addEventListener('change',()=>runnerPreviewFormDisplay());
+ runnerV2FormSelect.value='';
+ runnerPreviewFormDisplay();
 }
 function runnerPreviewOpen(){
  const drawer=document.getElementById('runnerV2TestDrawer');
