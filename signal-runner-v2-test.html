@@ -6915,11 +6915,16 @@ if(runnerV2FormSelect){
  runnerV2FormSelect.value='';
  runnerPreviewFormDisplay();
 }
-document.getElementById('runnerV2BossStart')?.addEventListener('click',()=>{
+document.getElementById('runnerV2BossStart')?.addEventListener('click',async()=>{
  const feedback=document.getElementById('runnerV2BossStatus');
+ // Boss demo is ONE TAP: start the isolated run automatically when necessary.
  if(!runnerRunning||runnerGameOver){
-   if(feedback)feedback.textContent='Сначала нажми «ИГРАТЬ» и запусти забег.';
-   return;
+   if(feedback)feedback.textContent='ПОДКЛЮЧЕНИЕ К АРЕНЕ БОССА…';
+   await startRunner();
+   if(!runnerRunning){
+    if(feedback)feedback.textContent='Не удалось начать тестовый забег. Нажми ещё раз.';
+    return;
+   }
  }
  const type=Number(document.getElementById('runnerV2Boss')?.value||0);
  const started=startRunnerBossEvent(type);
