@@ -34,6 +34,14 @@ try{
     return p.top>=c.bottom-2 && (p.top>=h.bottom||p.left>=h.right);
   });
   assert.equal(pauseFits,true,'Pause is beneath playfield, not over scores or the canvas');
+  assert.equal(await page.locator('#runnerHazardHint').count(),1,'Approach warning exists');
+  const warningOutOfPlayfield=await page.evaluate(()=>{
+    const c=document.getElementById('signalRunnerCanvas').getBoundingClientRect();
+    const cue=document.getElementById('runnerHazardHint').getBoundingClientRect();
+    const hud=document.querySelector('.runner-hud').getBoundingClientRect();
+    return cue.top>=c.bottom-2&&cue.top>=hud.bottom;
+  });
+  assert.equal(warningOutOfPlayfield,true,'Upcoming-trap warning never covers gameplay or scores');
   assert.equal(await page.locator('#runnerGuidePanel').count(),1,'In-flow game guide is present');
   assert.equal(await page.locator('#runnerGuidePanel').getAttribute('hidden'),'','Guide is hidden at rest');
   await page.locator('#runnerGuideToggle').click();
