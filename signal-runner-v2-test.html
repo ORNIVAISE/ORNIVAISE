@@ -6625,6 +6625,9 @@ applyGameLanguage(document.documentElement.lang==='en'?'en':'ru');
  <label>Препятствия <select id="runnerV2Hazard"></select></label>
  <label>Форма ловушки <select id="runnerV2Form"></select></label>
  <label>Тип испытания <select id="runnerV2Pattern"><option value="auto">AUTO · СМЕШАННЫЕ</option><option value="pair">ПАРНЫЕ ШИПЫ</option><option value="overhead">ВЕРХНИЕ ЛОВУШКИ</option><option value="hover">ДВИЖУЩАЯСЯ ПИЛА</option></select></label>
+ <label>Босс <select id="runnerV2Boss"><option value="0">ОКО БЕЗДНЫ</option><option value="1">ЗМЕЙ РАЗЛОМА</option><option value="2">СТРАЖ МОНОЛИТА</option></select></label>
+ <button id="runnerV2BossStart" type="button" style="width:100%;padding:12px;border:1px solid #945fce;border-radius:10px;background:#211335;color:#ead5ff;font-weight:700;cursor:pointer">ЗАПУСТИТЬ ВСТРЕЧУ С БОССОМ</button>
+ <p id="runnerV2BossStatus" style="font:12px/1.4 system-ui;color:#aebdc9" role="status">Для теста начни обычный забег и выбери босса.</p>
  <canvas id="runnerV2FormCanvas" width="600" height="190" style="display:block;width:100%;max-height:160px;background:#050c14;border:1px solid #244453;border-radius:10px;margin:10px 0" aria-label="Рисунок выбранной формы препятствия"></canvas>
  <p>Выбери отдельную форму шипов или AUTO для случайной генерации. Форма влияет на столкновения и сложность. Все 10 миров, 14 планет и 11 типов препятствий доступны здесь для визуальной проверки. Выбор тестового облика не открывает товар и не меняет покупки на сайте.</p>
  <p>Забеги, Ø-кредиты и профиль сохраняются только в браузере тестовой страницы. Привязка устройств отключена. Цены внутри магазина — условные тестовые.</p>
@@ -6796,6 +6799,22 @@ if(runnerV2FormSelect){
  runnerV2FormSelect.value='';
  runnerPreviewFormDisplay();
 }
+document.getElementById('runnerV2BossStart')?.addEventListener('click',()=>{
+ const feedback=document.getElementById('runnerV2BossStatus');
+ if(!runnerRunning||runnerGameOver){
+   if(feedback)feedback.textContent='Сначала нажми «ИГРАТЬ» и запусти забег.';
+   return;
+ }
+ const type=Number(document.getElementById('runnerV2Boss')?.value||0);
+ const started=startRunnerBossEvent(type);
+ if(feedback)feedback.textContent=started?'БОСС АКТИВИРОВАН · ТРИ ВОЛНЫ · НАГРАДА ТОЛЬКО В ПРОГРЕССЕ ТЕСТА':
+   'Встреча уже активна. Заверши её, чтобы испытать следующего босса.';
+ if(started){
+   runnerPreviewDrawer?.classList.remove('open');
+   runnerPreviewSettings?.setAttribute('aria-expanded','false');
+   if(runnerPaused)resumeRunner();
+ }
+});
 function runnerPreviewOpen(){
  const drawer=document.getElementById('runnerV2TestDrawer');
  drawer?.classList.remove('open');
