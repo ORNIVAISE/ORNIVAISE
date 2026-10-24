@@ -1883,6 +1883,25 @@ body.runner-v2-testing .easter-panel.signal-game{max-height:calc(100dvh - 50px)!
 .runner-boss-mission[data-state="complete"]{color:#c2e6d2;border-top-color:rgba(123,209,163,.4)}
 .runner-boss-mission[data-state="complete"] strong{color:#98f5c5}
 @media(max-width:700px){.runner-boss-mission{padding:8px 10px;gap:7px;font-size:9px}}
+
+/* Boss announcement is a prominent separate band, not a faint background decoration. */
+.runner-boss-banner[hidden]{display:none!important}
+.runner-boss-banner{display:flex;align-items:center;justify-content:space-between;gap:14px;
+  min-height:53px;padding:10px 16px;border-top:1px solid rgba(207,159,255,.42);
+  border-bottom:1px solid rgba(207,159,255,.42);color:#f2e3ff;
+  background:linear-gradient(105deg,#311745,#160e2b 48%,#221439);
+  box-shadow:inset 4px 0 0 #c7a5ff}
+.runner-boss-banner[data-type="1"]{color:#d8ffff;border-color:rgba(104,238,240,.46);
+  box-shadow:inset 4px 0 0 #9ff2f2;background:linear-gradient(105deg,#102f40,#0a1d36 52%,#113044)}
+.runner-boss-banner[data-type="2"]{color:#ffead3;border-color:rgba(255,167,109,.5);
+  box-shadow:inset 4px 0 0 #ffc07f;background:linear-gradient(105deg,#43251f,#291921 52%,#391c1a)}
+.runner-boss-banner strong{display:block;font:850 clamp(13px,2vw,20px)/1.3 system-ui,sans-serif;letter-spacing:.09em}
+.runner-boss-banner small{display:block;color:inherit;opacity:.78;font:750 10px/1.4 system-ui,sans-serif;letter-spacing:.14em;margin-bottom:3px}
+.runner-boss-banner-wave{font:800 12px/1.25 system-ui,sans-serif;white-space:nowrap;padding:8px 12px;
+  border:1px solid currentColor;border-radius:8px}
+@media(max-width:700px){.runner-boss-banner{min-height:47px;padding:8px 11px;gap:6px}
+.runner-boss-banner strong{font-size:13px}.runner-boss-banner small{font-size:9px}
+.runner-boss-banner-wave{font-size:10px;padding:7px 8px}}
 </style>
 </head>
 <body data-track-theme="signal001">
@@ -2140,6 +2159,11 @@ body.runner-v2-testing .easter-panel.signal-game{max-height:calc(100dvh - 50px)!
           <div class="runner-stat"><small>СИГНАЛЫ</small><strong id="runnerSignals">00</strong></div>
           <div class="runner-stat"><small>РЕКОРД</small><strong id="runnerBest">00000</strong></div>
           <div class="runner-stat"><small>Ø-CREDITS</small><strong id="runnerCredits">0000</strong></div>
+        </div>
+        <div id="runnerBossBanner" class="runner-boss-banner" data-type="0" role="status" aria-live="polite" hidden>
+          <div><small id="runnerBossBannerKicker">⚠ ØN // БОСС ПРИБЛИЖАЕТСЯ</small>
+          <strong id="runnerBossBannerName">ОКО БЕЗДНЫ</strong></div>
+          <span class="runner-boss-banner-wave" id="runnerBossBannerWave">ВОЛНА 0 / 3</span>
         </div>
         <div class="runner-canvas-wrap" id="runnerCanvasWrap">
           <canvas id="signalRunnerCanvas" width="960" height="360" tabindex="0" aria-label="SIGNAL RUNNER. Нажми пробел или коснись экрана, чтобы прыгнуть."></canvas>
@@ -4065,6 +4089,19 @@ function updateRunnerBossMission(){
  const label=document.getElementById('runnerBossMissionText');
  const status=document.getElementById('runnerBossMissionProgress');
  const current=runnerBossActive;
+ const banner=document.getElementById('runnerBossBanner');
+ if(banner){
+  banner.hidden=!current;
+  banner.dataset.type=String(runnerBossType);
+  if(current){
+   const name=document.getElementById('runnerBossBannerName');
+   const waves=document.getElementById('runnerBossBannerWave');
+   const kicker=document.getElementById('runnerBossBannerKicker');
+   if(name)name.textContent=runnerBossLabel();
+   if(waves)waves.textContent=(en?'WAVE ':'ВОЛНА ')+Math.min(3,runnerBossWaveIndex)+' / 3';
+   if(kicker)kicker.textContent=en?'⚠ ØN // BOSS ENCOUNTER':'⚠ ØN // ВСТРЕЧА С БОССОМ';
+  }
+ }
  el.dataset.state=current?'battle':runnerBossWins?'complete':'ready';
  if(label)label.textContent=current?(en?'BOSS ENCOUNTER: ':'БОСС: ')+runnerBossLabel():
    en?'MISSION: SURVIVE ONE BOSS':'ЗАДАНИЕ: ПЕРЕЖИТЬ ОДНОГО БОССА';
@@ -4122,6 +4159,108 @@ function updateRunnerBossEvent(dt){
   updateRunnerBossMission();
  }
 }
+/* V2: large, high-contrast, unmistakable boss silhouettes.
+   Art is decorative; contact damage comes ONLY from three telegraphed hazards. */
+function drawRunnerBossPresence(ctx){
+ if(!runnerBossActive)return;
+ const t=runnerBossClock,entry=Math.max(0,Math.min(1,t/.62));
+ const wave=RUNNER_BOSS_WAVE_TIMES.some(at=>Math.abs(t-at)<.27);
+ const col=RUNNER_BOSS_DEFS[runnerBossType]?.color||'#cda9ff';
+ const x=RUNNER_W*.735+Math.sin(t*.86)*11, y=150+Math.sin(t*1.1)*7;
+ ctx.save();
+ ctx.globalAlpha=.97*entry;
+ ctx.translate(x+(1-entry)*135,y);
+ const scale=.94+.04*Math.sin(t*.91);ctx.scale(scale,scale);
+ const halo=ctx.createRadialGradient(0,0,12,0,0,185);
+ halo.addColorStop(0,runnerBossType===2?'rgba(248,129,68,.38)':runnerBossType===1?'rgba(81,225,230,.33)':'rgba(183,116,250,.36)');
+ halo.addColorStop(.55,'rgba(59,45,98,.1)');halo.addColorStop(1,'rgba(0,0,0,0)');
+ ctx.fillStyle=halo;ctx.fillRect(-195,-184,390,368);
+ ctx.lineJoin='round';ctx.lineCap='round';
+ if(runnerBossType===0){
+  // ABYSS EYE: dark armored eyelids, glowing iris and eight orbiting blades.
+  ctx.save();ctx.rotate(Math.sin(t*.52)*.045);
+  ctx.shadowColor='#b879ff';ctx.shadowBlur=25;
+  ctx.fillStyle='#100c2b';ctx.strokeStyle='#ca9cff';ctx.lineWidth=5;
+  ctx.beginPath();ctx.moveTo(-148,0);ctx.bezierCurveTo(-81,-89,74,-102,147,0);
+  ctx.bezierCurveTo(73,92,-79,101,-148,0);ctx.fill();ctx.stroke();
+  ctx.shadowBlur=0;ctx.fillStyle='#2f1d56';ctx.strokeStyle='#9c65db';ctx.lineWidth=3;
+  ctx.beginPath();ctx.ellipse(0,0,72,67,0,0,Math.PI*2);ctx.fill();ctx.stroke();
+  const iris=ctx.createRadialGradient(-17,-17,3,0,0,59);
+  iris.addColorStop(0,'#effaff');iris.addColorStop(.21,'#b2e2ff');iris.addColorStop(.44,'#ad6cf8');
+  iris.addColorStop(.79,'#45206e');iris.addColorStop(1,'#0a0723');
+  ctx.fillStyle=iris;ctx.beginPath();ctx.arc(0,0,57,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle='rgba(231,194,255,.88)';ctx.lineWidth=1.3;
+  for(let i=0;i<14;i++){const a=t*.34+i*Math.PI/7;ctx.beginPath();ctx.moveTo(Math.cos(a)*33,Math.sin(a)*33);
+   ctx.lineTo(Math.cos(a)*51,Math.sin(a)*51);ctx.stroke()}
+  ctx.fillStyle='#050416';ctx.shadowColor='#b49aff';ctx.shadowBlur=15;
+  ctx.beginPath();ctx.arc(Math.sin(t*.6)*5,0,26,0,Math.PI*2);ctx.fill();
+  ctx.shadowBlur=0;ctx.fillStyle='#f6edff';ctx.beginPath();ctx.arc(-12,-16,9,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle='#c5a3ff';ctx.lineWidth=2;
+  for(let i=0;i<8;i++){
+   const a=i*Math.PI/4+t*.3;
+   const r=112+Math.sin(t*1.3+i)*4,px=Math.cos(a)*r*1.42,py=Math.sin(a)*r*.75;
+   ctx.beginPath();ctx.moveTo(px,py-12);ctx.lineTo(px+8,py);ctx.lineTo(px,py+13);ctx.stroke();
+  }
+  ctx.restore();
+ }else if(runnerBossType===1){
+  // RIFT SERPENT: thick layered cyber-serpent, a clear head and plasma horns.
+  ctx.save();
+  ctx.strokeStyle='#0c374b';ctx.lineWidth=49;ctx.shadowColor='#68eced';ctx.shadowBlur=21;
+  ctx.beginPath();ctx.moveTo(-156,79);ctx.bezierCurveTo(-120,-72,-39,98,11,-22);
+  ctx.bezierCurveTo(53,-120,91,-58,111,-15);ctx.stroke();
+  ctx.shadowBlur=0;ctx.strokeStyle='#3d8499';ctx.lineWidth=38;ctx.stroke();
+  ctx.strokeStyle='#a7f4f5';ctx.lineWidth=5;ctx.stroke();
+  for(let i=0;i<7;i++){
+   const px=-147+i*31,py=71-Math.sin(i*.92+t*.35)*30;
+   ctx.fillStyle='#09273d';ctx.strokeStyle='#70dfe9';ctx.lineWidth=2;
+   ctx.beginPath();ctx.moveTo(px-11,py-19);ctx.lineTo(px,py-43);ctx.lineTo(px+12,py-20);ctx.closePath();ctx.fill();ctx.stroke();
+  }
+  ctx.translate(105,-18+Math.sin(t*.8)*5);
+  ctx.shadowColor='#8deeff';ctx.shadowBlur=23;
+  ctx.fillStyle='#112c49';ctx.strokeStyle='#c3ffff';ctx.lineWidth=4;
+  ctx.beginPath();ctx.moveTo(-70,2);ctx.lineTo(-36,-34);ctx.lineTo(10,-34);ctx.lineTo(51,-8);
+  ctx.lineTo(70,18);ctx.lineTo(19,45);ctx.lineTo(-34,32);ctx.closePath();ctx.fill();ctx.stroke();
+  ctx.shadowBlur=0;
+  ctx.fillStyle='#052534';ctx.strokeStyle='#7af1fa';ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(-49,-25);ctx.lineTo(-25,-73);ctx.lineTo(-5,-34);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(9,-31);ctx.lineTo(29,-70);ctx.lineTo(36,-19);ctx.stroke();
+  ctx.fillStyle='#f0ffff';ctx.beginPath();ctx.ellipse(18,-7,11,6,-.17,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#063946';ctx.beginPath();ctx.arc(20,-7,3.5,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle='#96f6f8';ctx.lineWidth=4;
+  ctx.beginPath();ctx.moveTo(34,25);ctx.lineTo(73,32);ctx.stroke();
+  ctx.restore();
+ }else{
+  // MONOLITH GUARD: imposing armored colossus with bright fissures and a face.
+  ctx.save();ctx.translate(0,8+Math.sin(t*.64)*3);
+  ctx.shadowColor='#ff934c';ctx.shadowBlur=24;
+  ctx.fillStyle='#201a24';ctx.strokeStyle='#ffd4a2';ctx.lineWidth=4;
+  ctx.beginPath();ctx.moveTo(-128,92);ctx.lineTo(-118,-49);ctx.lineTo(-69,-86);
+  ctx.lineTo(-30,-108);ctx.lineTo(33,-101);ctx.lineTo(77,-82);ctx.lineTo(126,-45);
+  ctx.lineTo(128,91);ctx.lineTo(87,126);ctx.lineTo(-83,126);ctx.closePath();ctx.fill();ctx.stroke();
+  ctx.shadowBlur=0;ctx.fillStyle='#443242';ctx.strokeStyle='#ba825f';ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(-86,-53);ctx.lineTo(-58,-106);ctx.lineTo(-12,-113);ctx.lineTo(54,-91);
+  ctx.lineTo(88,-44);ctx.lineTo(67,53);ctx.lineTo(0,87);ctx.lineTo(-66,44);ctx.closePath();ctx.fill();ctx.stroke();
+  const crack=ctx.createLinearGradient(-20,-80,30,103);
+  crack.addColorStop(0,'#fff5d7');crack.addColorStop(.44,'#ffc67e');crack.addColorStop(1,'#ff6d3b');
+  ctx.strokeStyle=crack;ctx.shadowColor='#ff753c';ctx.shadowBlur=17;ctx.lineWidth=6;
+  ctx.beginPath();ctx.moveTo(-15,-94);ctx.lineTo(12,-42);ctx.lineTo(-5,-4);
+  ctx.lineTo(32,39);ctx.lineTo(15,72);ctx.lineTo(37,104);ctx.stroke();
+  ctx.shadowBlur=0;ctx.fillStyle='#090b12';
+  ctx.beginPath();ctx.moveTo(-65,-35);ctx.lineTo(-12,-26);ctx.lineTo(-18,-8);
+  ctx.lineTo(-60,-15);ctx.closePath();ctx.fill();
+  ctx.beginPath();ctx.moveTo(21,-27);ctx.lineTo(69,-36);ctx.lineTo(66,-16);
+  ctx.lineTo(24,-10);ctx.closePath();ctx.fill();
+  ctx.strokeStyle='#ffd198';ctx.lineWidth=4;ctx.shadowColor='#ff9a62';ctx.shadowBlur=12;
+  ctx.beginPath();ctx.moveTo(-61,-20);ctx.lineTo(-26,-13);ctx.moveTo(30,-14);ctx.lineTo(63,-20);ctx.stroke();
+  ctx.restore();
+ }
+ // Wave ignition ring: clear visual link between this boss and the incoming obstacle.
+ if(wave){
+  const n=Math.min(1,(t-RUNNER_BOSS_WAVE_TIMES.reduce((a,v)=>Math.abs(t-v)<Math.abs(t-a)?v:a,0))/.27);
+  ctx.globalAlpha=.16*entry;ctx.fillStyle=col;ctx.beginPath();ctx.arc(0,0,174+Math.abs(n)*22,0,Math.PI*2);ctx.fill();
+ }
+ ctx.restore();
+}
 function drawRunnerBossAttackFx(ctx,o,phase){
  if(!o.bossAttack)return;
  ctx.save();
@@ -4171,6 +4310,7 @@ function rectHit(a,b,pad=4){
 }
 function gameOverRunner(){
   runnerRunning=false;runnerGameOver=true;runnerPaused=false;
+  runnerBossActive=false;updateRunnerBossMission();
   updateRunnerPauseButton();
   runnerSfx('lose');
   cancelAnimationFrame(runnerRaf);runnerRaf=0;
@@ -5393,32 +5533,8 @@ function drawRunner(){
   drawRunnerWorldAtmosphere(ctx,runnerStoreState.selected_background,runnerDistanceValue,stage);
   drawRunnerSpectacle(ctx,runnerStoreState.selected_background,runnerDistanceValue,stage);
 
-  // Secret boss-events stay in the background and never change collision.
-  if(runnerBossActive){
-    ctx.save();
-    const life=Math.max(0,Math.min(1,(runnerBossEnd-runnerDistanceValue)/180));
-    const alpha=.08+.13*Math.min(1,(1-life)*2.2);
-    ctx.globalAlpha=alpha;
-    const bx=RUNNER_W*.76+Math.sin(runnerDistanceValue*.01)*18,by=138;
-    if(runnerBossType===0){
-      const eye=ctx.createRadialGradient(bx,by,3,bx,by,74);
-      eye.addColorStop(0,'rgba(226,199,241,.72)');eye.addColorStop(.18,'rgba(111,64,145,.38)');eye.addColorStop(.58,'rgba(7,5,12,.76)');eye.addColorStop(1,'rgba(0,0,0,0)');
-      ctx.fillStyle=eye;ctx.beginPath();ctx.ellipse(bx,by,108,48,0,0,Math.PI*2);ctx.fill();
-      ctx.strokeStyle='rgba(220,192,239,.42)';ctx.lineWidth=2;ctx.beginPath();ctx.ellipse(bx,by,92,34,0,0,Math.PI*2);ctx.stroke();
-      ctx.fillStyle='rgba(2,2,5,.92)';ctx.beginPath();ctx.arc(bx,by,20,0,Math.PI*2);ctx.fill();
-    }else if(runnerBossType===1){
-      ctx.strokeStyle='rgba(126,196,206,.34)';ctx.lineWidth=14;ctx.lineCap='round';
-      ctx.beginPath();ctx.moveTo(RUNNER_W*.58,68);ctx.bezierCurveTo(RUNNER_W*.72,98,RUNNER_W*.66,206,RUNNER_W*.9,232);ctx.stroke();
-      ctx.strokeStyle='rgba(207,239,242,.32)';ctx.lineWidth=2;ctx.stroke();
-      ctx.fillStyle='rgba(168,229,232,.4)';ctx.beginPath();ctx.arc(RUNNER_W*.9,232,4,0,Math.PI*2);ctx.fill();
-    }else{
-      ctx.translate(bx,by);ctx.rotate(Math.sin(runnerDistanceValue*.012)*.025);
-      ctx.fillStyle='rgba(72,50,88,.48)';ctx.strokeStyle='rgba(224,209,239,.34)';ctx.lineWidth=2;
-      ctx.beginPath();ctx.moveTo(-68,28);ctx.lineTo(-58,-36);ctx.lineTo(-25,-64);ctx.lineTo(0,-48);ctx.lineTo(27,-65);ctx.lineTo(61,-34);ctx.lineTo(68,30);ctx.quadraticCurveTo(0,73,-68,28);ctx.closePath();ctx.fill();ctx.stroke();
-      ctx.fillStyle='rgba(221,190,240,.46)';ctx.beginPath();ctx.arc(-24,-4,4,0,Math.PI*2);ctx.arc(24,-4,4,0,Math.PI*2);ctx.fill();
-    }
-    ctx.restore();
-  }
+  // Giant, readable boss illustration. All damaging objects remain in the obstacle layer.
+  drawRunnerBossPresence(ctx);
 
     // Multi-depth star parallax.
   ctx.save();
