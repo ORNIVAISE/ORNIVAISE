@@ -18,6 +18,7 @@ jobs:
           node tests/runner-v2-session.test.mjs
           node tests/runner-v2-state-order.test.mjs
           node tests/runner-v2-obstacle-variety.test.mjs
+          node tests/runner-v2-encounters.test.mjs
 
   browser-preview:
     runs-on: ubuntu-latest
