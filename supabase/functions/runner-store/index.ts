@@ -92,7 +92,7 @@ function maxRunnerDistance(elapsedSeconds: number) {
   const capDistance = (680 - 300) / 0.072;
   const capTime = Math.log(680 / 300) / growth;
   const physical = t <= capTime
-    ? (300 / growth) * (Math.exp(growth * t) - 1)
+    ? (300 * 0.18 / growth) * (Math.exp(growth * t) - 1)
     : capDistance + 680 * 0.18 * (t - capTime);
   // Small allowance covers animation-frame and request timing differences.
   return Math.floor(physical * 1.08 + 12);

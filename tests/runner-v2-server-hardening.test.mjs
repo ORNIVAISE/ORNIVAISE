@@ -10,6 +10,7 @@ assert.match(edge, /rpc\/runner_allow_request_atomic/);
 assert.match(edge, /runner-ip-v1:/);
 assert.match(edge, /rpc\/start_runner_run_atomic/);
 assert.match(edge, /maxRunnerDistance\(elapsed\)/);
+assert.match(edge, /\(300 \* 0\.18 \/ growth\)/);
 assert.match(edge, /maxRunnerSignals\(elapsed, distance\)/);
 assert.match(edge, /json\(\{ error: "server_error" \}, 500, origin\)/);
 assert.match(edge, /const status = known\.get\(msg\)/);
