@@ -63,3 +63,27 @@ Current `runner-store` v7 redeems a link with multiple independent REST requests
 **Deployment dependency:** the Edge Function update must not precede the SQL RPC deployment. Test with two independent devices, simultaneous redemptions, expired codes, an already-used code, and a device with existing progress.
 
 **Additional release blocker:** the proposed RPC currently mirrors the old progress check (runs, credits, display name). Before deployment, extend the check to inventory and other meaningful player records to avoid losing access to existing purchases.
+
+
+## 2026-10-25 follow-up — proposed server hardening
+
+This section records source changes prepared on `feature/signal-runner-v2`. The SQL and Edge Function are **not deployed**. The 2026-10-22 findings above describe the earlier deployed/source snapshot and remain historical.
+
+### Changes prepared
+
+- Start a run through a single database transaction. A player-row lock serializes linked-device starts, and a partial unique index permits only one active run per player.
+- Apply durable request quotas using keyed hashes for device tokens and forwarded IPs. The database stores hashes, not raw values; the per-isolate limiter remains as a cheap first check.
+- Limit JSON request bodies to 8 KiB while streaming, return `Cache-Control: no-store`, and map unexpected database/runtime errors to a generic client response.
+- Check submitted run distance and collected signals against server-clock elapsed time and the current runner movement/collectible cadence before the existing atomic finish-and-award RPC.
+
+### Required staging sequence
+
+1. Apply `docs/sql/runner-v2-server-hardening-proposed.sql` to an isolated Supabase project with a disposable player. Do not apply it to production as part of this change.
+2. Verify concurrent starts leave exactly one active run, then verify a finish can award only once.
+3. Exercise request quotas across separate Edge instances, many tokens from one IP, and one token across multiple actions. Confirm the forwarded IP header is present and trusted before relying on its quota.
+4. Compare run validation against real short, long, low-speed, capped-speed, and mobile-frame-rate play sessions. Tune limits if legitimate runs fail.
+5. Deploy the matching Edge Function only after the SQL passes these checks. The public test page still uses its test/simulated flow and does not prove this backend integration.
+
+### Remaining security limitation
+
+Distance and signal ceilings reject implausible reports but do not prove a run was played. A client can still fabricate a physically plausible score. A deterministic server simulation or signed event/replay protocol is needed before treating leaderboard scores as cheat-proof. Public leaderboard field minimization is also outside this patch because it requires a coordinated API/client change.

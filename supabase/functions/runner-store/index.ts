@@ -27,7 +27,7 @@ function cors(origin: string | null) {
 function json(body: unknown, status = 200, origin: string | null = null) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...cors(origin), "Content-Type": "application/json; charset=utf-8" }
+    headers: { ...cors(origin), "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" }
   });
 }
 
@@ -53,6 +53,59 @@ async function sha256(value: string) {
   const bytes = new TextEncoder().encode(value);
   const hash = await crypto.subtle.digest("SHA-256", bytes);
   return Array.from(new Uint8Array(hash)).map(b => b.toString(16).padStart(2,"0")).join("");
+}
+
+async function keyedHash(value: string) {
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode(ADMIN_KEY),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+  const signature = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(value));
+  return Array.from(new Uint8Array(signature)).map(b => b.toString(16).padStart(2,"0")).join("");
+}
+
+function getForwardedClientIp(req: Request) {
+  const first = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "";
+  return /^[0-9a-f:.]{2,80}$/i.test(first) ? first : "";
+}
+
+async function allowPersistentRequest(tokenRateHash: string, ipRateHash: string | null, action: string) {
+  const allowed = await db("/rest/v1/rpc/runner_allow_request_atomic", {
+    method: "POST",
+    body: JSON.stringify({
+      p_token_hash: tokenRateHash,
+      p_ip_hash: ipRateHash,
+      p_action: action
+    })
+  });
+  return allowed === true;
+}
+
+function maxRunnerDistance(elapsedSeconds: number) {
+  // Mirrors distance growth in updateRunner: speed=300+0.072*distance,
+  // distance advances by speed*dt*0.18, capped at 680 speed.
+  const t = Math.max(0, elapsedSeconds);
+  const growth = 0.072 * 0.18;
+  const capDistance = (680 - 300) / 0.072;
+  const capTime = Math.log(680 / 300) / growth;
+  const physical = t <= capTime
+    ? (300 / growth) * (Math.exp(growth * t) - 1)
+    : capDistance + 680 * 0.18 * (t - capTime);
+  // Small allowance covers animation-frame and request timing differences.
+  return Math.floor(physical * 1.08 + 12);
+}
+
+function maxRunnerSignals(elapsedSeconds: number, distance: number) {
+  // Coins appear in pairs at least 1.18s apart. Each pair tops out at 8
+  // signals (a 7-value gold orb plus the normal orb); require enough time
+  // and run distance for the pair to reach the player.
+  if (elapsedSeconds < 4.1 || distance < 140) return 0;
+  const wavesByTime = Math.floor((elapsedSeconds - 4.1) / 1.18) + 1;
+  const wavesByDistance = Math.floor((distance - 140) / 65) + 1;
+  return Math.min(wavesByTime, wavesByDistance) * 8;
 }
 
 function validToken(token: unknown): token is string {
@@ -83,7 +136,7 @@ async function getPlayerByHash(tokenHash: string) {
   return player;
 }
 
-async function ensurePlayer(token: string) {
+async function ensurePlayer(token: string, tokenRateHash: string, ipRateHash: string | null) {
   const tokenHash = await sha256(token.toLowerCase());
   let player = await getPlayerByHash(tokenHash);
   if (player) {
@@ -95,6 +148,9 @@ async function ensurePlayer(token: string) {
       });
     } catch (_) {}
     return player;
+  }
+  if (!await allowPersistentRequest(tokenRateHash, ipRateHash, "new_player")) {
+    throw new Error("rate_limited");
   }
   try {
     const rows = await db("/rest/v1/runner_players", {
@@ -121,6 +177,34 @@ function randomLinkCode() {
   const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   const bytes = crypto.getRandomValues(new Uint8Array(8));
   return Array.from(bytes, b => alphabet[b % alphabet.length]).join("");
+}
+
+async function readJsonLimited(req: Request, maxBytes: number) {
+  const reader = req.body?.getReader();
+  if (!reader) return { ok: false as const, error: "invalid_json" };
+  const chunks: Uint8Array[] = [];
+  let size = 0;
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    size += value.byteLength;
+    if (size > maxBytes) {
+      await reader.cancel();
+      return { ok: false as const, error: "payload_too_large" };
+    }
+    chunks.push(value);
+  }
+  const bytes = new Uint8Array(size);
+  let offset = 0;
+  for (const chunk of chunks) {
+    bytes.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  try {
+    return { ok: true as const, value: JSON.parse(new TextDecoder("utf-8", { fatal: true }).decode(bytes)) };
+  } catch (_) {
+    return { ok: false as const, error: "invalid_json" };
+  }
 }
 
 async function getState(player: any) {
@@ -183,12 +267,16 @@ Deno.serve(async (req) => {
   if (origin && !ALLOWED_ORIGINS.has(origin)) return json({ error: "origin_not_allowed" }, 403, origin);
   if (!ADMIN_KEY) return json({ error: "server_not_configured" }, 500, origin);
   const size = Number(req.headers.get("content-length") || "0");
-  if (size > 8192) return json({ error: "payload_too_large" }, 413, origin);
+  if (Number.isFinite(size) && size > 8192) return json({ error: "payload_too_large" }, 413, origin);
   const type = req.headers.get("content-type") || "";
   if (!type.toLowerCase().includes("application/json")) return json({ error: "unsupported_media_type" }, 415, origin);
 
-  let body: any;
-  try { body = await req.json(); } catch (_) { return json({ error: "invalid_json" }, 400, origin); }
+  const parsedBody = await readJsonLimited(req, 8192);
+  if (!parsedBody.ok) {
+    const status = parsedBody.error === "payload_too_large" ? 413 : 400;
+    return json({ error: parsedBody.error }, status, origin);
+  }
+  const body: any = parsedBody.value;
 
   const token = body?.token;
   if (!validToken(token)) return json({ error: "invalid_player_token" }, 400, origin);
@@ -197,7 +285,14 @@ Deno.serve(async (req) => {
   if (!allowRequest(token,action)) return json({ error: "rate_limited" }, 429, origin);
 
   try {
-    const player = await ensurePlayer(token);
+    const tokenRateHash = await keyedHash("runner-token-v1:" + token.toLowerCase());
+    const forwardedIp = getForwardedClientIp(req);
+    const ipRateHash = forwardedIp ? await keyedHash("runner-ip-v1:" + forwardedIp) : null;
+    if (!await allowPersistentRequest(tokenRateHash, ipRateHash, action)) {
+      return json({ error: "rate_limited" }, 429, origin);
+    }
+
+    const player = await ensurePlayer(token, tokenRateHash, ipRateHash);
 
     if (action === "state") {
       return json({ ok: true, ...(await getState(player)) }, 200, origin);
@@ -248,20 +343,9 @@ Deno.serve(async (req) => {
     }
 
     if (action === "start_run") {
-      const active = await db("/rest/v1/runner_runs?player_id=eq." + encodeURIComponent(player.id) +
-        "&finished_at=is.null&select=id,started_at&order=started_at.desc&limit=1");
-      const previous = active?.[0];
-      if (previous) {
-        await db("/rest/v1/runner_runs?id=eq." + encodeURIComponent(previous.id), {
-          method: "PATCH",
-          headers: { Prefer: "return=minimal" },
-          body: JSON.stringify({ finished_at: new Date().toISOString(), distance: 0, signals: 0, credits_awarded: 0 })
-        });
-      }
-      const rows = await db("/rest/v1/runner_runs", {
+      const rows = await db("/rest/v1/rpc/start_runner_run_atomic", {
         method: "POST",
-        headers: { Prefer: "return=representation" },
-        body: JSON.stringify({ player_id: player.id })
+        body: JSON.stringify({ p_player_id: player.id })
       });
       const run = rows?.[0];
       if (!run) throw new Error("run_start_failed");
@@ -280,9 +364,13 @@ Deno.serve(async (req) => {
       const run = runs?.[0];
       if (!run || run.finished_at) return json({ error: "run_not_active" }, 409, origin);
 
-      const elapsed = Math.max(0, (Date.now() - new Date(run.started_at).getTime()) / 1000);
-      const maxDistance = Math.floor(300 + elapsed * 140);
-      const maxSignals = (Math.floor(elapsed / 0.7) + 4) * 7;
+      const startedAt = Date.parse(run.started_at);
+      if (!Number.isFinite(startedAt) || startedAt > Date.now() + 30000) {
+        return json({ error: "invalid_run_clock" }, 422, origin);
+      }
+      const elapsed = Math.max(0, (Date.now() - startedAt) / 1000);
+      const maxDistance = maxRunnerDistance(elapsed);
+      const maxSignals = maxRunnerSignals(elapsed, distance);
       if (distance < 0 || distance > maxDistance || signals < 0 || signals > maxSignals) {
         return json({ error: "run_validation_failed" }, 422, origin);
       }
@@ -347,8 +435,24 @@ Deno.serve(async (req) => {
 
     return json({ error: "unknown_action" }, 400, origin);
   } catch (err) {
-    const msg = err instanceof Error ? err.message : "server_error";
-    const status = msg.includes("not_enough_credits") || msg.includes("device_has_progress") || msg.includes("item_not_owned") || msg.includes("run_not_active") ? 409 : msg.includes("link_code_expired") ? 404 : msg.includes("rate_limited") ? 429 : 400;
-    return json({ error: msg }, status, origin);
+    const msg = err instanceof Error ? err.message : "";
+    const known = new Map<string, number>([
+      ["rate_limited", 429],
+      ["not_enough_credits", 409],
+      ["device_has_progress", 409],
+      ["item_not_owned", 409],
+      ["run_not_active", 409],
+      ["name_taken", 409],
+      ["reserved_name", 409],
+      ["link_code_expired", 404],
+      ["item_not_found", 400],
+      ["invalid_name", 400],
+      ["invalid_distance", 422],
+      ["invalid_signals", 422]
+    ]);
+    const status = known.get(msg);
+    return status
+      ? json({ error: msg }, status, origin)
+      : json({ error: "server_error" }, 500, origin);
   }
 });
