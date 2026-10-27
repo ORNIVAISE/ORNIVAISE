@@ -4426,7 +4426,8 @@ function drawRunnerBossPresence(ctx){
    ctx.lineTo(Math.cos(a)*r+7,Math.sin(a)*r*.7+3);ctx.lineTo(Math.cos(a)*r-5,Math.sin(a)*r*.7+10);ctx.closePath();ctx.fill();
   }
   ctx.globalAlpha=1;ctx.restore();
-  // A growing charge ring points to the next incoming boss beat.
+ }
+ // A growing charge ring points to the next incoming boss beat.
  if(runnerBossActive&&charge>0){
   ctx.globalAlpha=.32+.48*charge;ctx.strokeStyle=col;ctx.lineWidth=2+charge*2;
   ctx.shadowColor=col;ctx.shadowBlur=22;
