@@ -4275,51 +4275,51 @@ function drawRunnerBossPresence(ctx){
   }
   ctx.restore();
  }else if(runnerBossType===1){
-  // RIFT SERPENT: compact armored coil with a readable left-facing head.
+  // RIFT SERPENT: smooth, compact coil with broad readable plates.
   ctx.save();
-  const bodyPath=()=>{
-   ctx.beginPath();ctx.moveTo(-76,-2);
-   ctx.bezierCurveTo(-35,42,8,82,65,66);
-   ctx.bezierCurveTo(128,49,122,-7,75,-18);
-   ctx.bezierCurveTo(31,-29,34,-74,92,-66);
-   ctx.bezierCurveTo(134,-60,154,-33,169,-20);
+  const sway=Math.sin(t*.72)*4;
+  const body=()=>{
+   ctx.beginPath();ctx.moveTo(-64,-4+sway*.25);
+   ctx.bezierCurveTo(-38,25,-21,64,21,64+sway);
+   ctx.bezierCurveTo(67,65+sway,105,36,82,8);
+   ctx.bezierCurveTo(63,-14,24,-26,38,-51+sway*.6);
+   ctx.bezierCurveTo(52,-78,102,-72,133,-50+sway*.5);
   };
-  bodyPath();ctx.strokeStyle='#080d16';ctx.lineWidth=62;ctx.lineCap='round';ctx.lineJoin='round';ctx.stroke();
-  bodyPath();ctx.strokeStyle='#263244';ctx.lineWidth=48;ctx.stroke();
-  bodyPath();ctx.strokeStyle='#101b29';ctx.lineWidth=34;ctx.stroke();
-  // Broad armor plates make the coil readable at the small canvas scale.
-  const plates=[[-40,31,.62],[-8,61,.4],[31,69,-.12],[72,53,-.68],[101,22,-1.05],[84,-16,-2.2],[57,-53,-2.05],[94,-63,-.35],[130,-48,.25]];
+  // Soft rim light, then a shaded core for volume.
+  body();ctx.strokeStyle='rgba(34,219,235,.22)';ctx.lineWidth=64;ctx.lineCap='round';ctx.lineJoin='round';ctx.shadowColor='#25e4ef';ctx.shadowBlur=23;ctx.stroke();
+  ctx.shadowBlur=0;body();
+  const bodyGrad=ctx.createLinearGradient(-35,-76,70,76);
+  bodyGrad.addColorStop(0,'#465468');bodyGrad.addColorStop(.38,'#202c3a');bodyGrad.addColorStop(.72,'#111923');bodyGrad.addColorStop(1,'#344354');
+  ctx.strokeStyle='#080c13';ctx.lineWidth=54;ctx.stroke();
+  ctx.strokeStyle=bodyGrad;ctx.lineWidth=46;ctx.stroke();
+  // Segments follow the curve; each plate stays broad enough to read on phones.
+  const plates=[[-43,22,.82],[-20,47,.47],[10,62,.12],[43,55,-.52],[69,35,-.92],[82,7,-1.6],[58,-20,-2.2],[42,-48,-1.85],[68,-65,-.55],[101,-62,-.3]];
   for(let i=0;i<plates.length;i++){
-   const [px,py,a]=plates[i],pulse=.75+.25*Math.sin(t*1.5+i*.8);
-   ctx.save();ctx.translate(px,py);ctx.rotate(a);
-   ctx.fillStyle=i%2?'#303b4b':'#394556';ctx.strokeStyle='#111a26';ctx.lineWidth=3;
-   ctx.beginPath();ctx.moveTo(-20,-17);ctx.lineTo(7,-21);ctx.lineTo(23,-5);ctx.lineTo(15,17);ctx.lineTo(-12,19);ctx.lineTo(-23,2);ctx.closePath();ctx.fill();ctx.stroke();
-   ctx.strokeStyle='#25d5e6';ctx.globalAlpha=.35+.3*pulse;ctx.lineWidth=3;ctx.shadowColor='#12d5e8';ctx.shadowBlur=9;
-   ctx.beginPath();ctx.moveTo(-4,-14);ctx.lineTo(1,-3);ctx.lineTo(-6,5);ctx.lineTo(5,15);ctx.stroke();
+   const [px,py,angle]=plates[i],pulse=.78+.22*Math.sin(t*1.3+i*.52);
+   ctx.save();ctx.translate(px,py+sway*(i<5?1:.35));ctx.rotate(angle);
+   ctx.fillStyle=i%2?'#354354':'#3e4b5c';ctx.strokeStyle='#121a25';ctx.lineWidth=3;
+   ctx.beginPath();ctx.moveTo(-19,-16);ctx.quadraticCurveTo(-2,-22,16,-13);ctx.lineTo(22,1);ctx.quadraticCurveTo(7,20,-12,16);ctx.lineTo(-22,2);ctx.closePath();ctx.fill();ctx.stroke();
+   ctx.globalAlpha=.55+.25*pulse;ctx.strokeStyle='#26dbe8';ctx.lineWidth=2.5;ctx.shadowColor='#18d7e6';ctx.shadowBlur=7;
+   ctx.beginPath();ctx.moveTo(-4,-11);ctx.lineTo(1,-2);ctx.lineTo(-5,5);ctx.stroke();
    ctx.restore();
   }
-  // Oversized angular head, aimed toward the runner.
-  ctx.shadowColor='#12d5e8';ctx.shadowBlur=14;
-  ctx.fillStyle='#202b3b';ctx.strokeStyle='#66788b';ctx.lineWidth=3;
-  ctx.beginPath();ctx.moveTo(-72,-7);ctx.lineTo(-48,-32);ctx.lineTo(-12,-29);ctx.lineTo(12,-11);
-  ctx.lineTo(4,5);ctx.lineTo(-34,9);ctx.lineTo(-58,25);ctx.closePath();ctx.fill();ctx.stroke();
+  // Head stays separate from the coil and faces the runner.
+  ctx.save();ctx.translate(-4,sway*.2);
+  ctx.shadowColor='#26dfeb';ctx.shadowBlur=16;ctx.fillStyle='#263344';ctx.strokeStyle='#65768a';ctx.lineWidth=3;
+  ctx.beginPath();ctx.moveTo(-80,-4);ctx.quadraticCurveTo(-65,-25,-38,-29);ctx.lineTo(-11,-20);ctx.quadraticCurveTo(2,-9,-4,2);ctx.lineTo(-35,9);ctx.quadraticCurveTo(-57,22,-76,15);ctx.closePath();ctx.fill();ctx.stroke();
   ctx.shadowBlur=0;
-  // Open jaw and two clear fangs.
-  ctx.fillStyle='#08111a';ctx.strokeStyle='#314555';ctx.lineWidth=2;
-  ctx.beginPath();ctx.moveTo(-69,1);ctx.lineTo(-22,3);ctx.lineTo(-43,26);ctx.closePath();ctx.fill();ctx.stroke();
-  ctx.fillStyle='#d8faff';ctx.beginPath();ctx.moveTo(-47,2);ctx.lineTo(-41,15);ctx.lineTo(-36,3);ctx.closePath();ctx.fill();
-  ctx.beginPath();ctx.moveTo(-28,3);ctx.lineTo(-21,13);ctx.lineTo(-20,2);ctx.closePath();ctx.fill();
-  // One bright eye is the focal point at gameplay size.
-  ctx.fillStyle='#07131c';ctx.beginPath();ctx.ellipse(-40,-17,10,7,-.15,0,Math.PI*2);ctx.fill();
-  ctx.fillStyle='#42f1ff';ctx.shadowColor='#19dcec';ctx.shadowBlur=13;
-  ctx.beginPath();ctx.arc(-40,-17,4.5,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
-  // Short crown plates echo the concept without obscuring the face.
-  ctx.fillStyle='#556477';ctx.strokeStyle='#182331';ctx.lineWidth=2;
-  ctx.beginPath();ctx.moveTo(-49,-28);ctx.lineTo(-40,-52);ctx.lineTo(-32,-29);ctx.closePath();ctx.fill();ctx.stroke();
-  ctx.beginPath();ctx.moveTo(-25,-27);ctx.lineTo(-17,-46);ctx.lineTo(-12,-23);ctx.closePath();ctx.fill();ctx.stroke();
-  // Segmented tail tip.
-  ctx.strokeStyle='#253244';ctx.lineWidth=10;ctx.beginPath();ctx.moveTo(151,-31);ctx.lineTo(174,-48);ctx.lineTo(188,-43);ctx.stroke();
-  ctx.strokeStyle='#28d9e8';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(172,-46);ctx.lineTo(184,-42);ctx.stroke();
+  // Jaw and teeth are graphic accents, not noisy detail.
+  ctx.fillStyle='#081019';ctx.beginPath();ctx.moveTo(-78,8);ctx.quadraticCurveTo(-51,2,-27,7);ctx.lineTo(-49,23);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#d8fbff';ctx.beginPath();ctx.moveTo(-54,6);ctx.lineTo(-49,15);ctx.lineTo(-44,7);ctx.closePath();ctx.fill();
+  ctx.fillStyle='#07131d';ctx.beginPath();ctx.ellipse(-48,-15,10,6,-.1,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#5af3ff';ctx.shadowColor='#23e7f1';ctx.shadowBlur=12;ctx.beginPath();ctx.arc(-48,-15,4,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+  ctx.fillStyle='#5b6a7d';ctx.strokeStyle='#192432';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(-56,-24);ctx.lineTo(-47,-43);ctx.lineTo(-39,-25);ctx.closePath();ctx.fill();ctx.stroke();
+  ctx.beginPath();ctx.moveTo(-34,-23);ctx.lineTo(-27,-38);ctx.lineTo(-22,-19);ctx.closePath();ctx.fill();ctx.stroke();
+  ctx.restore();
+  // Thin tail fin gives the silhouette a clean ending.
+  ctx.strokeStyle='#263446';ctx.lineWidth=9;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(119,-56+sway*.5);ctx.quadraticCurveTo(145,-52,157,-34+sway);ctx.stroke();
+  ctx.strokeStyle='#29dce9';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(138,-49+sway*.5);ctx.lineTo(152,-36+sway);ctx.stroke();
   ctx.restore();
  }else{
   // MONOLITH GUARD: imposing armored colossus with bright fissures and a face.
