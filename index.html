@@ -4087,17 +4087,17 @@ function spawnRunnerObstacle(){
    geometry, and clocks advance only in updateRunner (pause-safe). No server bonuses. */
 const RUNNER_BOSS_DEFS=[
  {ru:'ОКО БЕЗДНЫ',en:'ABYSS EYE',color:'#d9a5ff',attacks:[
- {form:'ridge',action:'jump',ru:'УДАРНАЯ ВОЛНА',en:'SHOCKWAVE',height:31,count:1},
- {form:'twins',action:'stay',ru:'ДВОЙНОЙ ИМПУЛЬС',en:'TWIN PULSE',height:48,count:2},
- {form:'saw',action:'jump',ru:'ТРИ ЭНЕРГОПИЛЫ',en:'TRIPLE ENERGY SAW',height:46,count:3}]},
+ {form:'fan',action:'jump',ru:'ВЕЕР СЛЕДЯЩИХ ОСКОЛКОВ',en:'TRACKING SHARD FAN',height:58,count:1,motionStyle:'stutter',motionAmp:8},
+ {form:'saw',action:'double',ru:'ОРБИТАЛЬНЫЙ РАЗРЕЗ',en:'ORBITAL CUT',height:52,count:2,motionStyle:'sweep',motionAmp:27},
+ {form:'wave',action:'jump',ru:'ИМПУЛЬС ПУСТОТЫ',en:'VOID PULSE',height:42,count:3,motionStyle:'stutter',motionAmp:7}]},
  {ru:'ЗМЕЙ РАЗЛОМА',en:'RIFT SERPENT',color:'#89eaf0',attacks:[
- {form:'twins',action:'stay',ru:'КЛЫКИ ИЗ РАЗЛОМА',en:'RIFT FANGS',height:48,count:1},
- {form:'trident',action:'jump',ru:'РЫВОК ИЗ РАЗЛОМА',en:'RIFT LUNGE',height:46,count:2},
- {form:'ridge',action:'stay',ru:'ТРИ УДАРА ХВОСТОМ',en:'TRIPLE TAIL SWEEP',height:34,count:3}]},
+ {form:'needle',action:'jump',ru:'КЛЫКИ РАЗЛОМА',en:'RIFT FANGS',height:62,count:3,motionStyle:'stutter',motionAmp:13},
+ {form:'trident',action:'double',ru:'РЫВОК ПО ДУГЕ',en:'ARC LUNGE',height:51,count:1,motionStyle:'drift',motionAmp:16,motionXAmplitude:26},
+ {form:'ridge',action:'jump',ru:'РАЗМАХ ХВОСТА',en:'TAIL SWEEP',height:36,count:2,motionStyle:'sweep',motionAmp:18}]},
  {ru:'СТРАЖ МОНОЛИТА',en:'MONOLITH GUARD',color:'#ffb77d',attacks:[
- {form:'slab',action:'jump',ru:'КАМЕННАЯ ПЛИТА',en:'STONE SLAB',height:34,count:1},
- {form:'monolith',action:'double',ru:'СТЕНА РАЗЛОМА',en:'RIFT WALL',height:128,count:1},
- {form:'twins',action:'jump',ru:'ОБВАЛ ИЗ ТРЁХ ОСКОЛКОВ',en:'THREE-SHARD FALL',height:46,count:3}]}
+ {form:'slab',action:'jump',ru:'ПАДАЮЩАЯ ПЛИТА',en:'FALLING SLAB',height:34,count:1},
+ {form:'monolith',action:'double',ru:'КОЛОННА РАЗЛОМА',en:'RIFT PILLAR',height:116,count:1},
+ {form:'gate',action:'double',ru:'ЗАПЕЧАТАННЫЕ ВОРОТА',en:'SEALED GATE',height:98,count:2}]}
 ];
 const RUNNER_BOSS_ACTIONS={
  jump:{ru:'↑ ПРЫГАЙ',en:'↑ JUMP'},
@@ -4109,15 +4109,21 @@ function runnerBossAttackInfo(type,index){
  return def.attacks[Math.max(0,Math.min(2,index))];
 }
 function runnerBossPlayerLane(){
+ if(runnerPortalTransition.active){
+  const gravity=runnerPortalTransition.switched?runnerPortalTransition.target:runnerPortalTransition.fromGravity;
+  return gravity===-1;
+ }
  const center=runnerPlayer.y+runnerPlayer.h/2;
  const ceilingY=RUNNER_CEILING+runnerPlayer.h/2;
  const floorY=RUNNER_GROUND-runnerPlayer.h/2;
- return Math.abs(center-ceilingY)<Math.abs(center-floorY);
+ const topDistance=Math.abs(center-ceilingY),bottomDistance=Math.abs(center-floorY);
+ if(Math.abs(topDistance-bottomDistance)<runnerPlayer.h)return runnerGravity===-1;
+ return topDistance<bottomDistance;
 }
 function runnerBossPlannedAttack(index){
  const base=runnerBossAttackInfo(runnerBossType,index);
  const ceiling=typeof runnerBossPlans[index]==='boolean'?runnerBossPlans[index]:runnerBossPlayerLane();
- return {...base,action:base.action==='double'?'double':'jump',ceiling};
+ return {...base,ceiling};
 }
 function runnerBossCueActionLabel(cue,lang=document.documentElement.lang==='en'?'en':'ru'){
  const action=RUNNER_BOSS_ACTIONS[cue.attack.action][lang];
@@ -4189,7 +4195,6 @@ function startRunnerBossEvent(forcedType=null){
  runnerBossActive=true;
  runnerBossType=Number.isInteger(forcedType)&&forcedType>=0&&forcedType<3?forcedType:Math.floor(Math.random()*3);
  runnerBossClock=0;runnerBossWaveIndex=0;runnerBossPlans=[];runnerBossVictoryTimer=0;
- runnerBossPlans[0]=runnerBossPlayerLane();
  runnerBossEnd=runnerDistanceValue+930;
  // Never stack unavoidable random traps/coins on top of a boss attack.
  runnerObstacles=[];runnerOrbs=[];
@@ -4213,10 +4218,13 @@ function spawnRunnerBossWave(index){
    encounter:'boss',bossAttack:true,bossType:runnerBossType,bossWave:index+1,
    bossBeat:beat+1,bossBeatCount:count,bossCue:attack,
    bossAction:attack.action,groupSpan:count*w+(count-1)*gap};
-  if(attack.form==='saw'){
-   o.motion='hover';o.motionSpeed=1.8+index*.3;o.motionAmp=6;o.motionT=0;
-   o.baseY=ceiling?RUNNER_CEILING+6:RUNNER_GROUND-h-6;
-   o.y=o.baseY+Math.sin(o.phase)*o.motionAmp;
+  if(attack.motionStyle){
+   o.motion='hover';o.motionStyle=attack.motionStyle;o.motionSpeed=attack.motionStyle==='sweep'?1.2:attack.motionStyle==='stutter'?2.5:1.8;
+   o.motionAmp=attack.motionAmp||10;o.motionXAmplitude=attack.motionXAmplitude||0;o.motionT=0;
+   o.baseY=ceiling?RUNNER_CEILING+o.motionAmp:RUNNER_GROUND-h-o.motionAmp;
+   o.y=o.baseY+runnerObstacleMotionY(o,0);
+   if(o.motionXAmplitude)o.x+=o.motionXAmplitude*Math.sin(o.phase);
+   o.groupSpan+=o.motionXAmplitude*2;
   }
   runnerObstacles.push(o);
  }
@@ -4225,7 +4233,7 @@ function spawnRunnerBossWave(index){
 function updateRunnerBossEvent(dt){
  if(!runnerBossActive){runnerBossVictoryTimer=Math.max(0,runnerBossVictoryTimer-dt);return}
  runnerBossClock+=dt;
- for(let i=1;i<3;i++)if(typeof runnerBossPlans[i]!=='boolean'&&runnerBossClock>=RUNNER_BOSS_WAVE_TIMES[i]-1.4)runnerBossPlans[i]=runnerBossPlayerLane();
+ for(let i=runnerBossWaveIndex;i<3;i++)runnerBossPlans[i]=runnerBossPlayerLane();
  updateRunnerBossMission();
  while(runnerBossWaveIndex<3&&runnerBossClock>=RUNNER_BOSS_WAVE_TIMES[runnerBossWaveIndex]){
   spawnRunnerBossWave(runnerBossWaveIndex);
