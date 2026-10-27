@@ -4029,7 +4029,7 @@ function updateRunnerHazardHint(){
   }
   if(runnerBossActive&&!runnerGameOver){
     const cue=runnerBossCue(),lang=en?'en':'ru';
-    next=cue?(en?'BOSS ATTACK: ':'АТАКА БОССА: ')+RUNNER_BOSS_ACTIONS[cue.attack.action][lang]:
+    next=cue?(en?'BOSS ATTACK: ':'АТАКА БОССА: ')+runnerBossCueActionLabel(cue,lang):
       (en?'BOSS IS RETREATING':'БОСС ОТСТУПАЕТ');
     level=cue&&cue.eta<1.2?'danger':'warning';
   }
@@ -4116,6 +4116,11 @@ function runnerBossPlannedAttack(index){
  const ceiling=typeof runnerBossPlans[index]==='boolean'?runnerBossPlans[index]:runnerBossPlayerLane();
  return {...base,action:base.action==='double'?'double':'jump',ceiling};
 }
+function runnerBossCueActionLabel(cue,lang=document.documentElement.lang==='en'?'en':'ru'){
+ const action=RUNNER_BOSS_ACTIONS[cue.attack.action][lang];
+ const lane=cue.attack.ceiling?(lang==='en'?'HIGH':'ВЕРХ'):(lang==='en'?'LOW':'НИЗ');
+ return action+' · '+lane;
+}
 function runnerBossCue(){
  if(!runnerBossActive)return null;
  const front=runnerPlayer.x+runnerPlayer.w;
@@ -4158,7 +4163,7 @@ function updateRunnerBossMission(){
    const set=(el,value)=>{if(el&&el.textContent!==value)el.textContent=value};
    if(cue){
      set(attackNode,cue.attack[lang]);
-     set(actionNode,RUNNER_BOSS_ACTIONS[cue.attack.action][lang]+(cue.attack.ceiling?(en?' · HIGH':' · ВЕРХ'):(en?' · LOW':' · НИЗ')));
+     set(actionNode,runnerBossCueActionLabel(cue,lang));
      set(etaNode,(en?'DANGER IN ':'ОПАСНОСТЬ ЧЕРЕЗ ')+
        Math.max(0,Math.ceil(cue.eta*10)/10).toFixed(1)+(en?'S':' С'));
      banner.dataset.action=cue.attack.action;
@@ -4254,7 +4259,8 @@ function drawRunnerBossPresence(ctx){
  const introEase=entry*entry*(3-2*entry);
  const recoil=wave?(runnerBossType===2?10:runnerBossType===1?-8:0)*Math.sin(Math.PI*Math.min(1,Math.abs(t-RUNNER_BOSS_WAVE_TIMES.reduce((a,v)=>Math.abs(t-v)<Math.abs(t-a)?v:a,0))/.32)):0;
  ctx.translate(x+(1-introEase)*112,y+recoil);
- const scale=victory?1.2+victoryT*.13:(.78+.42*introEase)+.025*Math.sin(t*.91)+charge*.045;
+ const rawScale=victory?1.2+victoryT*.13:(.78+.42*introEase)+.025*Math.sin(t*.91)+charge*.045;
+ const scale=Math.min(rawScale,runnerBossType===1?1:1.08);
  ctx.scale(scale,scale);
  const halo=ctx.createRadialGradient(0,0,12,0,0,230);
  halo.addColorStop(0,runnerBossType===2?'rgba(248,129,68,.38)':runnerBossType===1?'rgba(81,225,230,.33)':'rgba(183,116,250,.36)');
@@ -4477,21 +4483,27 @@ function drawRunnerBossAttackFx(ctx,o,phase){
  ctx.fillStyle=edge;ctx.globalAlpha=.12*pulse;
  ctx.fillRect(o.x-14,o.y-11,o.w+28,o.h+22);
  ctx.strokeStyle=edge;ctx.lineWidth=2.5;ctx.shadowBlur=18;ctx.shadowColor=edge;
- ctx.globalAlpha=.82*pulse;
- ctx.strokeRect(o.x-7,o.y-7,o.w+14,o.h+14);
- // A bright floor/ceiling marker anchors the attack to the lane it will strike.
- ctx.globalAlpha=.68*pulse;ctx.lineWidth=3;
+ ctx.globalAlpha=.82*pulse;ctx.strokeRect(o.x-7,o.y-7,o.w+14,o.h+14);
+ // A luminous lane rail and a short connector identify the exact target lane.
  const laneY=o.ceiling?RUNNER_CEILING+5:RUNNER_GROUND-4;
- ctx.beginPath();ctx.moveTo(o.x+2,laneY);ctx.lineTo(o.x+o.w-2,laneY);ctx.stroke();
- ctx.globalAlpha=1;ctx.shadowBlur=0;ctx.font='900 18px Arial';ctx.textAlign='center';
- const mark=o.bossAction==='double'?'↑↑':o.bossAction==='stay'?'↓':'↑';
- const badgeY=o.ceiling?o.y+o.h+27:o.y-13;
- ctx.fillStyle='rgba(4,7,15,.9)';ctx.beginPath();ctx.roundRect(o.x+o.w/2-18,badgeY-19,36,25,8);ctx.fill();
- ctx.strokeStyle=edge;ctx.lineWidth=1.5;ctx.stroke();ctx.fillStyle='#fff';
- ctx.fillText(mark,o.x+o.w/2,badgeY);
+ const mid=o.x+o.w/2;
+ ctx.globalAlpha=.2*pulse;ctx.fillStyle=edge;
+ ctx.fillRect(o.x-8,laneY-5,o.w+16,10);
+ ctx.globalAlpha=.9*pulse;ctx.lineWidth=3;
+ ctx.beginPath();ctx.moveTo(o.x-8,laneY);ctx.lineTo(o.x+o.w+8,laneY);ctx.stroke();
+ ctx.globalAlpha=.52*pulse;ctx.lineWidth=2;ctx.setLineDash([5,5]);
+ ctx.beginPath();ctx.moveTo(mid,laneY);ctx.lineTo(mid,o.ceiling?o.y+o.h:o.y);ctx.stroke();ctx.setLineDash([]);
+ ctx.globalAlpha=1;ctx.shadowBlur=0;ctx.textAlign='center';ctx.font='900 10px Arial';
+ const en=document.documentElement.lang==='en';
+ const mark=o.bossAction==='double'?'↑↑':'↑';
+ const lane=o.ceiling?(en?'HIGH':'ВЕРХ'):(en?'LOW':'НИЗ');
+ const badgeText=mark+' '+lane,badgeW=62,badgeH=20;
+ const badgeY=o.ceiling?o.y+o.h+25:o.y-11,badgeX=mid-badgeW/2;
+ ctx.fillStyle='rgba(4,7,15,.94)';ctx.beginPath();ctx.roundRect(badgeX,badgeY-badgeH+4,badgeW,badgeH,7);ctx.fill();
+ ctx.strokeStyle=edge;ctx.lineWidth=1.5;ctx.stroke();ctx.fillStyle='#fff';ctx.fillText(badgeText,mid,badgeY);
  if((o.bossBeatCount||1)>1){
-  ctx.globalAlpha=.9;ctx.font='800 11px Arial';ctx.fillStyle=edge;
-  ctx.fillText(`${o.bossBeat}/${o.bossBeatCount}`,o.x+o.w/2,o.ceiling?o.y+o.h+43:o.y-30);
+  ctx.globalAlpha=.95;ctx.font='800 10px Arial';ctx.fillStyle=edge;
+  ctx.fillText(`${o.bossBeat}/${o.bossBeatCount}`,mid,o.ceiling?o.y+o.h+42:o.y-27);
  }
  ctx.restore();
 }
@@ -6977,6 +6989,7 @@ applyGameLanguage(document.documentElement.lang==='en'?'en':'ru');
  <label>Форма ловушки <select id="runnerV2Form"></select></label>
  <label>Тип испытания <select id="runnerV2Pattern"><option value="auto">AUTO · СМЕШАННЫЕ</option><option value="pair">ПАРНЫЕ ШИПЫ</option><option value="overhead">ВЕРХНИЕ ЛОВУШКИ</option><option value="hover">ДВИЖУЩАЯСЯ ПИЛА</option></select></label>
  <label>Босс <select id="runnerV2Boss"><option value="0">ОКО БЕЗДНЫ</option><option value="1">ЗМЕЙ РАЗЛОМА</option><option value="2">СТРАЖ МОНОЛИТА</option></select></label>
+ <label>Полоса игрока <select id="runnerV2StartLane"><option value="floor">НИЗ — обычная гравитация</option><option value="ceiling">ВЕРХ — обратная гравитация</option></select></label>
  <button id="runnerV2BossStart" type="button" style="width:100%;padding:12px;border:1px solid #945fce;border-radius:10px;background:#211335;color:#ead5ff;font-weight:700;cursor:pointer">ЗАПУСТИТЬ ВСТРЕЧУ С БОССОМ</button>
  <p id="runnerV2BossStatus" style="font:12px/1.4 system-ui;color:#aebdc9" role="status">Для теста начни обычный забег и выбери босса.</p>
  <canvas id="runnerV2FormCanvas" width="600" height="190" style="display:block;width:100%;max-height:160px;background:#050c14;border:1px solid #244453;border-radius:10px;margin:10px 0" aria-label="Рисунок выбранной формы препятствия"></canvas>
@@ -7161,6 +7174,11 @@ document.getElementById('runnerV2BossStart')?.addEventListener('click',async()=>
     return;
    }
  }
+ const lane=document.getElementById('runnerV2StartLane')?.value==='ceiling'?-1:1;
+ runnerGravity=lane;runnerGravityEvent=lane===-1;runnerGravityEnd=Infinity;runnerNextGravity=Infinity;
+ runnerPortalTransition={active:false,t:0,duration:.92,target:lane,fromGravity:lane,switched:false};
+ Object.assign(runnerPlayer,{y:lane===1?RUNNER_GROUND-runnerPlayer.h:RUNNER_CEILING,vy:0,onGround:true});
+ runnerJumpsUsed=0;runnerJumpBuffer=0;updateRunnerJumpHud();
  const type=Number(document.getElementById('runnerV2Boss')?.value||0);
  const started=startRunnerBossEvent(type);
  if(feedback)feedback.textContent=started?'БОСС АКТИВИРОВАН · ТРИ ВОЛНЫ · НАГРАДА ТОЛЬКО В ПРОГРЕССЕ ТЕСТА':
