@@ -7175,7 +7175,7 @@ document.getElementById('runnerV2BossStart')?.addEventListener('click',async()=>
    }
  }
  const lane=document.getElementById('runnerV2StartLane')?.value==='ceiling'?-1:1;
- runnerGravity=lane;runnerGravityEvent=lane===-1;runnerGravityEnd=Infinity;runnerNextGravity=Infinity;
+ runnerGravity=lane;runnerGravityEvent=false;runnerGravityEnd=Infinity;runnerNextGravity=Infinity;
  runnerPortalTransition={active:false,t:0,duration:.92,target:lane,fromGravity:lane,switched:false};
  Object.assign(runnerPlayer,{y:lane===1?RUNNER_GROUND-runnerPlayer.h:RUNNER_CEILING,vy:0,onGround:true});
  runnerJumpsUsed=0;runnerJumpBuffer=0;updateRunnerJumpHud();
