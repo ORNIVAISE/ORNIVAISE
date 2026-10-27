@@ -4275,53 +4275,85 @@ function drawRunnerBossPresence(ctx){
   }
   ctx.restore();
  }else if(runnerBossType===1){
-  // RIFT SERPENT: smooth, compact coil with broad readable plates.
+  // RIFT SERPENT: a clear dragon silhouette, layered armor, and one luminous rift.
   ctx.save();
-  const sway=Math.sin(t*.72)*4;
+  const sway=Math.sin(t*.72)*3;
   const body=()=>{
-   ctx.beginPath();ctx.moveTo(-64,-4+sway*.25);
-   ctx.bezierCurveTo(-38,25,-21,64,21,64+sway);
-   ctx.bezierCurveTo(67,65+sway,105,36,82,8);
-   ctx.bezierCurveTo(63,-14,24,-26,38,-51+sway*.6);
-   ctx.bezierCurveTo(52,-78,102,-72,133,-50+sway*.5);
+   ctx.beginPath();ctx.moveTo(-71,-1+sway*.2);
+   ctx.bezierCurveTo(-43,18,-28,61,12,66+sway);
+   ctx.bezierCurveTo(64,73+sway,105,46,91,13);
+   ctx.bezierCurveTo(79,-16,39,-20,42,-49+sway*.55);
+   ctx.bezierCurveTo(45,-82,96,-89,137,-57+sway*.4);
   };
-  // Soft rim light, then a shaded core for volume.
-  body();ctx.strokeStyle='rgba(34,219,235,.22)';ctx.lineWidth=64;ctx.lineCap='round';ctx.lineJoin='round';ctx.shadowColor='#25e4ef';ctx.shadowBlur=23;ctx.stroke();
-  ctx.shadowBlur=0;body();
-  const bodyGrad=ctx.createLinearGradient(-35,-76,70,76);
-  bodyGrad.addColorStop(0,'#465468');bodyGrad.addColorStop(.38,'#202c3a');bodyGrad.addColorStop(.72,'#111923');bodyGrad.addColorStop(1,'#344354');
-  ctx.strokeStyle='#080c13';ctx.lineWidth=54;ctx.stroke();
-  ctx.strokeStyle=bodyGrad;ctx.lineWidth=46;ctx.stroke();
-  // Segments follow the curve; each plate stays broad enough to read on phones.
-  const plates=[[-43,22,.82],[-20,47,.47],[10,62,.12],[43,55,-.52],[69,35,-.92],[82,7,-1.6],[58,-20,-2.2],[42,-48,-1.85],[68,-65,-.55],[101,-62,-.3]];
+  // Depth rim and broad, smooth body make the silhouette read at phone size.
+  body();ctx.strokeStyle='rgba(22,212,230,.20)';ctx.lineWidth=72;ctx.shadowColor='#26e5ef';ctx.shadowBlur=28;ctx.stroke();
+  ctx.shadowBlur=0;body();ctx.strokeStyle='#070d15';ctx.lineWidth=62;ctx.stroke();
+  const bodyGrad=ctx.createLinearGradient(-34,-84,67,78);
+  bodyGrad.addColorStop(0,'#627184');bodyGrad.addColorStop(.18,'#344456');bodyGrad.addColorStop(.52,'#172330');bodyGrad.addColorStop(.78,'#0c151f');bodyGrad.addColorStop(1,'#425366');
+  ctx.strokeStyle=bodyGrad;ctx.lineWidth=53;ctx.stroke();
+  // A restrained dorsal highlight and a continuous glowing rift replace noisy seams.
+  body();ctx.strokeStyle='rgba(186,212,226,.22)';ctx.lineWidth=3;ctx.stroke();
+  ctx.save();ctx.globalAlpha=.82+.18*Math.sin(t*1.8);ctx.strokeStyle='#48f3fa';ctx.lineWidth=5;
+  ctx.shadowColor='#20e9f1';ctx.shadowBlur=13;ctx.setLineDash([22,17]);ctx.lineDashOffset=-t*17;ctx.stroke();ctx.restore();
+  ctx.save();ctx.globalAlpha=.58;ctx.strokeStyle='#a8ffff';ctx.lineWidth=1.4;ctx.setLineDash([9,26]);ctx.lineDashOffset=t*8;ctx.stroke();ctx.restore();
+  // Six broad overlapping scutes follow the coil without breaking its shape.
+  const plates=[[-34,25,.8],[-5,57,.22],[34,64,-.28],[70,43,-.92],[78,8,-1.5],[50,-27,-2.15],[51,-58,-1.55],[91,-75,-.52]];
   for(let i=0;i<plates.length;i++){
-   const [px,py,angle]=plates[i],pulse=.78+.22*Math.sin(t*1.3+i*.52);
-   ctx.save();ctx.translate(px,py+sway*(i<5?1:.35));ctx.rotate(angle);
-   ctx.fillStyle=i%2?'#354354':'#3e4b5c';ctx.strokeStyle='#121a25';ctx.lineWidth=3;
-   ctx.beginPath();ctx.moveTo(-19,-16);ctx.quadraticCurveTo(-2,-22,16,-13);ctx.lineTo(22,1);ctx.quadraticCurveTo(7,20,-12,16);ctx.lineTo(-22,2);ctx.closePath();ctx.fill();ctx.stroke();
-   ctx.globalAlpha=.55+.25*pulse;ctx.strokeStyle='#26dbe8';ctx.lineWidth=2.5;ctx.shadowColor='#18d7e6';ctx.shadowBlur=7;
-   ctx.beginPath();ctx.moveTo(-4,-11);ctx.lineTo(1,-2);ctx.lineTo(-5,5);ctx.stroke();
+   const [px,py,angle]=plates[i],pulse=.82+.18*Math.sin(t*1.15+i*.7);
+   ctx.save();ctx.translate(px,py+sway*(i<4?1:.35));ctx.rotate(angle);
+   const pg=ctx.createLinearGradient(0,-19,0,19);
+   pg.addColorStop(0,i%2?'#506174':'#5b6d80');pg.addColorStop(.48,'#2b3949');pg.addColorStop(1,'#15212d');
+   ctx.fillStyle=pg;ctx.strokeStyle='rgba(5,11,18,.9)';ctx.lineWidth=3;
+   ctx.beginPath();ctx.moveTo(-25,-6);ctx.quadraticCurveTo(-21,-18,-6,-20);
+   ctx.quadraticCurveTo(12,-21,25,-7);ctx.quadraticCurveTo(22,12,5,18);
+   ctx.quadraticCurveTo(-12,20,-25,7);ctx.quadraticCurveTo(-29,0,-25,-6);ctx.closePath();ctx.fill();ctx.stroke();
+   ctx.globalAlpha=.28+.2*pulse;ctx.strokeStyle='#9beaf0';ctx.lineWidth=1.5;
+   ctx.beginPath();ctx.moveTo(-13,-10);ctx.quadraticCurveTo(0,-16,14,-8);ctx.stroke();
    ctx.restore();
   }
-  // Head stays separate from the coil and faces the runner.
-  ctx.save();ctx.translate(-4,sway*.2);
-  ctx.shadowColor='#26dfeb';ctx.shadowBlur=16;ctx.fillStyle='#263344';ctx.strokeStyle='#65768a';ctx.lineWidth=3;
-  ctx.beginPath();ctx.moveTo(-80,-4);ctx.quadraticCurveTo(-65,-25,-38,-29);ctx.lineTo(-11,-20);ctx.quadraticCurveTo(2,-9,-4,2);ctx.lineTo(-35,9);ctx.quadraticCurveTo(-57,22,-76,15);ctx.closePath();ctx.fill();ctx.stroke();
+  // A large, readable head with a strong brow, jaw, eye and swept-back crown.
+  ctx.save();ctx.translate(-13,sway*.2);
+  ctx.shadowColor='#28e7ef';ctx.shadowBlur=20;
+  const headGrad=ctx.createLinearGradient(-82,-52,-18,27);
+  headGrad.addColorStop(0,'#718397');headGrad.addColorStop(.3,'#39495c');headGrad.addColorStop(.72,'#26384a');headGrad.addColorStop(1,'#111c29');
+  ctx.fillStyle=headGrad;ctx.strokeStyle='#9db1c3';ctx.lineWidth=3.5;
+  ctx.beginPath();ctx.moveTo(-96,-5);ctx.quadraticCurveTo(-84,-32,-57,-38);
+  ctx.lineTo(-27,-31);ctx.quadraticCurveTo(-7,-23,-4,-8);
+  ctx.lineTo(-20,4);ctx.quadraticCurveTo(-48,15,-74,18);
+  ctx.quadraticCurveTo(-91,15,-96,-5);ctx.closePath();ctx.fill();ctx.stroke();
   ctx.shadowBlur=0;
-  // Jaw and teeth are graphic accents, not noisy detail.
-  ctx.fillStyle='#081019';ctx.beginPath();ctx.moveTo(-78,8);ctx.quadraticCurveTo(-51,2,-27,7);ctx.lineTo(-49,23);ctx.closePath();ctx.fill();
-  ctx.fillStyle='#d8fbff';ctx.beginPath();ctx.moveTo(-54,6);ctx.lineTo(-49,15);ctx.lineTo(-44,7);ctx.closePath();ctx.fill();
-  ctx.fillStyle='#07131d';ctx.beginPath();ctx.ellipse(-48,-15,10,6,-.1,0,Math.PI*2);ctx.fill();
-  ctx.fillStyle='#5af3ff';ctx.shadowColor='#23e7f1';ctx.shadowBlur=12;ctx.beginPath();ctx.arc(-48,-15,4,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
-  ctx.fillStyle='#5b6a7d';ctx.strokeStyle='#192432';ctx.lineWidth=2;
-  ctx.beginPath();ctx.moveTo(-56,-24);ctx.lineTo(-47,-43);ctx.lineTo(-39,-25);ctx.closePath();ctx.fill();ctx.stroke();
-  ctx.beginPath();ctx.moveTo(-34,-23);ctx.lineTo(-27,-38);ctx.lineTo(-22,-19);ctx.closePath();ctx.fill();ctx.stroke();
+  // Lower jaw extends forward so the face reads as a creature, not an arrow.
+  ctx.fillStyle='#09121c';ctx.strokeStyle='#516678';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(-95,5);ctx.quadraticCurveTo(-65,2,-31,4);
+  ctx.quadraticCurveTo(-44,22,-73,27);ctx.quadraticCurveTo(-91,23,-95,5);ctx.closePath();ctx.fill();ctx.stroke();
+  ctx.fillStyle='#d9fcff';ctx.beginPath();
+  ctx.moveTo(-75,5);ctx.lineTo(-69,15);ctx.lineTo(-64,5);
+  ctx.moveTo(-50,4);ctx.lineTo(-45,13);ctx.lineTo(-40,3);ctx.fill();
+  // Brow ridge and a large cyan slit eye.
+  ctx.fillStyle='#111c29';ctx.beginPath();ctx.ellipse(-58,-16,15,10,-.08,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#5af5ff';ctx.shadowColor='#31f1fa';ctx.shadowBlur=16;
+  ctx.beginPath();ctx.ellipse(-58,-16,8,5,-.08,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
+  ctx.fillStyle='#b4c5d2';ctx.strokeStyle='#233547';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(-72,-31);ctx.lineTo(-82,-58);ctx.quadraticCurveTo(-62,-49,-53,-31);ctx.closePath();ctx.fill();ctx.stroke();
+  ctx.beginPath();ctx.moveTo(-40,-29);ctx.lineTo(-38,-54);ctx.quadraticCurveTo(-25,-40,-24,-22);ctx.closePath();ctx.fill();ctx.stroke();
+  // Three swept crown fins sharpen the profile against the dark background.
+  ctx.fillStyle='#26384a';ctx.strokeStyle='#7890a4';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(-42,-34);ctx.quadraticCurveTo(-7,-68,25,-60);
+  ctx.quadraticCurveTo(8,-43,-20,-26);ctx.closePath();ctx.fill();ctx.stroke();
+  ctx.beginPath();ctx.moveTo(-36,-30);ctx.quadraticCurveTo(-1,-49,20,-41);
+  ctx.quadraticCurveTo(3,-31,-20,-22);ctx.closePath();ctx.fill();ctx.stroke();
+  // A small luminous nostril anchors the snout.
+  ctx.fillStyle='#91fbff';ctx.shadowColor='#2cecf5';ctx.shadowBlur=8;
+  ctx.beginPath();ctx.arc(-88,-4,2.6,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
   ctx.restore();
-  // Thin tail fin gives the silhouette a clean ending.
-  ctx.strokeStyle='#263446';ctx.lineWidth=9;ctx.lineCap='round';ctx.beginPath();ctx.moveTo(119,-56+sway*.5);ctx.quadraticCurveTo(145,-52,157,-34+sway);ctx.stroke();
-  ctx.strokeStyle='#29dce9';ctx.lineWidth=2.5;ctx.beginPath();ctx.moveTo(138,-49+sway*.5);ctx.lineTo(152,-36+sway);ctx.stroke();
-  ctx.restore();
- }else{
+  // The tail tapers into a twin-fork rift fin.
+  ctx.save();ctx.translate(128,-58+sway*.4);ctx.rotate(Math.sin(t*.7)*.06);
+  ctx.fillStyle='#28394b';ctx.strokeStyle='#778b9d';ctx.lineWidth=2;
+  ctx.beginPath();ctx.moveTo(-8,0);ctx.quadraticCurveTo(12,-16,34,-17);
+  ctx.lineTo(20,-3);ctx.lineTo(43,8);ctx.quadraticCurveTo(17,7,0,12);ctx.closePath();ctx.fill();ctx.stroke();
+  ctx.strokeStyle='#35e7ef';ctx.lineWidth=2.5;ctx.shadowColor='#28e8f0';ctx.shadowBlur=9;
+  ctx.beginPath();ctx.moveTo(4,2);ctx.lineTo(28,-11);ctx.moveTo(5,5);ctx.lineTo(31,5);ctx.stroke();ctx.restore();
+  ctx.restore();}else{
   // MONOLITH GUARD: imposing armored colossus with bright fissures and a face.
   ctx.save();ctx.translate(0,8+Math.sin(t*.64)*3);
   ctx.shadowColor='#ff934c';ctx.shadowBlur=24;
