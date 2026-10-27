@@ -7175,12 +7175,15 @@ document.getElementById('runnerV2BossStart')?.addEventListener('click',async()=>
    }
  }
  const lane=document.getElementById('runnerV2StartLane')?.value==='ceiling'?-1:1;
- runnerGravity=lane;runnerGravityEvent=false;runnerGravityEnd=Infinity;runnerNextGravity=Infinity;
- runnerPortalTransition={active:false,t:0,duration:.92,target:lane,fromGravity:lane,switched:false};
- Object.assign(runnerPlayer,{y:lane===1?RUNNER_GROUND-runnerPlayer.h:RUNNER_CEILING,vy:0,onGround:true});
- runnerJumpsUsed=0;runnerJumpBuffer=0;updateRunnerJumpHud();
  const type=Number(document.getElementById('runnerV2Boss')?.value||0);
  const started=startRunnerBossEvent(type);
+ if(started){
+   runnerGravity=lane;runnerGravityEvent=false;runnerGravityEnd=Infinity;runnerNextGravity=Infinity;
+   runnerPortalTransition={active:false,t:0,duration:.92,target:lane,fromGravity:lane,switched:false};
+   Object.assign(runnerPlayer,{y:lane===1?RUNNER_GROUND-runnerPlayer.h:RUNNER_CEILING,vy:0,onGround:true});
+   runnerBossPlans[0]=runnerBossPlayerLane();runnerJumpsUsed=0;runnerJumpBuffer=0;
+   updateRunnerJumpHud();updateRunnerBossMission();
+ }
  if(feedback)feedback.textContent=started?'БОСС АКТИВИРОВАН · ТРИ ВОЛНЫ · НАГРАДА ТОЛЬКО В ПРОГРЕССЕ ТЕСТА':
    'Встреча уже активна. Заверши её, чтобы испытать следующего босса.';
  if(started){
