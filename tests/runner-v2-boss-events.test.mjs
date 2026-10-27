@@ -93,7 +93,7 @@ assert.match(html,/id="runnerBossBannerEta"/);
 assert.match(html,/RUNNER_BOSS_ACTIONS/);
 assert.match(html,/drawRunnerBossPresence\(ctx\)/);
 const serpentDraw=take('if(runnerBossType===1){\n  // RIFT SERPENT','}else{\n  // MONOLITH GUARD');
-assert.match(serpentDraw,/Large, readable head/);
+assert.match(serpentDraw,/large, readable head/);
 assert.match(serpentDraw,/broad overlapping scutes/);
 assert.match(serpentDraw,/slit eye/);
 assert.match(serpentDraw,/const body=\(\)=>/);
