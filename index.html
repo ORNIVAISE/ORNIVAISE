@@ -3480,7 +3480,7 @@ let runnerDistanceValue=0,runnerSignalCount=0,runnerSpeed=300,runnerSpawn=0,runn
 let runnerObstacles=[],runnerOrbs=[],runnerDust=[],runnerStars=[],runnerSecret=false,runnerStage=0,runnerStageTimer=0;
 let runnerGravity=1,runnerGravityEvent=false,runnerGravityEnd=0,runnerNextGravity=0,runnerPortalFx=0;
 let runnerPortalTransition={active:false,t:0,duration:.92,target:1,fromGravity:1,switched:false};
-let runnerBossActive=false,runnerBossType=0,runnerBossEnd=0,runnerNextBoss=0,runnerEventTimer=0,runnerBossPlans=[];
+let runnerBossActive=false,runnerBossType=0,runnerBossEnd=0,runnerNextBoss=0,runnerEventTimer=0,runnerBossPlans=[],runnerBossVictoryTimer=0;
 let runnerBossClock=0,runnerBossWaveIndex=0,runnerBossWins=0;
 let runnerModifier='none';
 let runnerGhostBest=[],runnerGhostCurrent=[];
@@ -3704,7 +3704,7 @@ function resetRunner(){
   runnerGravity=1;runnerGravityEvent=false;runnerGravityEnd=0;runnerNextGravity=850+Math.random()*650;runnerPortalFx=0;
   runnerPortalTransition={active:false,t:0,duration:.92,target:1,fromGravity:1,switched:false};
   runnerBossActive=false;runnerBossType=0;runnerBossEnd=0;runnerNextBoss=1750+Math.random()*900;
-  runnerBossClock=0;runnerBossWaveIndex=0;runnerBossWins=0;
+  runnerBossClock=0;runnerBossWaveIndex=0;runnerBossWins=0;runnerBossVictoryTimer=0;
   updateRunnerBossMission();
   runnerModifier='none';runnerRecordCelebrated=false;
   runnerGhostCurrent=[];loadRunnerGhost();
@@ -4154,7 +4154,7 @@ function startRunnerBossEvent(forcedType=null){
  if(runnerBossActive||runnerGravityEvent||runnerPortalTransition.active||!runnerRunning||runnerGameOver)return false;
  runnerBossActive=true;
  runnerBossType=Number.isInteger(forcedType)&&forcedType>=0&&forcedType<3?forcedType:Math.floor(Math.random()*3);
- runnerBossClock=0;runnerBossWaveIndex=0;runnerBossPlans=[];
+ runnerBossClock=0;runnerBossWaveIndex=0;runnerBossPlans=[];runnerBossVictoryTimer=0;
  runnerBossPlans[0]=runnerBossPlayerLane();
  runnerBossEnd=runnerDistanceValue+930;
  // Never stack unavoidable random traps/coins on top of a boss attack.
@@ -4189,7 +4189,7 @@ function spawnRunnerBossWave(index){
  return true;
 }
 function updateRunnerBossEvent(dt){
- if(!runnerBossActive)return;
+ if(!runnerBossActive){runnerBossVictoryTimer=Math.max(0,runnerBossVictoryTimer-dt);return}
  runnerBossClock+=dt;
  for(let i=1;i<3;i++)if(typeof runnerBossPlans[i]!=='boolean'&&runnerBossClock>=RUNNER_BOSS_WAVE_TIMES[i]-1.4)runnerBossPlans[i]=runnerBossPlayerLane();
  updateRunnerBossMission();
@@ -4201,7 +4201,7 @@ function updateRunnerBossEvent(dt){
  // The last attack must have cleared the player's collision zone before victory.
  const incoming=runnerObstacles.some(o=>o.bossAttack&&o.x+o.w>runnerPlayer.x-55);
  if(runnerBossClock>=11.2&&!incoming){
-  runnerBossActive=false;runnerBossWins++;
+  runnerBossActive=false;runnerBossWins++;runnerBossVictoryTimer=2.5;
   runnerNextBoss=runnerDistanceValue+2400+Math.random()*1200;
   runnerSpawn=Math.max(runnerSpawn,1.55);
   announceRunnerEvent(document.documentElement.lang==='en'?'BOSS SURVIVED // ØN':'БОСС ПРОЙДЕН // ØN',2.2);
@@ -4211,13 +4211,15 @@ function updateRunnerBossEvent(dt){
 /* V2: large, high-contrast, unmistakable boss silhouettes.
    Art is decorative; contact damage comes ONLY from three telegraphed hazards. */
 function drawRunnerBossPresence(ctx){
- if(!runnerBossActive)return;
- const t=runnerBossClock,entry=Math.max(0,Math.min(1,t/.62));
- const wave=RUNNER_BOSS_WAVE_TIMES.some(at=>Math.abs(t-at)<.27);
+ const victory=!runnerBossActive&&runnerBossVictoryTimer>0;
+ if(!runnerBossActive&&!victory)return;
+ const victoryT=victory?2.5-runnerBossVictoryTimer:0;
+ const t=victory?13.2+victoryT:runnerBossClock,entry=victory?1:Math.max(0,Math.min(1,runnerBossClock/.62));
+ const wave=!victory&&RUNNER_BOSS_WAVE_TIMES.some(at=>Math.abs(t-at)<.27);
  const col=RUNNER_BOSS_DEFS[runnerBossType]?.color||'#cda9ff';
  const x=RUNNER_W*.735+Math.sin(t*.86)*11, y=150+Math.sin(t*1.1)*7;
  ctx.save();
- ctx.globalAlpha=.97*entry;
+ ctx.globalAlpha=victory?Math.max(0,runnerBossVictoryTimer/2.5):.97*entry;
  ctx.translate(x+(1-entry)*135,y);
  const scale=.94+.04*Math.sin(t*.91);ctx.scale(scale,scale);
  const halo=ctx.createRadialGradient(0,0,12,0,0,185);
@@ -4362,6 +4364,18 @@ function drawRunnerBossPresence(ctx){
  if(wave){
   const n=Math.min(1,(t-RUNNER_BOSS_WAVE_TIMES.reduce((a,v)=>Math.abs(t-v)<Math.abs(t-a)?v:a,0))/.27);
   ctx.globalAlpha=.16*entry;ctx.fillStyle=col;ctx.beginPath();ctx.ellipse(0,0,174+Math.abs(n)*22,118+Math.abs(n)*10,0,0,Math.PI*2);ctx.fill();
+ }
+ if(victory){
+  const burst=runnerBossVictoryTimer<1.65?1-runnerBossVictoryTimer/1.65:0;
+  ctx.globalAlpha=.3+burst*.5;ctx.strokeStyle=col;ctx.lineWidth=2;ctx.shadowColor=col;ctx.shadowBlur=18;
+  ctx.beginPath();ctx.ellipse(0,0,176+burst*105,130+burst*15,0,0,Math.PI*2);ctx.stroke();ctx.shadowBlur=0;
+  for(let i=0;i<12;i++){
+   const a=i*Math.PI/6+victoryT*.32,r=94+burst*125+(i%3)*12;
+   const px=Math.cos(a)*r,py=Math.sin(a)*r*.48;
+   ctx.globalAlpha=Math.max(0,runnerBossVictoryTimer/2.5)*(.3+(i%3)*.18);
+   ctx.fillStyle=i%2?col:'#f0f6ff';
+   ctx.beginPath();ctx.moveTo(px-5,py-8);ctx.lineTo(px+7,py);ctx.lineTo(px-3,py+9);ctx.closePath();ctx.fill();
+  }
  }
  ctx.restore();
 }
