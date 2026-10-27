@@ -4026,7 +4026,7 @@ function updateRunnerHazardHint(){
   node.classList.toggle('warning',level==='warning');
   node.classList.toggle('danger',level==='danger');
 }
-function runnerMovingHazardfunction runnerMovingHazard(o,dt){
+function runnerMovingHazard(o,dt){
   if(o.motion!=='hover')return;
   const oldT=o.motionT||0,nextT=oldT+dt;
   o.motionT=nextT;
@@ -4035,7 +4035,7 @@ function runnerMovingHazardfunction runnerMovingHazard(o,dt){
     o.x+=o.motionXAmplitude*(Math.sin(nextT*o.motionSpeed*.72+o.phase)-Math.sin(oldT*o.motionSpeed*.72+o.phase));
   }
 }
-function spawnRunnerObstaclefunction spawnRunnerObstacle(){
+function spawnRunnerObstacle(){
   const forced=typeof window!=='undefined'?window.__runnerV2ForceObstacleForm:null;
   const available=RUNNER_OBSTACLE_FORMS.filter(form=>form.minStage<=runnerStage);
   const approved=runnerObstacleForm(forced),pool=approved?[approved]:available;
@@ -4083,7 +4083,7 @@ function spawnRunnerObstaclefunction spawnRunnerObstacle(){
   }
   return true;
 }
-/* SIGNAL RUNNER V2 — boss encounters./* SIGNAL RUNNER V2 — boss encounters. All attacks reuse real obstacle collision
+/* SIGNAL RUNNER V2 — boss encounters. All attacks reuse real obstacle collision
    geometry, and clocks advance only in updateRunner (pause-safe). No server bonuses. */
 const RUNNER_BOSS_DEFS=[
  {ru:'ОКО БЕЗДНЫ',en:'ABYSS EYE',color:'#d9a5ff',attacks:[
@@ -5330,7 +5330,7 @@ function drawRunnerTrapTelegraph(ctx,o,phase){
   }
   ctx.restore();
 }
-function drawRunnerObstacleGeometryfunction drawRunnerObstacleGeometry(ctx,o,skin,phase){
+function drawRunnerObstacleGeometry(ctx,o,skin,phase){
   if(!runnerObstacleForm(o.form))return false;
   const ice=['frost_spines','crystal_shards'].includes(skin);
   const fire=['inferno_obelisks','orbital_debris'].includes(skin);
