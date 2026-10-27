@@ -92,6 +92,11 @@ assert.match(html,/id="runnerBossBannerAttack"/);
 assert.match(html,/id="runnerBossBannerEta"/);
 assert.match(html,/RUNNER_BOSS_ACTIONS/);
 assert.match(html,/drawRunnerBossPresence\(ctx\)/);
+const serpentDraw=take('if(runnerBossType===1){\\n  // RIFT SERPENT','}else{\\n  // MONOLITH GUARD');
+assert.match(serpentDraw,/Oversized angular head/);
+assert.match(serpentDraw,/Broad armor plates/);
+assert.match(serpentDraw,/One bright eye/);
+assert.match(serpentDraw,/bodyPath/);
 
 const sandbox=fs.readFileSync(new URL('../signal-runner-v2-test.html',import.meta.url),'utf8');
 assert.match(sandbox,/id="runnerV2BossStart"/);
