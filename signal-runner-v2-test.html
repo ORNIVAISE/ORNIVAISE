@@ -4297,6 +4297,7 @@ function drawRunnerBossPresence(ctx){
  }else if(runnerBossType===1){
   // RIFT SERPENT — match the approved open-coil silhouette and obsidian armor.
   ctx.save();
+  ctx.translate(0,18);ctx.scale(1,.82);
   const sway=Math.sin(t*.7)*3.2, pulse=.84+.16*Math.sin(t*2.1);
   const serpentBody=()=>{
    ctx.beginPath();
