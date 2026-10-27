@@ -3512,7 +3512,7 @@ let runnerObstacles=[],runnerOrbs=[],runnerDust=[],runnerStars=[],runnerSecret=f
 let runnerGravity=1,runnerGravityEvent=false,runnerGravityEnd=0,runnerNextGravity=0,runnerPortalFx=0;
 let runnerPortalTransition={active:false,t:0,duration:.92,target:1,fromGravity:1,switched:false};
 let runnerBossActive=false,runnerBossType=0,runnerBossEnd=0,runnerNextBoss=0,runnerEventTimer=0;
-let runnerBossClock=0,runnerBossWaveIndex=0,runnerBossWins=0,runnerBossVictoryTimer=0;
+let runnerBossClock=0,runnerBossWaveIndex=0,runnerBossWins=0,runnerBossVictoryTimer=0,runnerBossPlans=[];
 let runnerModifier='none';
 let runnerGhostBest=[],runnerGhostCurrent=[];
 const runnerPlayer={x:104,y:RUNNER_GROUND-42,w:42,h:42,vy:0,onGround:true};
@@ -3735,7 +3735,7 @@ function resetRunner(){
   runnerGravity=1;runnerGravityEvent=false;runnerGravityEnd=0;runnerNextGravity=850+Math.random()*650;runnerPortalFx=0;
   runnerPortalTransition={active:false,t:0,duration:.92,target:1,fromGravity:1,switched:false};
   runnerBossActive=false;runnerBossType=0;runnerBossEnd=0;runnerNextBoss=1750+Math.random()*900;
-  runnerBossClock=0;runnerBossWaveIndex=0;runnerBossWins=0;runnerBossVictoryTimer=0;
+  runnerBossClock=0;runnerBossWaveIndex=0;runnerBossWins=0;runnerBossVictoryTimer=0;runnerBossPlans=[];
   updateRunnerBossMission();
   runnerModifier='none';runnerRecordCelebrated=false;
   runnerGhostCurrent=[];loadRunnerGhost();
@@ -4084,15 +4084,15 @@ function spawnRunnerObstacle(){
    geometry, and clocks advance only in updateRunner (pause-safe). No server bonuses. */
 const RUNNER_BOSS_DEFS=[
  {ru:'ОКО БЕЗДНЫ',en:'ABYSS EYE',color:'#d9a5ff',attacks:[
- {form:'ridge',action:'jump',ru:'НИЖНЯЯ УДАРНАЯ ВОЛНА',en:'LOW SHOCKWAVE',height:31,count:1},
- {form:'twins',action:'stay',ru:'ДВОЙНОЙ ИМПУЛЬС СВЕРХУ',en:'TWIN CEILING PULSE',height:48,count:2},
+ {form:'ridge',action:'jump',ru:'УДАРНАЯ ВОЛНА',en:'SHOCKWAVE',height:31,count:1},
+ {form:'twins',action:'stay',ru:'ДВОЙНОЙ ИМПУЛЬС',en:'TWIN PULSE',height:48,count:2},
  {form:'saw',action:'jump',ru:'ТРИ ЭНЕРГОПИЛЫ',en:'TRIPLE ENERGY SAW',height:46,count:3}]},
  {ru:'ЗМЕЙ РАЗЛОМА',en:'RIFT SERPENT',color:'#89eaf0',attacks:[
  {form:'twins',action:'stay',ru:'КЛЫКИ ИЗ РАЗЛОМА',en:'RIFT FANGS',height:48,count:1},
- {form:'trident',action:'jump',ru:'РЫВОК ИЗ-ПОД ПОЛА',en:'FLOOR LUNGE',height:46,count:2},
- {form:'ridge',action:'stay',ru:'ТРИ УДАРА ХВОСТОМ СВЕРХУ',en:'TRIPLE OVERHEAD TAIL SWEEP',height:34,count:3}]},
+ {form:'trident',action:'jump',ru:'РЫВОК ИЗ РАЗЛОМА',en:'RIFT LUNGE',height:46,count:2},
+ {form:'ridge',action:'stay',ru:'ТРИ УДАРА ХВОСТОМ',en:'TRIPLE TAIL SWEEP',height:34,count:3}]},
  {ru:'СТРАЖ МОНОЛИТА',en:'MONOLITH GUARD',color:'#ffb77d',attacks:[
- {form:'slab',action:'jump',ru:'ПЛИТА ИЗ-ПОД ЗЕМЛИ',en:'RISING STONE SLAB',height:34,count:1},
+ {form:'slab',action:'jump',ru:'КАМЕННАЯ ПЛИТА',en:'STONE SLAB',height:34,count:1},
  {form:'monolith',action:'double',ru:'СТЕНА РАЗЛОМА',en:'RIFT WALL',height:128,count:1},
  {form:'twins',action:'jump',ru:'ОБВАЛ ИЗ ТРЁХ ОСКОЛКОВ',en:'THREE-SHARD FALL',height:46,count:3}]}
 ];
@@ -4105,14 +4105,25 @@ function runnerBossAttackInfo(type,index){
  const def=RUNNER_BOSS_DEFS[type]||RUNNER_BOSS_DEFS[0];
  return def.attacks[Math.max(0,Math.min(2,index))];
 }
+function runnerBossPlayerLane(){
+ const center=runnerPlayer.y+runnerPlayer.h/2;
+ const ceilingY=RUNNER_CEILING+runnerPlayer.h/2;
+ const floorY=RUNNER_GROUND-runnerPlayer.h/2;
+ return Math.abs(center-ceilingY)<Math.abs(center-floorY);
+}
+function runnerBossPlannedAttack(index){
+ const base=runnerBossAttackInfo(runnerBossType,index);
+ const ceiling=typeof runnerBossPlans[index]==='boolean'?runnerBossPlans[index]:runnerBossPlayerLane();
+ return {...base,action:base.action==='double'?'double':'jump',ceiling};
+}
 function runnerBossCue(){
  if(!runnerBossActive)return null;
  const front=runnerPlayer.x+runnerPlayer.w;
  const live=runnerObstacles.filter(o=>o.bossAttack&&o.x+o.w>=front-10).sort((a,b)=>a.x-b.x)[0];
- if(live)return{index:live.bossWave-1,attack:live.bossCue||runnerBossAttackInfo(runnerBossType,live.bossWave-1),
+ if(live)return{index:live.bossWave-1,attack:live.bossCue||runnerBossPlannedAttack(live.bossWave-1),
    eta:Math.max(0,(live.x-front)/runnerSpeed),onScreen:live.x<RUNNER_W};
  if(runnerBossWaveIndex<3)return{index:runnerBossWaveIndex,
-  attack:runnerBossAttackInfo(runnerBossType,runnerBossWaveIndex),
+  attack:runnerBossPlannedAttack(runnerBossWaveIndex),
   eta:Math.max(0,RUNNER_BOSS_WAVE_TIMES[runnerBossWaveIndex]-runnerBossClock+(RUNNER_W-front)/runnerSpeed),
   onScreen:false};
  return null;
@@ -4147,7 +4158,7 @@ function updateRunnerBossMission(){
    const set=(el,value)=>{if(el&&el.textContent!==value)el.textContent=value};
    if(cue){
      set(attackNode,cue.attack[lang]);
-     set(actionNode,RUNNER_BOSS_ACTIONS[cue.attack.action][lang]);
+     set(actionNode,RUNNER_BOSS_ACTIONS[cue.attack.action][lang]+(cue.attack.ceiling?(en?' · HIGH':' · ВЕРХ'):(en?' · LOW':' · НИЗ')));
      set(etaNode,(en?'DANGER IN ':'ОПАСНОСТЬ ЧЕРЕЗ ')+
        Math.max(0,Math.ceil(cue.eta*10)/10).toFixed(1)+(en?'S':' С'));
      banner.dataset.action=cue.attack.action;
@@ -4170,7 +4181,8 @@ function startRunnerBossEvent(forcedType=null){
  if(runnerBossActive||runnerGravityEvent||runnerPortalTransition.active||!runnerRunning||runnerGameOver)return false;
  runnerBossActive=true;
  runnerBossType=Number.isInteger(forcedType)&&forcedType>=0&&forcedType<3?forcedType:Math.floor(Math.random()*3);
- runnerBossClock=0;runnerBossWaveIndex=0;runnerBossVictoryTimer=0;
+ runnerBossClock=0;runnerBossWaveIndex=0;runnerBossVictoryTimer=0;runnerBossPlans=[];
+ runnerBossPlans[0]=runnerBossPlayerLane();
  runnerBossEnd=runnerDistanceValue+930;
  // Never stack unavoidable random traps/coins on top of a boss attack.
  runnerObstacles=[];runnerOrbs=[];
@@ -4181,10 +4193,10 @@ function startRunnerBossEvent(forcedType=null){
 }
 function spawnRunnerBossWave(index){
  if(!runnerBossActive||index<0||index>=3)return false;
- const attack=runnerBossAttackInfo(runnerBossType,index),form=runnerObstacleForm(attack.form);
+ const attack=runnerBossPlannedAttack(index),form=runnerObstacleForm(attack.form);
  if(!form)return false;
  const w=Math.round((form.width[0]+form.width[1])/2),h=attack.height;
- const ceiling=attack.action==='stay'?runnerGravity===1:runnerGravity===-1;
+ const ceiling=attack.ceiling;
  const x=RUNNER_W+28,phase=(runnerBossType+1)*.8+index*.71;
  const count=Math.max(1,Math.min(3,attack.count||1));
  const gap=count>1?Math.round(runnerSpeed*.82):0;
@@ -4206,6 +4218,7 @@ function spawnRunnerBossWave(index){
 function updateRunnerBossEvent(dt){
  if(!runnerBossActive){runnerBossVictoryTimer=Math.max(0,runnerBossVictoryTimer-dt);return;}
  runnerBossClock+=dt;
+ for(let i=1;i<3;i++)if(typeof runnerBossPlans[i]!=='boolean'&&runnerBossClock>=RUNNER_BOSS_WAVE_TIMES[i]-1.4)runnerBossPlans[i]=runnerBossPlayerLane();
  updateRunnerBossMission();
  while(runnerBossWaveIndex<3&&runnerBossClock>=RUNNER_BOSS_WAVE_TIMES[runnerBossWaveIndex]){
   spawnRunnerBossWave(runnerBossWaveIndex);
