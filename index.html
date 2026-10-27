@@ -3480,7 +3480,7 @@ let runnerDistanceValue=0,runnerSignalCount=0,runnerSpeed=300,runnerSpawn=0,runn
 let runnerObstacles=[],runnerOrbs=[],runnerDust=[],runnerStars=[],runnerSecret=false,runnerStage=0,runnerStageTimer=0;
 let runnerGravity=1,runnerGravityEvent=false,runnerGravityEnd=0,runnerNextGravity=0,runnerPortalFx=0;
 let runnerPortalTransition={active:false,t:0,duration:.92,target:1,fromGravity:1,switched:false};
-let runnerBossActive=false,runnerBossType=0,runnerBossEnd=0,runnerNextBoss=0,runnerEventTimer=0;
+let runnerBossActive=false,runnerBossType=0,runnerBossEnd=0,runnerNextBoss=0,runnerEventTimer=0,runnerBossPlans=[];
 let runnerBossClock=0,runnerBossWaveIndex=0,runnerBossWins=0;
 let runnerModifier='none';
 let runnerGhostBest=[],runnerGhostCurrent=[];
@@ -3998,7 +3998,7 @@ function updateRunnerHazardHint(){
   }
   if(runnerBossActive&&!runnerGameOver){
     const cue=runnerBossCue(),lang=en?'en':'ru';
-    next=cue?(en?'BOSS ATTACK: ':'АТАКА БОССА: ')+RUNNER_BOSS_ACTIONS[cue.attack.action][lang]:
+    next=cue?(en?'BOSS ATTACK: ':'АТАКА БОССА: ')+runnerBossCueActionLabel(cue,lang):
       (en?'BOSS IS RETREATING':'БОСС ОТСТУПАЕТ');
     level=cue&&cue.eta<1.2?'danger':'warning';
   }
@@ -4053,17 +4053,17 @@ function spawnRunnerObstacle(){
    geometry, and clocks advance only in updateRunner (pause-safe). No server bonuses. */
 const RUNNER_BOSS_DEFS=[
  {ru:'ОКО БЕЗДНЫ',en:'ABYSS EYE',color:'#d9a5ff',attacks:[
- {form:'ridge',action:'jump',ru:'ГРЕБЕНЬ ШИПОВ',en:'SPIKE RIDGE',height:31},
- {form:'twins',action:'stay',ru:'ШИПЫ СВЕРХУ',en:'CEILING SPIKES',height:48},
- {form:'saw',action:'jump',ru:'ЭНЕРГОПИЛА',en:'ENERGY SAW',height:46}]},
+ {form:'ridge',action:'jump',ru:'УДАРНАЯ ВОЛНА',en:'SHOCKWAVE',height:31,count:1},
+ {form:'twins',action:'stay',ru:'ДВОЙНОЙ ИМПУЛЬС',en:'TWIN PULSE',height:48,count:2},
+ {form:'saw',action:'jump',ru:'ТРИ ЭНЕРГОПИЛЫ',en:'TRIPLE ENERGY SAW',height:46,count:3}]},
  {ru:'ЗМЕЙ РАЗЛОМА',en:'RIFT SERPENT',color:'#89eaf0',attacks:[
- {form:'twins',action:'stay',ru:'КЛЫКИ СВЕРХУ',en:'CEILING FANGS',height:48},
- {form:'trident',action:'jump',ru:'НИЖНИЕ КЛЫКИ',en:'GROUND FANGS',height:46},
- {form:'ridge',action:'stay',ru:'ХВОСТ СВЕРХУ',en:'CEILING TAIL',height:34}]},
+ {form:'twins',action:'stay',ru:'КЛЫКИ ИЗ РАЗЛОМА',en:'RIFT FANGS',height:48,count:1},
+ {form:'trident',action:'jump',ru:'РЫВОК ИЗ РАЗЛОМА',en:'RIFT LUNGE',height:46,count:2},
+ {form:'ridge',action:'stay',ru:'ТРИ УДАРА ХВОСТОМ',en:'TRIPLE TAIL SWEEP',height:34,count:3}]},
  {ru:'СТРАЖ МОНОЛИТА',en:'MONOLITH GUARD',color:'#ffb77d',attacks:[
- {form:'slab',action:'jump',ru:'КАМЕННАЯ ПЛИТА',en:'STONE SLAB',height:34},
- {form:'monolith',action:'double',ru:'ВЫСОКАЯ СТЕНА',en:'TALL WALL',height:128},
- {form:'twins',action:'jump',ru:'КАМЕННЫЕ ОСКОЛКИ',en:'STONE SHARDS',height:46}]}
+ {form:'slab',action:'jump',ru:'КАМЕННАЯ ПЛИТА',en:'STONE SLAB',height:34,count:1},
+ {form:'monolith',action:'double',ru:'СТЕНА РАЗЛОМА',en:'RIFT WALL',height:128,count:1},
+ {form:'twins',action:'jump',ru:'ОБВАЛ ИЗ ТРЁХ ОСКОЛКОВ',en:'THREE-SHARD FALL',height:46,count:3}]}
 ];
 const RUNNER_BOSS_ACTIONS={
  jump:{ru:'↑ ПРЫГАЙ',en:'↑ JUMP'},
@@ -4074,19 +4074,35 @@ function runnerBossAttackInfo(type,index){
  const def=RUNNER_BOSS_DEFS[type]||RUNNER_BOSS_DEFS[0];
  return def.attacks[Math.max(0,Math.min(2,index))];
 }
+function runnerBossPlayerLane(){
+ const center=runnerPlayer.y+runnerPlayer.h/2;
+ const ceilingY=RUNNER_CEILING+runnerPlayer.h/2;
+ const floorY=RUNNER_GROUND-runnerPlayer.h/2;
+ return Math.abs(center-ceilingY)<Math.abs(center-floorY);
+}
+function runnerBossPlannedAttack(index){
+ const base=runnerBossAttackInfo(runnerBossType,index);
+ const ceiling=typeof runnerBossPlans[index]==='boolean'?runnerBossPlans[index]:runnerBossPlayerLane();
+ return {...base,action:base.action==='double'?'double':'jump',ceiling};
+}
+function runnerBossCueActionLabel(cue,lang=document.documentElement.lang==='en'?'en':'ru'){
+ const action=RUNNER_BOSS_ACTIONS[cue.attack.action][lang];
+ const lane=cue.attack.ceiling?(lang==='en'?'HIGH':'ВЕРХ'):(lang==='en'?'LOW':'НИЗ');
+ return action+' · '+lane;
+}
 function runnerBossCue(){
  if(!runnerBossActive)return null;
  const front=runnerPlayer.x+runnerPlayer.w;
  const live=runnerObstacles.filter(o=>o.bossAttack&&o.x+o.w>=front-10).sort((a,b)=>a.x-b.x)[0];
- if(live)return{index:live.bossWave-1,attack:runnerBossAttackInfo(runnerBossType,live.bossWave-1),
+ if(live)return{index:live.bossWave-1,attack:live.bossCue||runnerBossPlannedAttack(live.bossWave-1),
    eta:Math.max(0,(live.x-front)/runnerSpeed),onScreen:live.x<RUNNER_W};
  if(runnerBossWaveIndex<3)return{index:runnerBossWaveIndex,
-  attack:runnerBossAttackInfo(runnerBossType,runnerBossWaveIndex),
+  attack:runnerBossPlannedAttack(runnerBossWaveIndex),
   eta:Math.max(0,RUNNER_BOSS_WAVE_TIMES[runnerBossWaveIndex]-runnerBossClock+(RUNNER_W-front)/runnerSpeed),
   onScreen:false};
  return null;
 }
-const RUNNER_BOSS_WAVE_TIMES=[1.25,4.4,7.55];
+const RUNNER_BOSS_WAVE_TIMES=[1.35,5.15,8.95];
 function runnerBossLabel(type=runnerBossType){
  const entry=RUNNER_BOSS_DEFS[type]||RUNNER_BOSS_DEFS[0];
  return document.documentElement.lang==='en'?entry.en:entry.ru;
@@ -4115,7 +4131,7 @@ function updateRunnerBossMission(){
    const set=(el,value)=>{if(el&&el.textContent!==value)el.textContent=value};
    if(cue){
      set(attackNode,cue.attack[lang]);
-     set(actionNode,RUNNER_BOSS_ACTIONS[cue.attack.action][lang]);
+     set(actionNode,runnerBossCueActionLabel(cue,lang));
      set(etaNode,(en?'DANGER IN ':'ОПАСНОСТЬ ЧЕРЕЗ ')+
        Math.max(0,Math.ceil(cue.eta*10)/10).toFixed(1)+(en?'S':' С'));
      banner.dataset.action=cue.attack.action;
@@ -4138,7 +4154,8 @@ function startRunnerBossEvent(forcedType=null){
  if(runnerBossActive||runnerGravityEvent||runnerPortalTransition.active||!runnerRunning||runnerGameOver)return false;
  runnerBossActive=true;
  runnerBossType=Number.isInteger(forcedType)&&forcedType>=0&&forcedType<3?forcedType:Math.floor(Math.random()*3);
- runnerBossClock=0;runnerBossWaveIndex=0;
+ runnerBossClock=0;runnerBossWaveIndex=0;runnerBossPlans=[];
+ runnerBossPlans[0]=runnerBossPlayerLane();
  runnerBossEnd=runnerDistanceValue+930;
  // Never stack unavoidable random traps/coins on top of a boss attack.
  runnerObstacles=[];runnerOrbs=[];
@@ -4149,26 +4166,32 @@ function startRunnerBossEvent(forcedType=null){
 }
 function spawnRunnerBossWave(index){
  if(!runnerBossActive||index<0||index>=3)return false;
- const attack=runnerBossAttackInfo(runnerBossType,index),form=runnerObstacleForm(attack.form);
+ const attack=runnerBossPlannedAttack(index),form=runnerObstacleForm(attack.form);
  if(!form)return false;
  const w=Math.round((form.width[0]+form.width[1])/2),h=attack.height;
- const ceiling=attack.action==='stay'?runnerGravity===1:runnerGravity===-1;
+ const ceiling=attack.ceiling;
  const x=RUNNER_W+28,phase=(runnerBossType+1)*.8+index*.71;
- const o={x,y:ceiling?RUNNER_CEILING:RUNNER_GROUND-h,w,h,
-   type:form.type,form:attack.form,variant:index%3,phase,ceiling,
+ const count=Math.max(1,Math.min(3,attack.count||1));
+ const gap=count>1?Math.round(runnerSpeed*.82):0;
+ for(let beat=0;beat<count;beat++){
+  const o={x:x+beat*(w+gap),y:ceiling?RUNNER_CEILING:RUNNER_GROUND-h,w,h,
+   type:form.type,form:attack.form,variant:(index+beat)%3,phase:phase+beat*.53,ceiling,
    encounter:'boss',bossAttack:true,bossType:runnerBossType,bossWave:index+1,
-   bossAction:attack.action,groupSpan:w};
- if(attack.form==='saw'){
-   o.motion='hover';o.motionSpeed=1.4;o.motionAmp=5;o.motionT=0;
+   bossBeat:beat+1,bossBeatCount:count,bossCue:attack,
+   bossAction:attack.action,groupSpan:count*w+(count-1)*gap};
+  if(attack.form==='saw'){
+   o.motion='hover';o.motionSpeed=1.8+index*.3;o.motionAmp=6;o.motionT=0;
    o.baseY=ceiling?RUNNER_CEILING+6:RUNNER_GROUND-h-6;
    o.y=o.baseY+Math.sin(o.phase)*o.motionAmp;
+  }
+  runnerObstacles.push(o);
  }
- runnerObstacles.push(o);
  return true;
 }
 function updateRunnerBossEvent(dt){
  if(!runnerBossActive)return;
  runnerBossClock+=dt;
+ for(let i=1;i<3;i++)if(typeof runnerBossPlans[i]!=='boolean'&&runnerBossClock>=RUNNER_BOSS_WAVE_TIMES[i]-1.4)runnerBossPlans[i]=runnerBossPlayerLane();
  updateRunnerBossMission();
  while(runnerBossWaveIndex<3&&runnerBossClock>=RUNNER_BOSS_WAVE_TIMES[runnerBossWaveIndex]){
   spawnRunnerBossWave(runnerBossWaveIndex);
@@ -4283,7 +4306,7 @@ function drawRunnerBossPresence(ctx){
  // Wave ignition ring: clear visual link between this boss and the incoming obstacle.
  if(wave){
   const n=Math.min(1,(t-RUNNER_BOSS_WAVE_TIMES.reduce((a,v)=>Math.abs(t-v)<Math.abs(t-a)?v:a,0))/.27);
-  ctx.globalAlpha=.16*entry;ctx.fillStyle=col;ctx.beginPath();ctx.arc(0,0,174+Math.abs(n)*22,0,Math.PI*2);ctx.fill();
+  ctx.globalAlpha=.16*entry;ctx.fillStyle=col;ctx.beginPath();ctx.ellipse(0,0,174+Math.abs(n)*22,118+Math.abs(n)*10,0,0,Math.PI*2);ctx.fill();
  }
  ctx.restore();
 }
@@ -4291,13 +4314,19 @@ function drawRunnerBossAttackFx(ctx,o,phase){
  if(!o.bossAttack)return;
  ctx.save();
  const edge=RUNNER_BOSS_DEFS[o.bossType]?.color||'#edb3ff';
- ctx.strokeStyle=edge;ctx.fillStyle=edge;
- ctx.lineWidth=2;ctx.shadowBlur=14;ctx.shadowColor=edge;
- ctx.globalAlpha=.46+.22*Math.sin(phase*2.3);
- ctx.strokeRect(o.x-4,o.y-5,o.w+8,o.h+10);
- ctx.globalAlpha=.92;ctx.font='bold 15px Arial';ctx.textAlign='center';
- const mark=o.bossAction==='double'?'↑↑':o.bossAction==='stay'?'↓':'↑';
- ctx.fillText(mark,o.x+o.w/2,o.ceiling?o.y+o.h+23:o.y-14);
+ ctx.strokeStyle=edge;ctx.fillStyle=edge;ctx.lineWidth=2.5;ctx.shadowBlur=18;ctx.shadowColor=edge;
+ const pulse=.68+.32*Math.sin(phase*3.4);ctx.globalAlpha=.82*pulse;ctx.strokeRect(o.x-7,o.y-7,o.w+14,o.h+14);
+ const laneY=o.ceiling?RUNNER_CEILING+5:RUNNER_GROUND-4,mid=o.x+o.w/2;
+ ctx.globalAlpha=.2*pulse;ctx.fillStyle=edge;ctx.fillRect(o.x-8,laneY-5,o.w+16,10);
+ ctx.globalAlpha=.9*pulse;ctx.beginPath();ctx.moveTo(o.x-8,laneY);ctx.lineTo(o.x+o.w+8,laneY);ctx.stroke();
+ ctx.globalAlpha=.52*pulse;ctx.lineWidth=2;ctx.setLineDash([5,5]);
+ ctx.beginPath();ctx.moveTo(mid,laneY);ctx.lineTo(mid,o.ceiling?o.y+o.h:o.y);ctx.stroke();ctx.setLineDash([]);
+ ctx.globalAlpha=1;ctx.shadowBlur=0;ctx.textAlign='center';ctx.font='900 10px Arial';
+ const en=document.documentElement.lang==='en',mark=o.bossAction==='double'?'↑↑':'↑';
+ const lane=o.ceiling?(en?'HIGH':'ВЕРХ'):(en?'LOW':'НИЗ'),badge=mark+' '+lane;
+ const badgeW=62,badgeH=20,badgeX=mid-badgeW/2,badgeY=o.ceiling?o.y+o.h+16:o.y-badgeH-16;
+ ctx.fillStyle='#071018';ctx.fillRect(badgeX,badgeY,badgeW,badgeH);ctx.strokeStyle=edge;ctx.lineWidth=1.5;
+ ctx.strokeRect(badgeX,badgeY,badgeW,badgeH);ctx.fillStyle='#fff';ctx.fillText(badge,mid,badgeY+14);
  ctx.restore();
 }
 function spawnRunnerOrb(){
