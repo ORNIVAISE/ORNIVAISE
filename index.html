@@ -3985,7 +3985,7 @@ function runnerObstaclePattern(selected,forced){
   if(r<.45&&runnerStage>=2)return 'hover';
   return 'single';
 }
-/* Fair-play preview warning/* Fair-play preview warning: only looks ahead, never changes collisions or spawn odds.
+/* Fair-play preview warning: only looks ahead, never changes collisions or spawn odds.
    Opposite-wall hazards are signposted, but not treated as immediate ground danger. */
 function updateRunnerHazardHint(){
   const node=document.getElementById('runnerHazardHint');
@@ -4060,7 +4060,7 @@ function spawnRunnerObstacle(){
   const variant=Math.floor(Math.random()*3),phase=Math.random()*Math.PI*2;
   const first={x:startX,y:ceiling?RUNNER_CEILING:RUNNER_GROUND-h,w,h,
     type:selected.type,form:selected.id,variant,phase,ceiling,encounter:requested,groupSpan:fullWidth};
-  if(['hover','sweep','drift','stutter'].includes(requested)||(!approved&&requested==='auto'&&selected.id==='saw')){
+  if(selected.id==='saw'||['hover','sweep','drift','stutter'].includes(requested)){
     const motionStyle=requested==='sweep'||requested==='drift'||requested==='stutter'?requested:
       ['bob','sweep','stutter','drift'][Math.floor(Math.random()*4)];
     const amp=motionStyle==='sweep'?32+Math.random()*11:
