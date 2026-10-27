@@ -3895,23 +3895,27 @@ const RUNNER_OBSTACLE_FORMS=[
   {id:'slab',type:'block',minStage:0,weight:12,width:[51,81],height:[22,35]},
   {id:'trident',type:'spire',minStage:1,weight:13,width:[62,83],height:[34,53]},
   {id:'shard',type:'spire',minStage:1,weight:11,width:[33,53],height:[50,74]},
+  {id:'wave',type:'spire',minStage:2,weight:8,width:[84,120],height:[30,54]},
   {id:'ridge',type:'spire',minStage:2,weight:8,width:[88,113],height:[24,41]},
   {id:'monolith',type:'block',minStage:2,weight:9,width:[35,51],height:[62,86]},
-  {id:'saw',type:'block',minStage:2,weight:7,width:[44,56],height:[44,56]}
+  {id:'saw',type:'block',minStage:2,weight:9,width:[38,70],height:[38,70]},
+  {id:'fan',type:'spire',minStage:3,weight:6,width:[76,104],height:[42,68]},
+  {id:'gate',type:'block',minStage:3,weight:4,width:[38,52],height:[88,108]}
 ];
 function runnerObstacleForm(id){return RUNNER_OBSTACLE_FORMS.find(f=>f.id===id)}
 function runnerObstacleShapes(o){
   const id=o.form||'';
-  if(!['needle','twins','trident','ridge','shard'].includes(id))return [];
-  const count={needle:1,twins:2,trident:3,ridge:5,shard:1}[id];
-  const base=o.ceiling?o.y:o.y+o.h;
-  const tipIsUp=!o.ceiling;
-  const result=[];
+  if(!['needle','twins','trident','ridge','shard','wave','fan'].includes(id))return [];
+  const count={needle:1,twins:2,trident:3,ridge:5,shard:1,wave:6,fan:4}[id];
+  const base=o.ceiling?o.y:o.y+o.h,tipIsUp=!o.ceiling,result=[];
   for(let i=0;i<count;i++){
-    const step=o.w/count, left=o.x+step*i;
-    const topScale=id==='ridge'?.68+(.32*((i*3+1)%5)/4):id==='trident'?.82+(i===1?.18:0):1;
+    const step=o.w/count,left=o.x+step*i;
+    const topScale=id==='ridge'?.68+(.32*((i*3+1)%5)/4):
+      id==='trident'?.82+(i===1?.18:0):
+      id==='wave'?.56+.44*(.5+.5*Math.sin(i*1.55+(o.variant||0)*.8)):
+      id==='fan'?.54+.46*(1-Math.abs((i-(count-1)/2)/((count-1)/2))*.38):1;
     const tip=base+(tipIsUp?-1:1)*o.h*topScale;
-    const shift=id==='shard'?step*.16:step*(i%2?.045:-.035);
+    const shift=id==='shard'?step*.16:id==='fan'?step*(i-(count-1)/2)*.035:step*(i%2?.045:-.035);
     result.push([[left+2,base],[left+step*.5+shift,tip],[left+step-2,base]]);
   }
   return result;
@@ -3951,13 +3955,24 @@ function runnerObstacleHit(player,o,pad=7){
 /* Hazard encounters: clear jumpable pairs, ceiling variants and oscillating saws.
    Never use moving traps during the calm intro or without enough recovery lane. */
 function runnerPatternRequest(){
-  return typeof window!=='undefined'&&['pair','overhead','hover'].includes(window.__runnerV2ForcePattern)
+  return typeof window!=='undefined'&&['pair','overhead','hover','sweep','drift','stutter','wave'].includes(window.__runnerV2ForcePattern)
     ?window.__runnerV2ForcePattern:'auto';
 }
+function runnerObstacleMotionY(o,time){
+  const t=(o.motionT||0)+time,angle=t*o.motionSpeed+o.phase;
+  if(o.motionStyle==='stutter')
+    return Math.sin(angle)*o.motionAmp+Math.sin(angle*2.15+o.phase*.7)*o.motionAmp*.18;
+  return Math.sin(angle)*o.motionAmp;
+}
 function runnerObstacleProjected(o,time){
-  const projected={...o,x:o.x-runnerSpeed*time};
-  if(o.motion==='hover')projected.y=o.baseY+
-    Math.sin(((o.motionT||0)+time)*o.motionSpeed+o.phase)*o.motionAmp;
+  const projected={...o,x:o.x-runnerSpeed*time,y:o.y};
+  if(o.motion==='hover'){
+    projected.y=o.baseY+runnerObstacleMotionY({...o,motionT:o.motionT||0},time);
+    if(o.motionXAmplitude){
+      const t=o.motionT||0;
+      projected.x+=o.motionXAmplitude*(Math.sin((t+time)*o.motionSpeed*.72+o.phase)-Math.sin(t*o.motionSpeed*.72+o.phase));
+    }
+  }
   return projected;
 }
 function runnerObstaclePattern(selected,forced){
@@ -3967,10 +3982,10 @@ function runnerObstaclePattern(selected,forced){
   const r=Math.random();
   if(r<Math.min(.19,.10+runnerStage*.035))return 'pair';
   if(r<Math.min(.33,.22+runnerStage*.035))return 'overhead';
-  if(r<.42&&runnerStage>=2)return 'hover';
+  if(r<.45&&runnerStage>=2)return 'hover';
   return 'single';
 }
-/* Fair-play preview warning: only looks ahead, never changes collisions or spawn odds.
+/* Fair-play preview warning/* Fair-play preview warning: only looks ahead, never changes collisions or spawn odds.
    Opposite-wall hazards are signposted, but not treated as immediate ground danger. */
 function updateRunnerHazardHint(){
   const node=document.getElementById('runnerHazardHint');
@@ -3979,15 +3994,20 @@ function updateRunnerHazardHint(){
   const idle=en?'SPACE / TAP — DOUBLE JUMP · ? — HELP':'ПРОБЕЛ / ТАП — ДВОЙНОЙ ПРЫЖОК · ? — ПОМОЩЬ';
   let next=idle,level='';
   if(runnerRunning&&!runnerGameOver&&!runnerPortalTransition.active){
-    const range=runnerSpeed*1.1;
     const playerFront=runnerPlayer.x+runnerPlayer.w;
     const upcoming=runnerObstacles
-      .filter(o=>o.x+o.w>=playerFront&&o.x-playerFront<range)
+      .filter(o=>o.x+o.w>=playerFront&&o.x-playerFront<runnerSpeed*(o.motion==='hover'?1.7:1.1))
       .sort((a,b)=>a.x-b.x)[0];
     if(upcoming){
       const overhead=!!upcoming.ceiling!==(runnerGravity===-1);
-      const name=overhead?(en?'UPPER SPIKES':'ВЕРХНИЕ ШИПЫ'):
+      const name=overhead?(en?'UPPER HAZARD':'ВЕРХНЯЯ ЛОВУШКА'):
+        upcoming.motion==='hover'&&upcoming.motionStyle==='sweep'?(en?'SWEEPING SAW':'НИРЯЮЩАЯ ПИЛА'):
+        upcoming.motion==='hover'&&upcoming.motionStyle==='drift'?(en?'DRIFTING SAW':'ПИЛА С БОКОВЫМ ДРЕЙФОМ'):
+        upcoming.motion==='hover'&&upcoming.motionStyle==='stutter'?(en?'STUTTER SAW':'ПИЛА С РЫВКАМИ'):
         upcoming.motion==='hover'?(en?'MOVING SAW':'ДВИЖУЩАЯСЯ ПИЛА'):
+        upcoming.form==='gate'?(en?'RIFT GATE · DOUBLE JUMP':'ВОРОТА РАЗЛОМА · ДВОЙНОЙ ПРЫЖОК'):
+        upcoming.form==='fan'?(en?'SHARD FAN':'ВЕЕР ОСКОЛКОВ'):
+        upcoming.form==='wave'?(en?'WAVE RIDGE':'ВОЛНОВАЯ ГРЯДА'):
         upcoming.encounter==='pair'?(en?'DOUBLE SPIKES':'ПАРНЫЕ ШИПЫ'):
         upcoming.form==='monolith'?(en?'TALL MONOLITH':'ВЫСОКИЙ МОНОЛИТ'):
         upcoming.form==='ridge'?(en?'WIDE SPIKES':'ШИРОКИЕ ШИПЫ'):
@@ -4006,25 +4026,30 @@ function updateRunnerHazardHint(){
   node.classList.toggle('warning',level==='warning');
   node.classList.toggle('danger',level==='danger');
 }
-function runnerMovingHazard(o,dt){
+function runnerMovingHazardfunction runnerMovingHazard(o,dt){
   if(o.motion!=='hover')return;
-  o.motionT=(o.motionT||0)+dt;
-  o.y=o.baseY+Math.sin(o.motionT*o.motionSpeed+o.phase)*o.motionAmp;
+  const oldT=o.motionT||0,nextT=oldT+dt;
+  o.motionT=nextT;
+  o.y=o.baseY+runnerObstacleMotionY({...o,motionT:oldT},dt);
+  if(o.motionXAmplitude){
+    o.x+=o.motionXAmplitude*(Math.sin(nextT*o.motionSpeed*.72+o.phase)-Math.sin(oldT*o.motionSpeed*.72+o.phase));
+  }
 }
-function spawnRunnerObstacle(){
+function spawnRunnerObstaclefunction spawnRunnerObstacle(){
   const forced=typeof window!=='undefined'?window.__runnerV2ForceObstacleForm:null;
   const available=RUNNER_OBSTACLE_FORMS.filter(form=>form.minStage<=runnerStage);
   const approved=runnerObstacleForm(forced),pool=approved?[approved]:available;
   let roll=Math.random()*pool.reduce((sum,f)=>sum+f.weight,0),selected=pool[0];
   for(const form of pool){roll-=form.weight;if(roll<0){selected=form;break}}
   const requested=runnerObstaclePattern(selected,!!approved);
-  if(requested==='hover')selected=runnerObstacleForm('saw');
-  if(requested==='pair'&&!['needle','twins','shard'].includes(selected.id))selected=runnerObstacleForm('twins');
-  if(requested==='overhead'&&!['needle','twins','trident'].includes(selected.id))selected=runnerObstacleForm('twins');
+  const pair=requested==='pair';
+  if(requested==='wave')selected=runnerObstacleForm('wave');
+  else if(requested==='hover'||['sweep','drift','stutter'].includes(requested))selected=runnerObstacleForm('saw');
+  else if(pair&&!['needle','twins','shard'].includes(selected.id))selected=runnerObstacleForm('twins');
+  else if(requested==='overhead'&&!['needle','twins','trident'].includes(selected.id))selected=runnerObstacleForm('twins');
   const w=Math.round(selected.width[0]+Math.random()*(selected.width[1]-selected.width[0]));
   const h=Math.round(selected.height[0]+Math.random()*(selected.height[1]-selected.height[0]));
-  const startX=RUNNER_W+24,pair=requested==='pair';
-  const gap=pair?Math.round(58+Math.random()*31):0;
+  const startX=RUNNER_W+24,gap=pair?Math.round(58+Math.random()*31):0;
   const secondary=pair?runnerObstacleForm(Math.random()<.5?'needle':'twins'):null;
   const w2=secondary?Math.round(secondary.width[0]+Math.random()*(secondary.width[1]-secondary.width[0])):0;
   const fullWidth=w+gap+w2;
@@ -4035,10 +4060,19 @@ function spawnRunnerObstacle(){
   const variant=Math.floor(Math.random()*3),phase=Math.random()*Math.PI*2;
   const first={x:startX,y:ceiling?RUNNER_CEILING:RUNNER_GROUND-h,w,h,
     type:selected.type,form:selected.id,variant,phase,ceiling,encounter:requested,groupSpan:fullWidth};
-  if(requested==='hover'){
-    first.motion='hover';first.motionSpeed=2;first.motionAmp=14;first.motionT=0;
-    first.baseY=ceiling?RUNNER_CEILING+13:RUNNER_GROUND-h-13;
-    first.y=first.baseY+Math.sin(first.phase)*first.motionAmp;
+  if(['hover','sweep','drift','stutter'].includes(requested)||(!approved&&requested==='auto'&&selected.id==='saw')){
+    const motionStyle=requested==='sweep'||requested==='drift'||requested==='stutter'?requested:
+      ['bob','sweep','stutter','drift'][Math.floor(Math.random()*4)];
+    const amp=motionStyle==='sweep'?32+Math.random()*11:
+      motionStyle==='stutter'?17+Math.random()*10:motionStyle==='drift'?10+Math.random()*9:10+Math.random()*12;
+    first.motion='hover';first.motionStyle=motionStyle;first.motionSpeed=
+      motionStyle==='sweep'?1.05+Math.random()*.35:
+      motionStyle==='stutter'?2.25+Math.random()*.45:1.45+Math.random()*.85;
+    first.motionAmp=amp;first.motionXAmplitude=motionStyle==='drift'?18+Math.random()*18:0;
+    first.motionT=0;first.baseX=startX;first.baseY=ceiling?RUNNER_CEILING+10+amp:RUNNER_GROUND-h-10-amp;
+    first.y=first.baseY+runnerObstacleMotionY(first,0);
+    if(first.motionXAmplitude)first.x+=first.motionXAmplitude*Math.sin(first.phase);
+    first.groupSpan=fullWidth+first.motionXAmplitude*2;
   }
   runnerObstacles.push(first);
   if(pair){
@@ -4049,7 +4083,7 @@ function spawnRunnerObstacle(){
   }
   return true;
 }
-/* SIGNAL RUNNER V2 — boss encounters. All attacks reuse real obstacle collision
+/* SIGNAL RUNNER V2 — boss encounters./* SIGNAL RUNNER V2 — boss encounters. All attacks reuse real obstacle collision
    geometry, and clocks advance only in updateRunner (pause-safe). No server bonuses. */
 const RUNNER_BOSS_DEFS=[
  {ru:'ОКО БЕЗДНЫ',en:'ABYSS EYE',color:'#d9a5ff',attacks:[
@@ -5278,13 +5312,17 @@ function drawRunnerPremiumHazard(ctx,skin,o,variant,phase){
 function drawRunnerTrapTelegraph(ctx,o,phase){
   if(o.motion!=='hover'&&o.encounter!=='overhead')return;
   ctx.save();
-  const accent=o.motion==='hover'?'rgba(243,182,102,.65)':'rgba(132,228,241,.48)';
-  ctx.strokeStyle=accent;ctx.lineWidth=1.2;ctx.setLineDash([4,7]);
+  const accent=o.motion==='hover'?'rgba(243,182,102,.72)':'rgba(132,228,241,.48)';
+  ctx.strokeStyle=accent;ctx.lineWidth=1.4;ctx.setLineDash([4,7]);
   if(o.motion==='hover'){
     const cx=o.x+o.w/2;
     ctx.beginPath();ctx.moveTo(cx,o.baseY-o.motionAmp-8);
     ctx.lineTo(cx,o.baseY+o.h+o.motionAmp+8);ctx.stroke();
-    ctx.setLineDash([]);ctx.globalAlpha=.32+.17*Math.sin(phase*2);
+    if(o.motionXAmplitude){
+      const cy=o.y+o.h/2;
+      ctx.beginPath();ctx.moveTo(cx-o.motionXAmplitude,cy);ctx.lineTo(cx+o.motionXAmplitude,cy);ctx.stroke();
+    }
+    ctx.setLineDash([]);ctx.globalAlpha=.42+.2*Math.sin(phase*2);
     ctx.strokeStyle='#f6ad65';ctx.beginPath();ctx.arc(cx,o.y+o.h/2,Math.max(o.w,o.h)*.61,0,Math.PI*2);ctx.stroke();
   }else{
     const laneY=o.ceiling?o.y+o.h+14:o.y-14;
@@ -5292,7 +5330,7 @@ function drawRunnerTrapTelegraph(ctx,o,phase){
   }
   ctx.restore();
 }
-function drawRunnerObstacleGeometry(ctx,o,skin,phase){
+function drawRunnerObstacleGeometryfunction drawRunnerObstacleGeometry(ctx,o,skin,phase){
   if(!runnerObstacleForm(o.form))return false;
   const ice=['frost_spines','crystal_shards'].includes(skin);
   const fire=['inferno_obelisks','orbital_debris'].includes(skin);
@@ -5308,7 +5346,7 @@ function drawRunnerObstacleGeometry(ctx,o,skin,phase){
   grad.addColorStop(0,core);grad.addColorStop(.56,body);grad.addColorStop(1,'#050914');
   ctx.fillStyle=grad;ctx.strokeStyle=edge;ctx.lineWidth=1.35;
   ctx.shadowColor=edge;ctx.shadowBlur=5+Math.sin(phase)*2;
-  if(['needle','twins','trident','ridge','shard'].includes(o.form)){
+  if(['needle','twins','trident','ridge','shard','wave','fan'].includes(o.form)){
     const shapes=runnerObstacleShapes({...o,ceiling:false});
     // Drawing is in floor orientation; the enclosing canvas mirrors ceiling hazards.
     for(let i=0;i<shapes.length;i++){
@@ -5341,6 +5379,15 @@ function drawRunnerObstacleGeometry(ctx,o,skin,phase){
     ctx.beginPath();ctx.arc(0,0,r*.47,0,Math.PI*2);ctx.stroke();
     ctx.fillStyle='#050a13';ctx.beginPath();ctx.arc(0,0,r*.19,0,Math.PI*2);ctx.fill();
     ctx.restore();
+  }else if(o.form==='gate'){
+    ctx.beginPath();ctx.moveTo(x+8,bottom);ctx.lineTo(x+3,y+12);ctx.lineTo(x+w*.34,y);
+    ctx.lineTo(x+w-4,y+9);ctx.lineTo(x+w-9,bottom);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.shadowBlur=0;ctx.strokeStyle=edge;ctx.lineWidth=2.2;ctx.globalAlpha=.88;
+    ctx.beginPath();ctx.moveTo(x+7,y+h*.28);ctx.lineTo(x+w-8,y+h*.28);
+    ctx.moveTo(x+5,y+h*.72);ctx.lineTo(x+w-7,y+h*.72);ctx.stroke();
+    ctx.strokeStyle='rgba(255,255,255,.62)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(x+w*.33,y+7);ctx.lineTo(x+w*.54,y+h*.39);ctx.lineTo(x+w*.4,y+h*.62);
+    ctx.lineTo(x+w*.63,bottom-7);ctx.stroke();ctx.globalAlpha=1;
   }else if(o.form==='monolith'){
     ctx.beginPath();ctx.moveTo(x+5,bottom);ctx.lineTo(x+2,y+9);ctx.lineTo(x+w*.32,y);
     ctx.lineTo(x+w-7,y+3);ctx.lineTo(x+w-2,bottom);ctx.closePath();ctx.fill();ctx.stroke();
