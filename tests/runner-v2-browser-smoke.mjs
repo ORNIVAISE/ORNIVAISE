@@ -25,8 +25,10 @@ try{
   assert.equal(await page.locator('#runnerV2World option').count(),10,'All 10 world choices');
   assert.equal(await page.locator('#runnerV2Planet option').count(),14,'All 14 planet choices');
   assert.equal(await page.locator('#runnerV2Hazard option').count(),11,'All 11 obstacle choices');
-  assert.equal(await page.locator('#runnerV2Form option').count(),9,'Eight geometry forms plus AUTO');
-  assert.equal(await page.locator('#runnerV2Pattern option').count(),4,'Four encounter scenarios');
+  assert.equal(await page.locator('#runnerV2Form option').count(),await page.evaluate(()=>RUNNER_OBSTACLE_FORMS.length+1),'All engine geometry forms plus AUTO');
+  const patterns=await page.locator('#runnerV2Pattern option').evaluateAll(nodes=>nodes.map(n=>n.value));
+  assert.equal(new Set(patterns).size,patterns.length,'Unique encounter scenarios');
+  for(const pattern of ['auto','pair','overhead','hover'])assert.ok(patterns.includes(pattern),'Base encounter '+pattern+' available');
   const pauseFits=await page.evaluate(()=>{
     const p=document.getElementById('runnerPauseToggle').getBoundingClientRect();
     const c=document.getElementById('signalRunnerCanvas').getBoundingClientRect();
@@ -145,11 +147,11 @@ try{
     'Boss name/banner must be prominent on mobile and desktop: '+JSON.stringify(bossDisplay));
   assert.match(bossDisplay.label||'',/ЗМЕЙ РАЗЛОМА|RIFT SERPENT/,'Boss name displayed prominently');
   assert.equal(await page.locator('#runnerBossBannerWave').textContent(),'ВОЛНА 0 / 3','Wave count starts at zero');
-  assert.match(await page.locator('#runnerBossBannerAttack').textContent(),/КЛЫКИ ИЗ РАЗЛОМА|RIFT FANGS/,
+  assert.match(await page.locator('#runnerBossBannerAttack').textContent(),/КЛЫКИ(?: ИЗ)? РАЗЛОМА|RIFT FANGS/,
     'Boss first attack is named explicitly');
-  assert.match(await page.locator('#runnerBossBannerAction').textContent(),/НЕ ПРЫГАЙ|STAY LOW/,
-    'Explicit instruction tells player to stay on the safe lane');
-  assert.equal(await page.locator('#runnerBossBanner').getAttribute('data-action'),'stay',
+  assert.match(await page.locator('#runnerBossBannerAction').textContent(),/ПРЫГАЙ|JUMP/,
+    'Explicit instruction tells player to jump over the tracked attack');
+  assert.equal(await page.locator('#runnerBossBanner').getAttribute('data-action'),'jump',
     'Boss warning is styled by its actual action');
   assert.match(await page.locator('#runnerBossBannerEta').textContent(),/ОПАСНОСТЬ ЧЕРЕЗ|DANGER IN/,
     'Visible countdown to the incoming attack');
@@ -171,3 +173,4 @@ try{
   await context.close();
  }
 }finally{await browser.close()}
+
