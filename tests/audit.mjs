@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 const html=fs.readFileSync(new URL('../index.html',import.meta.url),'utf8');
 for(const [,script] of html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g))new vm.Script(script);
-for(const file of ['index.html','privacy.html','terms.html','rights.html']){
+for(const file of ['index.html','signal-runner.html','privacy.html','terms.html','rights.html']){
   const text=fs.readFileSync(new URL('../'+file,import.meta.url),'utf8');
   assert.equal((text.match(/rel="canonical"/g)||[]).length,1,file+' canonical');
   assert.equal((text.match(/name="theme-color"/g)||[]).length,1,file+' theme color');
@@ -25,7 +25,7 @@ class Element {
   play(){if(this.fail)return Promise.reject(new Error('network'));this.paused=false;this.fire('play');return Promise.resolve()}
 }
 const elements=new Map();const get=id=>{if(!elements.has(id))elements.set(id,new Element(id));return elements.get(id)};
-const buttons=['signal001','echo','fractured','afterimage'].map(id=>{const b=new Element(id);b.dataset.track=id;return b});
+const buttons=['signal001'].map(id=>{const b=new Element(id);b.dataset.track=id;return b});
 const navLink=new Element('nav-link');get('mainNav').querySelectorAll=()=>[navLink];get('volumeRange').value=78;
 const document=new Element('document');document.getElementById=get;document.querySelectorAll=s=>s==='[data-track]'?buttons:[];document.querySelector=()=>new Element('decoration');document.body=new Element('body');
 const window={matchMedia:()=>({matches:false,addEventListener(){}})};
@@ -36,14 +36,20 @@ get('menuToggle').fire('click');assert.equal(get('menuToggle').attrs['aria-expan
 navLink.fire('click');assert.equal(get('menuToggle').attrs['aria-expanded'],'false');
 get('menuToggle').fire('click');document.fire('keydown',{key:'Escape'});assert.equal(get('menuToggle').attrs['aria-expanded'],'false');assert.equal(document.activeElement,get('menuToggle'));
 buttons[0].fire('click');assert.equal(get('audioSignal').paused,false);assert.equal(get('mainPlay').attrs['aria-label'],'Пауза');
-get('audioEcho').duration=213;get('audioEcho').currentTime=30;
-get('nextBtn').fire('click');assert.equal(get('audioSignal').paused,true);assert.equal(get('audioEcho').paused,false);assert.equal(get('gpDuration').textContent,'03:33');assert.equal(get('gpCurrent').textContent,'00:30');assert.ok(Number(get('gpSeek').value)>14);
-get('mainPlay').fire('click');assert.equal(get('audioEcho').paused,true);assert.equal(get('mainPlay').attrs['aria-label'],'Включить');
+get('audioSignal').duration=213;get('audioSignal').currentTime=30;
+get('nextBtn').fire('click');assert.equal(get('audioSignal').paused,false);assert.equal(get('gpDuration').textContent,'03:33');assert.equal(get('gpCurrent').textContent,'00:30');assert.ok(Number(get('gpSeek').value)>14);
+get('mainPlay').fire('click');assert.equal(get('audioSignal').paused,true);assert.equal(get('mainPlay').attrs['aria-label'],'Включить');
 get('volumeBtn').fire('click');assert.equal(get('volumeBtn').attrs['aria-label'],'Включить звук');get('volumeBtn').fire('click');assert.equal(get('volumeBtn').attrs['aria-label'],'Выключить звук');
-get('audioEcho').fail=true;get('mainPlay').fire('click');await new Promise(resolve=>setTimeout(resolve,0));assert.match(get('playerStatus').textContent,/Не удалось/);
-vm.runInContext(script.slice(script.indexOf('const easterHotspot='),script.indexOf('/* =========================================================')),context);
-get('easterHotspot').fire('click');assert.equal(get('easterOverlay').classList.contains('open'),false);get('easterHotspot').fire('click');assert.equal(get('easterOverlay').attrs['aria-hidden'],'false');assert.equal(document.activeElement,get('easterClose'));
-let trapped=false;get('easterOverlay').onkeydown({key:'Tab',preventDefault(){trapped=true}});assert.ok(trapped);
-document.fire('keydown',{key:'Escape'});assert.equal(get('easterOverlay').attrs['aria-hidden'],'true');assert.equal(document.activeElement,get('easterHotspot'));
-assert.equal((html.match(/id="easterHotspot"/g)||[]).length,1);assert.ok(html.includes('class="hero-copy-accessible"'));assert.ok(html.includes('if(reduced || document.hidden || activeAudio().paused)'));
-console.log('PASS: metadata, local links, script syntax, menu, exclusive playback, seeking state, mute, errors, double-click Easter egg and focus return.');
+get('audioSignal').fail=true;get('mainPlay').fire('click');await new Promise(resolve=>setTimeout(resolve,0));assert.match(get('playerStatus').textContent,/Не удалось/);
+const game=fs.readFileSync(new URL('../signal-runner.html',import.meta.url),'utf8');
+for(const [,source] of game.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g))new vm.Script(source);
+assert.ok(html.includes('href="signal-runner.html">ИГРА</a>'));
+assert.ok(html.includes('id="runnerTeaserPlay" href="signal-runner.html"'));
+assert.ok(!html.includes('id="signalRunnerCanvas"')&&!html.includes('runnerApi'));
+assert.ok(!html.includes('supabase.co'),'home does not create or load a game profile');
+assert.ok(game.includes('id="signalRunnerCanvas"')&&game.includes('id="runnerStorePanel"')&&game.includes('id="runnerProfilePanel"'));
+assert.ok(!game.includes('role="dialog"'),'the game is a normal page');
+assert.ok(game.includes('ornivaise-runner-player-token'),'same-origin profile identity is preserved');
+get('gpSeek').value=50;get('gpSeek').fire('input');assert.equal(get('audioSignal').currentTime,106.5);
+assert.ok(html.includes('class="hero-copy-accessible"'));assert.ok(html.includes('if(reduced || document.hidden || activeAudio().paused)'));
+console.log('PASS: page metadata and assets, menu, playback, seeking, mute and errors, separate game route, no game API on home, profile identity.');
