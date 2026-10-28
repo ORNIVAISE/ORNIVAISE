@@ -3,10 +3,10 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {Script} from 'node:vm';
-const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
+const html=readFileSync(new URL('../signal-runner.html',import.meta.url),'utf8');
 const scripts=[...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
   .filter(m=>!/\bsrc\s*=/.test(m[1]));
-assert.equal(scripts.length,4);
+assert.equal(scripts.length,3);
 scripts.forEach((m,i)=>new Script(m[2],{filename:'inline-'+i+'.js'}));
 function take(start,end){
  const a=html.indexOf(start),b=html.indexOf(end,a+start.length);
@@ -123,3 +123,4 @@ function setupStart(){
  assert.equal(runnerState.get().runnerLastSavedRunId,VALID_ID);
 }
 console.log('PASS: launch races, close while loading, offline retry, overlay pauses, single score submission');
+

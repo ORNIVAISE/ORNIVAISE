@@ -11,6 +11,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Check visuals and catalog contracts
         run: |
+          node tests/audit.mjs
           node tests/runner-v2-cosmetics.test.mjs
           node tests/runner-v2-reflections.test.mjs
           node tests/runner-v2-portal.test.mjs
@@ -37,6 +38,7 @@ jobs:
       - name: Test real V2 interface at desktop and phone sizes
         run: |
           python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/signal-runner-preview-http.log 2>&1 &
+          node tests/runner-standalone-browser-smoke.mjs
           node tests/runner-v2-browser-smoke.mjs
       - name: Verify independently hosted public preview on desktop and phone
         run: |
@@ -62,3 +64,4 @@ jobs:
           deno-version: v2.x
       - name: Type check runner-store Edge Function
         run: deno check supabase/functions/runner-store/index.ts
+

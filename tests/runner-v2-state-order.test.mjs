@@ -3,10 +3,10 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {Script} from 'node:vm';
-const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
+const html=readFileSync(new URL('../signal-runner.html',import.meta.url),'utf8');
 const scripts=[...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
   .filter(m=>!/\bsrc\s*=/.test(m[1]));
-assert.equal(scripts.length,4);
+assert.equal(scripts.length,3);
 scripts.forEach((m,i)=>new Script(m[2],{filename:'inline-'+i+'.js'}));
 function extract(from,to){
  const start=html.indexOf(from),end=html.indexOf(to,start+from.length);
@@ -76,3 +76,4 @@ function setup(){
  assert.equal(s.status.textContent,'storeError','current failures must be visible');
 }
 console.log('PASS: store read ordering, purchases override old responses, stale errors ignored');
+

@@ -1,7 +1,7 @@
 // SIGNAL RUNNER V2 encounter simulation and pause placement.
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
+const html=readFileSync(new URL('../signal-runner.html',import.meta.url),'utf8');
 const take=(a,b)=>{const x=html.indexOf(a),y=html.indexOf(b,x+a.length);assert.ok(x>=0&&y>x,a);return html.slice(x,y)};
 const code=[
  'const RUNNER_W=960,RUNNER_H=360,RUNNER_GROUND=292,RUNNER_CEILING=58;',
@@ -56,3 +56,4 @@ assert.ok(start<html.indexOf('id="runnerStoreToggle"'),'pause before store');
 assert.equal(html.slice(html.indexOf('<div class="runner-canvas-wrap"'),html.indexOf('<div class="runner-controls">')).includes('id="runnerPauseToggle"'),false,'no overlay pause on playfield');
 assert.match(html,/\.runner-control-buttons \.runner-pause-toggle\{[\s\S]*?position:static!important/);
 console.log('PASS hazards: pairs, reverse-gravity overhead, moving saw prediction, safe intro and lower pause');
+

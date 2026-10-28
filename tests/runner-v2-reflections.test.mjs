@@ -3,10 +3,10 @@
 import {strict as assert} from 'node:assert';
 import {readFileSync} from 'node:fs';
 import {Script} from 'node:vm';
-const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
+const html=readFileSync(new URL('../signal-runner.html',import.meta.url),'utf8');
 const inline=[...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
   .filter(m=>!/\bsrc\s*=/.test(m[1]));
-assert.equal(inline.length,4);
+assert.equal(inline.length,3);
 inline.forEach((m,i)=>new Script(m[2],{filename:'script-'+i+'.js'}));
 
 for(const name of ['lava','frost','storm','rift']){
@@ -73,3 +73,4 @@ assert.match(html,/drawRunnerLiveReflection\(ctx,runnerStoreState\.selected_back
 assert.match(html,/if\(drawRunnerPremiumHazard\(ctx,skin,o,variant,phase\)\)/);
 assert.match(html,/drawRunnerCinematicBackdrop\(ctx,runnerStoreState\.selected_background,stage\)/);
 console.log('PASS four panorama assets, 10 world surface themes, 4 hazard families and 40 live-reflection frames');
+

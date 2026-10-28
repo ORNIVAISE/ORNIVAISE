@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
-const html=fs.readFileSync(new URL('../index.html',import.meta.url),'utf8');
+const html=fs.readFileSync(new URL('../signal-runner.html',import.meta.url),'utf8');
 const slice=(start,end)=>{
  const a=html.indexOf(start),b=html.indexOf(end,a+start.length);
  assert.ok(a>=0&&b>a,'missing '+start);return html.slice(a,b);
@@ -22,8 +22,8 @@ const source=[
  'last(){return runnerObstacles.at(-1)},all(){return runnerObstacles}};'
 ].join('\n');
 const game=new Function(source)();
-assert.equal(game.forms.length,8);
-assert.equal(new Set(game.forms.map(x=>x.id)).size,8);
+assert.equal(game.forms.length,11);
+assert.equal(new Set(game.forms.map(x=>x.id)).size,11);
 for(const form of game.forms){
  assert.ok(form.width[0]>0&&form.width[1]>=form.width[0]);
  assert.ok(form.height[0]>0&&form.height[1]>=form.height[0]);
@@ -33,10 +33,12 @@ for(const form of game.forms){
  assert.equal(o.form,form.id);
  assert.ok(o.w>=form.width[0]&&o.w<=form.width[1],form.id+' width');
  assert.ok(o.h>=form.height[0]&&o.h<=form.height[1],form.id+' height');
- assert.equal(o.y+o.h,292,'ground aligned');
+ if(form.id==='saw')assert.ok(o.y>=58&&o.y+o.h<=292,'moving saw stays inside arena');
+ else assert.equal(o.y+o.h,292,'ground aligned');
  game.setGravity(-1);game.clear();
  assert.equal(game.spawn(),true);
- assert.equal(game.last().y,58,'ceiling aligned');
+ if(form.id==='saw')assert.ok(game.last().y>=58,'moving saw stays below ceiling');
+ else assert.equal(game.last().y,58,'ceiling aligned');
  game.setGravity(1);
 }
 game.force('');
@@ -45,7 +47,7 @@ for(let i=0;i<200;i++){game.clear();game.spawn();assert.ok(['needle','twins','sl
 game.setStage(3);
 const kinds=new Set();
 for(let i=0;i<300;i++){game.clear();game.spawn();kinds.add(game.last().form)}
-assert.equal(kinds.size,8,'endgame offers all silhouettes');
+assert.equal(kinds.size,11,'endgame offers all silhouettes');
 game.force('ridge');game.clear();game.orbs([{x:970,y:160}]);
 assert.equal(game.spawn(),false,'guard newly spawned obstacles near the Ø arc');
 game.orbs([]);game.clear();game.spawn();
@@ -84,4 +86,5 @@ const sandbox=fs.readFileSync(new URL('../signal-runner-v2-test.html',import.met
 assert.match(sandbox,/RUNNER_OBSTACLE_FORMS/);
 assert.match(sandbox,/runnerV2Form/);
 new vm.Script(sandbox.match(/<script id="runner-v2-sandbox">([\s\S]*?)<\/script>/)?.[1]||'');
-console.log('PASS eight obstacle silhouettes, stage weights, coin clearance, reverse gravity, polygon/circle collisions and canvas rendering');
+console.log('PASS eleven obstacle silhouettes, stage weights, coin clearance, reverse gravity, polygon/circle collisions and canvas rendering');
+

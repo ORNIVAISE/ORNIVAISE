@@ -2,10 +2,10 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {Script} from 'node:vm';
-const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
+const html=readFileSync(new URL('../signal-runner.html',import.meta.url),'utf8');
 const scripts=[...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)]
   .filter(b=>!/\bsrc\s*=/.test(b[1]));
-assert.equal(scripts.length,4);
+assert.equal(scripts.length,3);
 scripts.forEach((s,i)=>new Script(s[2],{filename:'runner-inline-'+i+'.js'}));
 for(const id of ['runnerAbilityHud','runnerAbilityCount','runnerAbilityLabel','runnerJump','signalRunnerCanvas']){
   assert.ok(html.includes('id="'+id+'"'),'missing HUD/control '+id);
@@ -37,6 +37,7 @@ const fixture=[
  'let runnerObstacles=[],runnerOrbs=[],runnerDust=[],runnerSecret=false,runnerStage=0,runnerStageTimer=0,runnerEventTimer=0;',
  'let runnerGravity=1,runnerGravityEvent=false,runnerGravityEnd=Infinity,runnerNextGravity=Infinity,runnerPortalFx=0;',
  'let runnerPortalTransition={active:false},runnerBossActive=false,runnerBossType=0,runnerBossEnd=Infinity,runnerNextBoss=Infinity;',
+ 'let runnerBossVictoryTimer=0,runnerBossClock=0,runnerBossWaveIndex=0,runnerBossWins=0,runnerBossPlans=[];',
  'let runnerModifier="none",runnerRecordCelebrated=false,runnerGhostCurrent=[];',
  'const signalRunner={classList:{contains:()=>true}};',
  'const document={documentElement:{lang:"ru"},getElementById:()=>null};',
@@ -198,3 +199,4 @@ function until(game,predicate,max=220){
  assert.equal(pauseApi.get().runnerPaused,true);
 }
 console.log('PASS double-jump, safe coins, landing prediction, paused shop and resumable run');
+

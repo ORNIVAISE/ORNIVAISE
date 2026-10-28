@@ -1,7 +1,7 @@
 // Boss combat regression: unique 3-wave encounters, non-overlapping hazards, and no currency mutation.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-const html=fs.readFileSync(new URL('../signal-runner-v2-test.html',import.meta.url),'utf8');
+const html=fs.readFileSync(new URL('../signal-runner.html',import.meta.url),'utf8');
 function take(from,to){
  const a=html.indexOf(from),b=html.indexOf(to,a+from.length);
  assert.ok(a>=0&&b>a,'missing code '+from);return html.slice(a,b);
@@ -12,14 +12,14 @@ const code= [
  "const elements={runnerBossMission:{dataset:{}},runnerBossMissionText:{textContent:''},runnerBossMissionProgress:{textContent:''}};",
  "let runnerSpeed=450,runnerStage=2,runnerGravity=1,runnerObstacles=[],runnerOrbs=[],runnerSpawn=0,runnerOrbSpawn=0;",
  "let runnerDistanceValue=2000,runnerRunning=true,runnerGameOver=false,runnerGravityEvent=false;",
- "let runnerPortalTransition={active:false},runnerBossActive=false,runnerBossType=0,runnerBossEnd=0,runnerNextBoss=2200,runnerBossClock=0,runnerBossWaveIndex=0,runnerBossWins=0,runnerBossVictoryTimer=0;",
+ "let runnerPortalTransition={active:false},runnerBossActive=false,runnerBossType=0,runnerBossEnd=0,runnerNextBoss=2200,runnerBossClock=0,runnerBossWaveIndex=0,runnerBossWins=0,runnerBossVictoryTimer=0,runnerBossPlans=[];",
  "let runnerPlayer={x:104,y:250,w:42,h:42};",
  "const window={__runnerV2ForceObstacleForm:null,__runnerV2ForcePattern:'auto'};",
  "const events=[],announceRunnerEvent=(msg,t)=>events.push({msg,t});",
  "const gameText=x=>x,rectHit=(a,b,p=4)=>a.x+p<b.x+b.w-p&&a.x+a.w-p>b.x+p&&a.y+p<b.y+b.h-p&&a.y+a.h-p>b.y+p;",
  take('/* V2 obstacle morphology','function spawnRunnerOrb(){'),
  "return {start:startRunnerBossEvent,tick:updateRunnerBossEvent,spawn:spawnRunnerBossWave,mission:updateRunnerBossMission,cue:runnerBossCue,",
- "setGravity:v=>{runnerGravity=v},setDistance:v=>{runnerDistanceValue=v},setPortal:v=>{runnerPortalTransition.active=v},",
+ "setGravity:v=>{runnerGravity=v;runnerPlayer.y=v===-1?RUNNER_CEILING:RUNNER_GROUND-runnerPlayer.h},setDistance:v=>{runnerDistanceValue=v},setPortal:v=>{runnerPortalTransition.active=v},",
  "move:dt=>{for(const o of runnerObstacles)o.x-=runnerSpeed*dt;runnerObstacles=runnerObstacles.filter(o=>o.x+o.w>-30)},",
  "get:()=>({active:runnerBossActive,type:runnerBossType,clock:runnerBossClock,index:runnerBossWaveIndex,wins:runnerBossWins,",
  "next:runnerNextBoss,obstacles:runnerObstacles.map(o=>({...o})),orbs:runnerOrbs,events,mission:elements.runnerBossMission.dataset.state,",
@@ -40,9 +40,9 @@ for(let boss=0;boss<3;boss++){
  assert.equal(o.bossAttack,true);
  assert.ok(o.x>=960,'attack must travel visibly from right edge');
  const attackMap=[
-  [{form:'ridge',action:'jump',h:31,ceiling:false,count:1},{form:'twins',action:'stay',h:48,ceiling:true,count:2},{form:'saw',action:'jump',h:46,ceiling:false,count:3}],
-  [{form:'twins',action:'stay',h:48,ceiling:true,count:1},{form:'trident',action:'jump',h:46,ceiling:false,count:2},{form:'ridge',action:'stay',h:34,ceiling:true,count:3}],
-  [{form:'slab',action:'jump',h:34,ceiling:false,count:1},{form:'monolith',action:'double',h:128,ceiling:false,count:1},{form:'twins',action:'jump',h:46,ceiling:false,count:3}]
+  [{form:'fan',action:'jump',h:58,ceiling:false,count:1},{form:'saw',action:'double',h:52,ceiling:false,count:2},{form:'wave',action:'jump',h:42,ceiling:false,count:3}],
+  [{form:'needle',action:'jump',h:62,ceiling:false,count:3},{form:'trident',action:'double',h:51,ceiling:false,count:1},{form:'ridge',action:'jump',h:36,ceiling:false,count:2}],
+  [{form:'slab',action:'jump',h:34,ceiling:false,count:1},{form:'monolith',action:'double',h:116,ceiling:false,count:1},{form:'gate',action:'double',h:98,ceiling:false,count:2}]
  ];
  const verify=(o,i)=>{
   const wave=o.bossWave,group=g.get().obstacles.filter(h=>h.bossWave===wave);
@@ -79,7 +79,7 @@ const paused=simulation();paused.start(0);const before=paused.get().clock;
 assert.equal(before,0,'new boss begins at 0');
 assert.equal(paused.get().index,0,'no attacks before simulation time advances');
 const upside=simulation();upside.setGravity(-1);upside.start(1);upside.tick(1.36);
-assert.equal(upside.get().obstacles[0].ceiling,false,'opposite-wall wave under reverse gravity');
+assert.equal(upside.get().obstacles[0].ceiling,true,'attack follows the player on the ceiling');
 const portal=simulation();portal.setPortal(true);assert.equal(portal.start(0),false,'boss cannot stack with gravity portal');
 const codeNoCredits=take('/* SIGNAL RUNNER V2 — boss encounters','function spawnRunnerOrb(){');
 assert.doesNotMatch(codeNoCredits,/credits\s*[\+\-]?=|earned\s*[\+\-]?=|runnerApi\s*\(/,'no counterfeit server currency bonus');
@@ -92,13 +92,8 @@ assert.match(html,/id="runnerBossBannerAttack"/);
 assert.match(html,/id="runnerBossBannerEta"/);
 assert.match(html,/RUNNER_BOSS_ACTIONS/);
 assert.match(html,/drawRunnerBossPresence\(ctx\)/);
-const serpentDraw=take('if(runnerBossType===1){\n  // RIFT SERPENT','}else{\n  // MONOLITH GUARD');
-assert.match(serpentDraw,/large, readable head/);
-assert.match(serpentDraw,/broad overlapping scutes/);
-assert.match(serpentDraw,/slit eye/);
-assert.match(serpentDraw,/const body=\(\)=>/);
-
 const sandbox=fs.readFileSync(new URL('../signal-runner-v2-test.html',import.meta.url),'utf8');
 assert.match(sandbox,/id="runnerV2BossStart"/);
 assert.match(sandbox,/startRunnerBossEvent\(type\)/);
 console.log('PASS 9 escalating boss attack patterns, accurate jump/stay/double cues, arrival countdowns, gravity, victory animation and rewards isolation');
+

@@ -3,7 +3,7 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 const html=fs.readFileSync(new URL('../index.html',import.meta.url),'utf8');
 for(const [,script] of html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g))new vm.Script(script);
-for(const file of ['index.html','privacy.html','terms.html','rights.html']){
+for(const file of ['index.html','signal-runner.html','privacy.html','terms.html','rights.html']){
   const text=fs.readFileSync(new URL('../'+file,import.meta.url),'utf8');
   assert.equal((text.match(/rel="canonical"/g)||[]).length,1,file+' canonical');
   assert.equal((text.match(/name="theme-color"/g)||[]).length,1,file+' theme color');
@@ -14,23 +14,22 @@ for(const file of ['index.html','privacy.html','terms.html','rights.html']){
   }
 }
 class Element {
-  constructor(id){this.id=id;this.attrs={};this.handlers={};this.children=[];this.style={setProperty(){}};this.dataset={};this.textContent='';this.value=0;this.paused=true;this.currentTime=0;this.duration=180;this.volume=.78;this.muted=false;const classes=new Set();this.classList={add:x=>classes.add(x),remove:x=>classes.delete(x),contains:x=>classes.has(x),toggle:(x,force)=>{const on=force??!classes.has(x);if(on)classes.add(x);else classes.delete(x);return on;}};}
+  constructor(id){this.id=id;this.attrs={};this.handlers={};this.style={setProperty(){}};this.dataset={};this.textContent='';this.value=0;this.paused=true;this.currentTime=0;this.duration=180;this.volume=.78;this.muted=false;const classes=new Set();this.classList={add:x=>classes.add(x),remove:x=>classes.delete(x),contains:x=>classes.has(x),toggle:(x,force)=>{const on=force??!classes.has(x);if(on)classes.add(x);else classes.delete(x);return on;}};}
   setAttribute(k,v){this.attrs[k]=String(v)}
   addEventListener(k,fn){(this.handlers[k]??=[]).push(fn)}
   fire(k,e={}){for(const fn of this.handlers[k]||[])fn(e)}
   focus(){document.activeElement=this}
   querySelector(){return this.label??=new Element('label')}
   querySelectorAll(){return []}
-  appendChild(child){this.children.push(child);return child}
   pause(){const wasPlaying=!this.paused;this.paused=true;if(wasPlaying)this.fire('pause')}
   play(){if(this.fail)return Promise.reject(new Error('network'));this.paused=false;this.fire('play');return Promise.resolve()}
 }
 const elements=new Map();const get=id=>{if(!elements.has(id))elements.set(id,new Element(id));return elements.get(id)};
 const buttons=['signal001'].map(id=>{const b=new Element(id);b.dataset.track=id;return b});
 const navLink=new Element('nav-link');get('mainNav').querySelectorAll=()=>[navLink];get('volumeRange').value=78;
-const document=new Element('document');document.getElementById=get;document.createElement=tag=>new Element(tag);document.querySelectorAll=s=>s==='[data-track]'?buttons:[];document.querySelector=()=>new Element('decoration');document.body=new Element('body');
+const document=new Element('document');document.getElementById=get;document.querySelectorAll=s=>s==='[data-track]'?buttons:[];document.querySelector=()=>new Element('decoration');document.body=new Element('body');
 const window={matchMedia:()=>({matches:false,addEventListener(){}})};
-const context=vm.createContext({document,window,location:{search:''},URLSearchParams,console,setTimeout,clearTimeout});
+const context=vm.createContext({document,window,console,setTimeout,clearTimeout});
 const script=html.match(/<script>\s*([\s\S]*?)<\/script>/)[1];
 vm.runInContext(script.slice(0,script.indexOf('// v11 —')),context);
 get('menuToggle').fire('click');assert.equal(get('menuToggle').attrs['aria-expanded'],'true');
@@ -42,11 +41,15 @@ get('nextBtn').fire('click');assert.equal(get('audioSignal').paused,false);asser
 get('mainPlay').fire('click');assert.equal(get('audioSignal').paused,true);assert.equal(get('mainPlay').attrs['aria-label'],'Включить');
 get('volumeBtn').fire('click');assert.equal(get('volumeBtn').attrs['aria-label'],'Включить звук');get('volumeBtn').fire('click');assert.equal(get('volumeBtn').attrs['aria-label'],'Выключить звук');
 get('audioSignal').fail=true;get('mainPlay').fire('click');await new Promise(resolve=>setTimeout(resolve,0));assert.match(get('playerStatus').textContent,/Не удалось/);
-// The legacy full-game VM harness cannot execute the canvas engine. Keep the
-// Easter-egg accessibility checks static; the real browser smoke covers game UI.
-assert.ok(script.includes("if(easterCount>=2){easterCount=0;openEaster();return}"));
-assert.ok(script.includes("easterHotspot?.focus()"));
-assert.ok(script.includes("if(e.key==='Escape'&&easterOverlay?.classList.contains('open'))closeEaster()"));
-assert.ok(script.includes("easterOverlay.setAttribute('aria-hidden','true')"));
-assert.equal((html.match(/id="easterHotspot"/g)||[]).length,1);assert.ok(html.includes('class="hero-copy-accessible"'));assert.ok(html.includes('if(reduced || document.hidden || activeAudio().paused)'));
-console.log('PASS: metadata, local links, script syntax, menu, single-release playback, seeking state, mute, errors, Easter-egg accessibility source checks.');
+const game=fs.readFileSync(new URL('../signal-runner.html',import.meta.url),'utf8');
+for(const [,source] of game.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g))new vm.Script(source);
+assert.ok(html.includes('href="signal-runner.html">ИГРА</a>'));
+assert.ok(html.includes('id="runnerTeaserPlay" href="signal-runner.html"'));
+assert.ok(!html.includes('id="signalRunnerCanvas"')&&!html.includes('runnerApi'));
+assert.ok(!html.includes('supabase.co'),'home does not create or load a game profile');
+assert.ok(game.includes('id="signalRunnerCanvas"')&&game.includes('id="runnerStorePanel"')&&game.includes('id="runnerProfilePanel"'));
+assert.ok(!game.includes('role="dialog"'),'the game is a normal page');
+assert.ok(game.includes('ornivaise-runner-player-token'),'same-origin profile identity is preserved');
+get('gpSeek').value=50;get('gpSeek').fire('input');assert.equal(get('audioSignal').currentTime,106.5);
+assert.ok(html.includes('class="hero-copy-accessible"'));assert.ok(html.includes('if(reduced || document.hidden || activeAudio().paused)'));
+console.log('PASS: page metadata and assets, menu, playback, seeking, mute and errors, separate game route, no game API on home, profile identity.');

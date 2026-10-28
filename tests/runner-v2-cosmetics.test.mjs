@@ -2,11 +2,11 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {Script} from 'node:vm';
-const html=readFileSync(new URL('../index.html',import.meta.url),'utf8');
+const html=readFileSync(new URL('../signal-runner.html',import.meta.url),'utf8');
 const seed=readFileSync(new URL('../docs/sql/runner-v2-cosmetics-stage.sql',import.meta.url),'utf8');
 const activation=readFileSync(new URL('../docs/sql/runner-v2-cosmetics-activate.sql',import.meta.url),'utf8');
 const scripts=[...html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)].filter(m=>!/[\s]src\s*=/.test(m[1]));
-assert.ok(scripts.length>=4,'four inline script blocks expected');
+assert.equal(scripts.length,3,'language, game runtime and page controls');
 scripts.forEach((m,i)=>new Script(m[2],{filename:'inline-'+i+'.js'}));
 const ids=[...html.matchAll(/\bid=["']([^"']+)["']/g)].map(x=>x[1]);
 assert.equal(new Set(ids).size,ids.length,'duplicate DOM IDs');
@@ -50,4 +50,5 @@ assert.ok(html.includes('renderRunnerShowroom();'),'showroom not synced with sto
 assert.ok(html.includes('runner-preview-glyph'),'planet previews lack visible glyph');
 
 assert.ok(calls>1500);
-console.log('PASS: 4 scripts, unique IDs, 12 staged SKUs, 10 worlds / 14 planets / 11 obstacles, showroom and profile ('+calls+' canvas calls)');
+console.log('PASS: 3 scripts, unique IDs, 12 staged SKUs, 10 worlds / 14 planets / 11 obstacles, showroom and profile ('+calls+' canvas calls)');
+
