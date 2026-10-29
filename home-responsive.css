@@ -62,3 +62,16 @@
 .hero-actions .runner-hero-portal:focus-visible{outline:2px solid #e6edf5;outline-offset:4px}
 @media(max-width:360px),(orientation:landscape) and (max-height:540px){.hero-actions .runner-hero-portal{gap:9px;padding:10px 12px;min-height:60px}.runner-hero-portal .portal-mark{width:30px;height:30px;font-size:22px}.runner-hero-portal .portal-copy strong{font-size:10px}.runner-hero-portal .portal-action{font-size:10px;gap:4px}.runner-hero-portal .portal-copy small{font-size:7px}}
 @media(prefers-reduced-motion:reduce){.hero-actions .runner-hero-portal,.runner-hero-portal .portal-action svg{transition:none}.hero-actions .runner-hero-portal:hover,.runner-hero-portal:hover .portal-action svg{transform:none}}
+
+/* Restore the original desktop cover composition without baking Russian text
+   into English or narrow-screen layouts. Assistive/readability modes retain live text. */
+@media(min-width:901px) and (min-height:541px){
+ .home-page .hero-stage{height:min(calc(100vh - 210px),calc(100vw * .556));height:min(calc(100svh - 210px),calc(100vw * .556));min-height:360px;max-height:820px}
+ .home-page .hero-bg{width:100%;background-size:contain;background-position:center;filter:none;animation:none;transform:none!important;-webkit-mask-image:none;mask-image:none}
+ html[lang="ru"] .home-page:not(.view-reading):not(.view-contrast):not(.view-large) .hero-bg{background-image:url('og-image.png')}
+ html[lang="ru"] .home-page:not(.view-reading):not(.view-contrast):not(.view-large) .hero-copy-live{opacity:0}
+ .home-page .hero-bg:after{background:linear-gradient(180deg,transparent 92%,#020305)}
+ .home-page .hero-copy-live h1{font-size:clamp(50px,7vw,112px);font-weight:500}
+ .home-page .hero-copy-live .hero-sub{font-size:clamp(10px,1.1vw,15px)}
+}
+@media(forced-colors:active){.home-page .hero-copy-live{opacity:1!important}.home-page .hero-bg{background:none!important}}
