@@ -1,77 +1,45 @@
-/* One layout contract for the planet, copy, and actions; no fixed 16:9 hero. */
 :root{--home-header:calc(68px + env(safe-area-inset-top));--home-player-space:118px}
 .home-page{overflow-x:clip}
 .home-page:not(.player-has-started):not(.player-demo){padding-bottom:0}
 #globalPlayer[hidden]{display:none!important}
-.home-page #top{padding-top:var(--home-header)}
+.home-page #top{padding-top:0}
 .home-page .site-header{height:var(--home-header);padding-top:env(safe-area-inset-top);-webkit-backdrop-filter:blur(14px)}
 .home-page .main-nav{max-height:calc(100vh - var(--home-header));max-height:calc(100svh - var(--home-header));overflow-y:auto}
-.hero{position:relative;isolation:isolate;width:100%;padding:0 0 20px;background:#020305;border-bottom:1px solid #252a31;--audio-energy:0;--audio-bass:0;--audio-high:0}
-.hero-stage{position:relative;isolation:isolate;overflow:hidden;height:clamp(250px,calc(100vh - 348px),720px);height:clamp(250px,calc(100svh - 348px),720px)}
-.hero-bg,.hero-glow,.hero-noise,.hero-particles{position:absolute;inset:0;pointer-events:none}
-.hero-bg{--mx:0px;--my:0px;background:#020305 url('planet-clean-v2.webp') 50% 52%/cover no-repeat;width:min(100%,calc(clamp(250px,calc(100vh - 348px),720px)*2.15));width:min(100%,calc(clamp(250px,calc(100svh - 348px),720px)*2.15));margin-inline:auto;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);will-change:transform;animation:planetBreath 24s ease-in-out infinite alternate;filter:brightness(calc(.96 + var(--audio-energy)*.12)) contrast(calc(1.02 + var(--audio-bass)*.08));transform-origin:50% 52%}
-.hero-bg:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 76%,#020305 100%)}
-.hero-glow{z-index:1;opacity:calc(.12 + var(--audio-energy)*.16);mix-blend-mode:screen;background:radial-gradient(circle at 50% 52%,#dae6ef12,transparent 52%)}
-.hero-noise{display:none}
-.hero-particles{z-index:2;overflow:hidden;opacity:calc(.72 + var(--audio-high)*.28)}
-.hero-particles i{position:absolute;border-radius:50%;background:#fff;animation:spaceDriftStrong var(--dur,18s) linear infinite;animation-delay:var(--delay,0s);box-shadow:0 0 var(--blur,4px) #e8f2ff55}
-.hero-audio-ring{position:absolute;z-index:2;left:50%;top:52%;width:min(42vw,calc(100% - 30px));aspect-ratio:1;border-radius:50%;transform:translate(-50%,-50%) scale(calc(.99 + var(--audio-bass)*.04));border:1px solid rgba(228,236,246,calc(.015 + var(--audio-bass)*.16));box-shadow:0 0 calc(8px + var(--audio-bass)*32px) rgba(228,236,246,calc(.01 + var(--audio-bass)*.07));pointer-events:none}
-.hero-copy-live{position:absolute;z-index:4;left:50%;top:50%;transform:translate(-50%,-50%);width:94%;text-align:center;pointer-events:none;text-shadow:0 2px 22px #000}
-.hero-copy-live .kicker{margin:0 0 clamp(22px,4vw,46px);font-size:clamp(9px,1vw,13px);letter-spacing:.32em;color:#e2e6ec}
-.hero-copy-live h1{font-size:clamp(28px,6.4vw,96px);font-weight:400;letter-spacing:.22em;line-height:1.1;margin:0;padding-left:.22em;white-space:nowrap}
-.hero-copy-live .hero-sub{max-width:740px;margin:clamp(16px,2.3vw,28px) auto 0;color:#e4e8ed;font-size:clamp(9px,1vw,12px);line-height:1.8;letter-spacing:.23em}
-.hero-stage:after{content:"";position:absolute;z-index:3;inset:-20% -40%;pointer-events:none;background:linear-gradient(108deg,transparent 38%,#ffffff04 46%,#ffffff12 50%,#ffffff05 54%,transparent 62%);animation:heroLightSweep 14s ease-in-out infinite;mix-blend-mode:screen}
-.hero-actions{position:relative;z-index:5;display:flex;flex-direction:column;align-items:center;gap:14px;width:min(1040px,calc(100% - 48px));margin:0 auto}
-.hero-actions .runner-hero-portal{position:static;transform:none;min-height:44px;border-color:#74818d66;background:#0a0e12;letter-spacing:.1em}
-.popular-card{position:relative;display:grid;grid-template-columns:64px minmax(115px,1fr) auto minmax(70px,1fr) auto auto;align-items:center;gap:18px;width:100%;min-height:90px;padding:12px 18px;border:1px solid #ffffff24;border-radius:14px;background:#07090ce8;-webkit-backdrop-filter:blur(15px);backdrop-filter:blur(15px)}
-.popular-cover img{display:block;width:62px;height:62px;object-fit:cover;border-radius:8px}
-.popular-info{display:flex;flex-direction:column;gap:4px;min-width:0}
-.popular-info .section-label{font-size:9px;letter-spacing:.2em}
-.popular-info strong{font-size:20px;letter-spacing:.04em}
-.popular-info small{font-size:10px;color:#929aa5}
-.popular-progress{display:flex;align-items:center;min-width:0}
-.popular-time{font-size:10px;white-space:nowrap;color:#b8bec6}
-.hero-wave.is-playing{animation:wavePulse .72s ease-in-out infinite alternate}
-.hero.hero-offscreen .hero-bg,.hero.hero-offscreen .hero-particles i,.hero.hero-offscreen .hero-stage:after{animation-play-state:paused}
-@supports not (aspect-ratio:1){.hero-audio-ring:before{content:"";display:block;padding-top:100%}}
-@keyframes planetBreath{from{transform:translate3d(var(--mx),var(--my),0) scale(1.005)}to{transform:translate3d(var(--mx),var(--my),0) scale(1.025)}}
-@media(max-width:1100px){.popular-card{grid-template-columns:60px minmax(0,1fr) auto;gap:16px}.popular-progress,.popular-time,.popular-card .jump-link{display:none}}
-@media(max-width:900px){:root{--home-header:calc(64px + env(safe-area-inset-top));--home-player-space:120px}.home-page .main-nav{top:var(--home-header)}.hero-stage{height:min(clamp(210px,calc(100vh - 340px),680px),125vw);height:min(clamp(210px,calc(100svh - 340px),680px),125vw)}.hero-actions{width:calc(100% - 32px);gap:12px}.hero-copy-live h1{font-size:clamp(28px,7.8vw,64px);letter-spacing:.17em;padding-left:.17em}.hero-copy-live .hero-sub{width:83%;max-width:490px;letter-spacing:.17em}.hero-audio-ring{width:83%;max-width:490px}.popular-card{min-height:82px;padding:10px 12px;gap:12px;grid-template-columns:54px minmax(0,1fr) auto}.popular-cover img{width:52px;height:52px}.popular-card .signal-btn{min-width:44px;min-height:44px;justify-content:center}.popular-card .signal-btn span{display:none}}
-@media(max-width:430px){.hero-actions{width:calc(100% - 24px)}.popular-card{min-height:80px;grid-template-columns:46px minmax(0,1fr) 44px;gap:10px;padding:10px}.popular-cover img{width:44px;height:44px}.popular-info strong{font-size:18px}.popular-info .section-label{font-size:8px;letter-spacing:.16em}.popular-info small{font-size:9px}.popular-card .signal-btn{padding:0}.popular-card .signal-btn svg{width:42px;height:42px}.hero-copy-live .hero-sub{font-size:9px;letter-spacing:.12em}.hero-copy-live .kicker{margin-bottom:24px}}
-@media(max-width:320px){.hero-copy-live h1{font-size:26px;letter-spacing:.1em}.hero-copy-live .hero-sub{width:88%;font-size:8px}.popular-info strong{font-size:15px}.popular-info .section-label{font-size:7px;letter-spacing:.08em}.hero-actions .runner-hero-portal{font-size:9px}}
-@media(max-width:900px) and (orientation:portrait){.hero-bg{width:100%;-webkit-mask-image:none;mask-image:none}}
-@media(max-width:900px){.home-page .main-nav{gap:0;padding:12px max(16px,env(safe-area-inset-right)) 12px max(16px,env(safe-area-inset-left));max-height:calc(100vh - var(--home-header) - 104px);max-height:calc(100svh - var(--home-header) - 104px)}.home-page .main-nav a{display:flex;align-items:center;min-height:44px}}
-@media(min-width:431px) and (max-width:980px){.hero-stage{height:min(clamp(210px,calc(100vh - 402px),680px),125vw);height:min(clamp(210px,calc(100svh - 402px),680px),125vw)}}
-@media(min-width:981px) and (max-width:1160px){.home-page .global-player.player-54{grid-template-columns:minmax(160px,1fr) minmax(180px,1.5fr) auto minmax(130px,.7fr);gap:12px;padding-inline:12px}.home-page .gp-track{padding-right:10px;gap:9px}.home-page .gp-volume{grid-template-columns:30px minmax(50px,1fr) 30px;padding-left:10px;gap:6px}}
-@media(min-width:901px) and (max-width:1100px){.home-page .social-nav span{display:none}.home-page .lang-switch{right:54px}}
-@media(orientation:landscape) and (max-height:540px){:root{--home-header:calc(54px + env(safe-area-inset-top))}.hero{display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,30%);align-items:center;gap:12px;padding:0 16px 18px 0}.hero-stage{height:clamp(170px,calc(100vh - 180px),350px);height:clamp(170px,calc(100svh - 180px),350px)}.hero-actions{width:100%;gap:12px;margin:0}.hero-copy-live h1{font-size:clamp(24px,4.5vw,46px);letter-spacing:.14em}.hero-copy-live .kicker{margin-bottom:14px;font-size:8px}.hero-copy-live .hero-sub{font-size:8px;letter-spacing:.08em;margin-top:12px}.popular-card{grid-template-columns:38px minmax(0,1fr) 44px;gap:7px;padding:10px 8px}.popular-cover img{width:36px;height:36px}.popular-info strong{font-size:14px}.popular-info .section-label{font-size:6.5px;letter-spacing:.08em}.popular-info small{font-size:8px}.popular-card .signal-btn{padding:0}.popular-card .signal-btn svg{width:40px;height:40px}.hero-actions .runner-hero-portal{font-size:9px}.hero-audio-ring{width:65%}}
-@media(prefers-reduced-motion:reduce){.hero-bg,.hero-particles i,.hero-stage:after,.hero-wave.is-playing{animation:none!important}.hero-bg{transform:none!important}.hero-particles,.hero-audio-ring,.hero-stage:after{display:none}.hero-bg,.hero-glow{filter:none;transition:none}}
-@media(orientation:landscape) and (max-height:540px){.hero{padding-left:env(safe-area-inset-left);padding-right:max(16px,env(safe-area-inset-right))}.popular-card .signal-btn span,.popular-progress,.popular-time,.popular-card .jump-link{display:none}.home-page .global-player.player-54{grid-template-columns:minmax(0,1fr) auto;min-height:82px;gap:4px 10px;padding:7px 10px}.home-page .gp-track{grid-column:1;grid-row:1;border:0;padding:0;grid-template-columns:38px minmax(0,1fr);gap:8px}.home-page .global-player.player-54 .gp-track>img{width:36px;height:36px}.home-page .gp-meta small{display:none}.home-page .gp-meta strong{font-size:11px}.home-page .gp-actions{grid-column:2;grid-row:1;gap:3px}.home-page .player-tool{display:none}.home-page #prevBtn,.home-page #nextBtn{display:grid;width:32px;height:32px}.home-page .main-play,.home-page .main-play svg{width:38px;height:38px}.home-page .gp-timeline{grid-column:1/-1;grid-row:2;align-self:auto;padding:0;height:26px}.home-page .gp-time-row{font-size:8px;margin:0}.home-page .gp-wave-track{top:18px;height:9px}.home-page .gp-seek{height:20px;margin:0}.home-page .gp-volume{display:none}}
-@media(orientation:landscape) and (max-height:540px){.hero-bg{width:min(100%,calc(clamp(170px,calc(100vh - 180px),350px)*2.15));width:min(100%,calc(clamp(170px,calc(100svh - 180px),350px)*2.15))}}
-
-/* Entrance to the game, paired with the music card. */
-.hero-actions .runner-hero-portal{display:flex;align-items:center;justify-content:flex-start;gap:13px;width:min(100%,360px);min-height:68px;padding:12px 15px;border:1px solid #ffffff25;border-radius:14px;background:linear-gradient(120deg,#15171c,#090c10);color:#edf0f4;letter-spacing:normal;font-weight:400;box-shadow:0 8px 28px #0003;transition:border-color .2s,background .2s,transform .2s}
-.runner-hero-portal .portal-mark{display:grid;place-items:center;flex:none;width:36px;height:36px;border:1px solid #ffffff25;border-radius:10px;background:#ffffff05;font-size:25px;font-weight:400;color:#e4e9ef}
+@keyframes planetBreath{from{transform:translate3d(var(--mx),var(--my),0) scale(1.005)}to{transform:translate3d(var(--mx),var(--my),0) scale(1.025)}}@media(max-width:900px){:root{--home-header:calc(64px + env(safe-area-inset-top));--home-player-space:120px}
+.home-page .main-nav{top:var(--home-header)}
+}@media(max-width:900px){.home-page .main-nav{gap:0;padding:12px max(16px,env(safe-area-inset-right)) 12px max(16px,env(safe-area-inset-left));max-height:calc(100vh - var(--home-header) - 104px);max-height:calc(100svh - var(--home-header) - 104px)}
+.home-page .main-nav a{display:flex;align-items:center;min-height:44px}
+}@media(min-width:981px) and (max-width:1160px){.home-page .global-player.player-54{grid-template-columns:minmax(160px,1fr) minmax(180px,1.5fr) auto minmax(130px,.7fr);gap:12px;padding-inline:12px}
+.home-page .gp-track{padding-right:10px;gap:9px}
+.home-page .gp-volume{grid-template-columns:30px minmax(50px,1fr) 30px;padding-left:10px;gap:6px}
+}@media(min-width:901px) and (max-width:1100px){.home-page .social-nav span{display:none}
+.home-page .lang-switch{right:54px}
+}@media(orientation:landscape) and (max-height:540px){:root{--home-header:calc(54px + env(safe-area-inset-top))}
+}@media(orientation:landscape) and (max-height:540px){.home-page .global-player.player-54{grid-template-columns:minmax(0,1fr) auto;min-height:82px;gap:4px 10px;padding:7px 10px}
+.home-page .gp-track{grid-column:1;grid-row:1;border:0;padding:0;grid-template-columns:38px minmax(0,1fr);gap:8px}
+.home-page .global-player.player-54 .gp-track>img{width:36px;height:36px}
+.home-page .gp-meta small{display:none}
+.home-page .gp-meta strong{font-size:11px}
+.home-page .gp-actions{grid-column:2;grid-row:1;gap:3px}
+.home-page .player-tool{display:none}
+.home-page #prevBtn,.home-page #nextBtn{display:grid;width:32px;height:32px}
+.home-page .main-play,.home-page .main-play svg{width:38px;height:38px}
+.home-page .gp-timeline{grid-column:1/-1;grid-row:2;align-self:auto;padding:0;height:26px}
+.home-page .gp-time-row{font-size:8px;margin:0}
+.home-page .gp-wave-track{top:18px;height:9px}
+.home-page .gp-seek{height:20px;margin:0}
+.home-page .gp-volume{display:none}
+}.runner-hero-portal .portal-mark{display:grid;place-items:center;flex:none;width:36px;height:36px;border:1px solid #ffffff25;border-radius:10px;background:#ffffff05;font-size:25px;font-weight:400;color:#e4e9ef}
 .runner-hero-portal .portal-copy{display:flex;flex:1;flex-direction:column;gap:5px;min-width:0}
 .runner-hero-portal .portal-copy small{font-size:8px;letter-spacing:.16em;color:#8d98a5;line-height:1}
 .runner-hero-portal .portal-copy strong{font-size:12px;letter-spacing:.07em;font-weight:500;line-height:1.2;white-space:nowrap}
 .runner-hero-portal .portal-action{display:flex;align-items:center;gap:7px;font-size:11px;color:#bcc6d1;white-space:nowrap}
 .runner-hero-portal .portal-action svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s}
-.hero-actions .runner-hero-portal:hover{border-color:#ffffff65;background:linear-gradient(120deg,#1b1e24,#0e1116);transform:translateY(-1px)}
 .runner-hero-portal:hover .portal-action svg{transform:translateX(3px)}
-.hero-actions .runner-hero-portal:focus-visible{outline:2px solid #e6edf5;outline-offset:4px}
-@media(max-width:360px),(orientation:landscape) and (max-height:540px){.hero-actions .runner-hero-portal{gap:9px;padding:10px 12px;min-height:60px}.runner-hero-portal .portal-mark{width:30px;height:30px;font-size:22px}.runner-hero-portal .portal-copy strong{font-size:10px}.runner-hero-portal .portal-action{font-size:10px;gap:4px}.runner-hero-portal .portal-copy small{font-size:7px}}
-@media(prefers-reduced-motion:reduce){.hero-actions .runner-hero-portal,.runner-hero-portal .portal-action svg{transition:none}.hero-actions .runner-hero-portal:hover,.runner-hero-portal:hover .portal-action svg{transform:none}}
-
-/* Restore the original desktop cover composition without baking Russian text
-   into English or narrow-screen layouts. Assistive/readability modes retain live text. */
-@media(min-width:901px) and (min-height:541px){
- .home-page .hero-stage{height:min(calc(100vh - 210px),calc(100vw * .556));height:min(calc(100svh - 210px),calc(100vw * .556));min-height:360px;max-height:820px}
- .home-page .hero-bg{width:100%;background-size:contain;background-position:center;filter:none;animation:none;transform:none!important;-webkit-mask-image:none;mask-image:none}
- html[lang="ru"] .home-page:not(.view-reading):not(.view-contrast):not(.view-large) .hero-bg{background-image:url('og-image.png')}
- html[lang="ru"] .home-page:not(.view-reading):not(.view-contrast):not(.view-large) .hero-copy-live{opacity:0}
- .home-page .hero-bg:after{background:linear-gradient(180deg,transparent 92%,#020305)}
- .home-page .hero-copy-live h1{font-size:clamp(50px,7vw,112px);font-weight:500}
- .home-page .hero-copy-live .hero-sub{font-size:clamp(10px,1.1vw,15px)}
+@media(max-width:360px),(orientation:landscape) and (max-height:540px){.runner-hero-portal .portal-mark{width:30px;height:30px;font-size:22px}
+.runner-hero-portal .portal-copy strong{font-size:10px}
+.runner-hero-portal .portal-action{font-size:10px;gap:4px}
+.runner-hero-portal .portal-copy small{font-size:7px}
+}@media(prefers-reduced-motion:reduce){.runner-hero-portal .portal-action svg{transition:none}
+.runner-hero-portal:hover .portal-action svg{transform:none}
 }
-@media(forced-colors:active){.home-page .hero-copy-live{opacity:1!important}.home-page .hero-bg{background:none!important}}
