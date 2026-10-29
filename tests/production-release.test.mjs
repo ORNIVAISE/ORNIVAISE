@@ -4,7 +4,7 @@ for(const [name,html]of [['index.html',home],['signal-runner.html',game]]){
  for(const [,src]of html.matchAll(/<script\b[^>]*>([\s\S]*?)<\/script>/g))new vm.Script(src);
  assert(!html.includes('noindex'));assert(!html.includes('/api/runner'));assert(!html.includes('ChatGPT'));assert(!html.includes('ПРИВАТНАЯ ВЕРСИЯ'));assert(!html.includes('ТЕСТОВЫЙ ПРОГРЕСС'));assert(!html.includes('beyond.html'));assert(!html.includes('/home.html'));
  assert.equal((html.match(/rel="canonical"/g)||[]).length,1);
- for(const [,url]of html.matchAll(/(?:src|href)="([^"#]+)"/g)){if(/^(?:https?:|mailto:|data:|\/|#)/.test(url))continue;assert(fs.existsSync(url),name+' missing '+url)}
+ for(const [,url]of html.matchAll(/(?:src|href)="([^"#]+)"/g)){if(/^(?:https?:|mailto:|data:|\/|#)/.test(url))continue;assert(fs.existsSync(url.split('?')[0]),name+' missing '+url)}
 }
 assert(game.includes("connect-src https://fnomjabadilhfatharve.supabase.co;"));assert(game.includes("localStorage.getItem('ornivaise-runner-player-token')"));assert(game.includes('id="runnerCreateLink"'));assert(game.includes('id="runnerRedeemLink"'));assert(game.includes('runnerPractice?{run_id:newRunnerRunId()}'));assert(!game.includes("runnerApi('start_run',{training:"));assert(!game.includes("runnerApi('leaderboard')"));assert(!/sb_secret_|service_role|sk-[A-Za-z0-9]{20}/.test(game));
 const src=game.slice(game.indexOf('async function runnerApi('),game.indexOf('// Obsolete state reads'));
